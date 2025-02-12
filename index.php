@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous"></link> -->
+    <script src="https://kit.fontawesome.com/d4641596a6.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/public/css/main.css">
-    <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous"></link>
     <title>Document</title>
 </head>
 <body class="home">
