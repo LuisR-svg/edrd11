@@ -1,5 +1,6 @@
+/* User Login - login.php */
 <?php
-require '../models/connection.php';
+require 'db.php';
 session_start();
 $ip = $_SERVER['REMOTE_ADDR'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,8 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->execute([$username]);
             $pdo->prepare("INSERT INTO login_attempts (username, ip_address, success) VALUES (?, ?, 1)")
                 ->execute([$username, $ip]);
-
-            echo "Login successful. Role: " . $user['role'];
+            
+            // Redirect users based on their role
+            if ($user['role'] === 'admin') {
+                header("Location: ../views/admin_dashboard.php");
+                exit();
+            } elseif ($user['role'] === 'editor') {
+                header("Location: ../views/editor_dashboard.php");
+                exit();
+            } else {
+                header("Location: ../views/user_dashboard.php");
+                exit();
+            }
         } else {
             $pdo->prepare("INSERT INTO login_attempts (username, ip_address, success) VALUES (?, ?, 0)")
                 ->execute([$username, $ip]);
