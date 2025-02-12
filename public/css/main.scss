@@ -84,24 +84,19 @@ body {
         flex-wrap: wrap;
         padding: 20px;   
            input{
-            min-height: 19px;
-            padding: 10px;
-            margin: 10px auto;
-            border-radius: .5rem;
-            width: calc(80% - 3px);
-            &:not(:placeholder-shown){
-                :valid{
+                min-height: 19px;
+                padding: 10px;
+                margin: 10px auto;
+                border-radius: .5rem;
+                width: calc(80% - 3px);
+                &:not(:placeholder-shown):valid{
                     outline-color: green;
-            }
-            }
-            &:not(:placeholder-shown){
-                :invalid{
+                }
+                &:not(:placeholder-shown):invalid{
                     outline-color: red;
-            }
-            }
-            &:focus{
-                :invalid{
-                    color: grba(red, 07);
+                }
+                &:focus:invalid{
+                color: grba(red, 07);
                 }
             }
            }
@@ -112,5 +107,4 @@ body {
         }
    }
 
-}
 }
