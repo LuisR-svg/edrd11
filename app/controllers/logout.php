@@ -2,6 +2,6 @@
 <?php
 session_start();
 session_destroy();
-header("Location: index.html");
+header("Location: https://edrd11.creativeworkspace-bz.com/");
 exit();
 ?>
