@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user['password_hash'])) {
             $_SESSION['username'] = $username;
             $_SESSION['role'] = $user['role'];
+            $_SESSION['loggedin'] = true;
             
             $pdo->prepare("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE username = ?")
                 ->execute([$username]);
@@ -27,12 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Redirect users based on their role
             if ($user['role'] === 'admin') {
+                $_SESSION['admin'] = true;
                 header("Location: ../views/admin_dashboard.php");
                 exit();
             } elseif ($user['role'] === 'editor') {
+                $_SESSION['editor'] = true;
                 header("Location: ../views/editor_dashboard.php");
                 exit();
             } else {
+                $_SESSION['user'] = true;
                 header("Location: ../views/user_dashboard.php");
                 exit();
             }
