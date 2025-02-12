@@ -10,7 +10,7 @@
     
 <a href="app/controllers/logout.php">Logout</a>
 
-<form method="POST">
+<form method="POST" action="controllers/login.php>
         <input type="text" name="username" required placeholder="Username">
         <input type="password" name="password" required placeholder="Password">
         <button type="submit">Login</button>
