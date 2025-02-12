@@ -14,12 +14,13 @@
     </nav>
 
 
-<form method="POST" action="app/controllers/login.php" class="login-form">
-        <input type="text" name="username" required placeholder="Username">
-        <input type="password" name="password" required placeholder="Password">
-        <button type="submit">Login</button>
-</form>
-
+<main class="form-container">
+    <form method="POST" action="app/controllers/login.php" class="login-form">
+            <input type="text" name="username" required placeholder="Username">
+            <input type="password" name="password" required placeholder="Password">
+            <button type="submit">Login</button>
+    </form>
+</main>
 
 
 <form method="POST" action="app/views/register.php">
