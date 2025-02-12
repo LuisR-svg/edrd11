@@ -39,3 +39,7 @@
   z-index: 2;
   white-space: nowrap;
 }
+.home .form-container .login-form button:hover {
+  transform: translate(0, -3px);
+  box-shadow: 0 20px 80px -10px #020969;
+}
