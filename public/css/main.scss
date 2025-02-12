@@ -1,47 +1,74 @@
+@import url('https://fonts.googleapis.com/css?family=Inter:700|Inter:400');
 $text: #ffffff;
 $background: #0c142c;
 $primary-color: #020969;
 $secondary-color: #443dff;
 $accent: #ffffff;
+
+// ==============================Global Mixins==============================================================================================
 @mixin primary-btn{
-   
-        padding: 0.5em 2em;
+        padding: 0.5em 3em;
         background-color: $primary-color;
         color: $text;
         border-radius: 0.5em;
         transition: transform ease 0.2s, box-shadow ease 0.2s;
         display: inline-block;
-        font-size: 0.8rem;
+        font-size: 1.2rem;
         z-index: 2;
         white-space: nowrap;
         &:hover{
             transform: translate(0, -3px);
             box-shadow: 0 20px 80px -10px $primary-color;
         }
-    @mixin secondary-btn{
-        
-            padding: 0.5em 2em;
-            background-color: $secondary-color;
-            color: $text;
-            border-radius: 0.5em;
-            display: inline-block;
-            font-size: 0.8rem;
-            z-index: 1;
-            cursor: pointer;
+   }
+@mixin secondary-btn{
+    padding: 0.5em 3em;
+    background-color: $secondary-color;
+    color: $text;
+    border-radius: 0.5em;
+    display: inline-block;
+    font-size: 1.2rem;
+    z-index: 1;
+    cursor: pointer;
+    transition: transform ease 0.2s;
+    white-space: nowrap;               
+    &:hover {
+            transform: translate(0, -3px);
             transition: transform ease 0.2s;
-            white-space: nowrap;               
-            &:hover {
-                    transform: translate(0, -3px);
-                    transition: transform ease 0.2s;
-                }
-    }
+        }
 }
-.home{
+// ==============================Global Mixins end==============================================================================================
+
+body { 
+    font-family: 'Inter';
+    font-weight: 400;
+    .home{
         margin: 0;
         padding: 0;
         height: 100vh;   
         background: $primary-color;
         overflow: hidden;
+        h1, h2, h3, h4, h5 {
+            font-family: 'Inter';
+            font-weight: 700;
+            color: $text;
+          }
+        h1 {
+            font-size: 4.210rem;
+        }
+        h2 {
+            font-size: 3.158rem;
+        }
+        h3 {
+            font-size: 2.369rem;
+        }
+        h4 {
+            font-size: 1.777rem;
+        }
+        h5 {
+            font-size: 1.333rem; 
+        }
+
    .form-container{
         background: #28304D;
         width: calc(40% - 10px);
@@ -62,6 +89,21 @@ $accent: #ffffff;
             margin: 10px auto;
             border-radius: .5rem;
             width: calc(80% - 3px);
+            &:not(:placeholder-shown){
+                :valid{
+                    outline-color: green;
+            }
+            }
+            &:not(:placeholder-shown){
+                :invalid{
+                    outline-color: red;
+            }
+            }
+            &:focus{
+                :invalid{
+                    color: grba(red, 07);
+                }
+            }
            }
            button{
             @include primary-btn;
@@ -70,4 +112,5 @@ $accent: #ffffff;
         }
    }
 
+}
 }

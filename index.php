@@ -17,7 +17,7 @@
 <main class="form-container">
     <form method="POST" action="app/controllers/login.php" class="login-form">
             <input type="text" name="username" required placeholder="Username">
-            <input type="password" name="password" required placeholder="Password">
+            <input type="password" name="password" required placeholder="Password" minlength="6">
             <button type="submit">Login</button>
     </form>
 </main>
