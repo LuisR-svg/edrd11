@@ -7,6 +7,9 @@
     <title>Document</title>
 </head>
 <body>
+    
+<a action="app/controllers/logout.php">Logout</a>
+
 <form method="POST">
         <input type="text" name="username" required placeholder="Username">
         <input type="password" name="password" required placeholder="Password">
@@ -26,6 +29,6 @@
     <button type="submit">Register</button>
 </form>
 
-<a action="app/controllers/logout.php">Logout</a>
+
 </body>
 </html>
