@@ -39,6 +39,7 @@
 }
 .home .form-container .login-form {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
@@ -72,9 +73,12 @@
 .home .form-container .login-form .input-box input:focus:invalid {
   color: grba(red, 7);
 }
-.home .form-container .login-form .input-box fa {
+.home .form-container .login-form .input-box .fa-solid {
   color: red;
   font-size: 15px;
+  width: 15px;
+  height: 15px;
+  background: white;
 }
 .home .form-container button {
   padding: 0.5em 3em;

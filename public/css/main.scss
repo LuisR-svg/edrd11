@@ -79,6 +79,7 @@ $accent: #ffffff;
         transform: translate(-50%, -50%);
     .login-form{
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
@@ -107,9 +108,12 @@ $accent: #ffffff;
                 color: grba(red, 07);
                 }
             }
-            fa{
+            .fa-solid{
                 color: red;
-                font-size: 15px                
+                font-size: 15px;
+                width: 15px;
+                height: 15px; 
+                background: white;
             }
          }
            }
