@@ -1,8 +1,8 @@
-/* Database Connection - db.php */
 <?php
+// Database Connection - db.php
 $host = '127.0.0.1:3306';
 $dbname = 'u581562866_EDRD11_DB';
-$username = 'admin';
+$username = 'u581562866_admin';
 $password = 'Thinkfast@96';
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
