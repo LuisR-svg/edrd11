@@ -8,7 +8,7 @@
 </head>
 <body>
     
-<a action="app/controllers/logout.php">Logout</a>
+<a href="app/controllers/logout.php">Logout</a>
 
 <form method="POST">
         <input type="text" name="username" required placeholder="Username">
