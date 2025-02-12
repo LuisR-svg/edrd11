@@ -25,5 +25,7 @@
     </select>
     <button type="submit">Register</button>
 </form>
+
+<a action="app/controllers/logout.php">Logout</a>
 </body>
 </html>
