@@ -39,15 +39,14 @@ $accent: #ffffff;
 }
 // ==============================Global Mixins end==============================================================================================
 
-body { 
+body .home { 
     font-family: 'Inter';
     font-weight: 400;
-    .home{
-        margin: 0;
-        padding: 0;
-        height: 100vh;   
-        background: $primary-color;
-        overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;   
+    background: $primary-color;
+    overflow: hidden;
         h1, h2, h3, h4, h5 {
             font-family: 'Inter';
             font-weight: 700;
@@ -107,4 +106,3 @@ body {
         }
    }
 
-}

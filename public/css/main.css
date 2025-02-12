@@ -1,9 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Inter:700|Inter:400");
-body {
+body .home {
   font-family: "Inter";
   font-weight: 400;
-}
-body .home {
   margin: 0;
   padding: 0;
   height: 100vh;
