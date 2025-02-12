@@ -1,6 +1,6 @@
 /* User Login - login.php */
 <?php
-require 'db.php';
+require '../models/connection.php';
 session_start();
 $ip = $_SERVER['REMOTE_ADDR'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
