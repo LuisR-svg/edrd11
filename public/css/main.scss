@@ -69,6 +69,7 @@ $accent: #ffffff;
         }
 
    .form-container{
+   
         background: #28304D;
         width: calc(40% - 10px);
         margin: 5px auto;
@@ -82,7 +83,15 @@ $accent: #ffffff;
         justify-content: center;
         flex-wrap: wrap;
         padding: 20px;   
-           input{
+        h1{
+        
+        }
+         .input-box{
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            input{
                 min-height: 19px;
                 padding: 10px;
                 margin: 10px auto;
@@ -98,6 +107,11 @@ $accent: #ffffff;
                 color: grba(red, 07);
                 }
             }
+            fa{
+                color: red;
+                font-size: 15px                
+            }
+         }
            }
            button{
             @include primary-btn;
