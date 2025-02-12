@@ -1,11 +1,21 @@
+
+$primary-color: #0C132B;
+
 .home{
     *{
         margin: 0;
         padding: 0;
+        height: 100vh;
     }
-    background: #0C132B;
+    background: $primary-color;
     .login-form{
-        background: #28304D;
+    background: #28304D;
+    width: calc(40% - 10px);
+    margin: 5px auto;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    transform: translate(-50%, -50%);
     }
 
 }
