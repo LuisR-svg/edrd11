@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="stylesheet" href="/public/css/main.scss">
     <title>Document</title>
 </head>
-<body>
-    
-<a href="app/controllers/logout.php">Logout</a>
+<body class="home">
+    <nav>
+       <ol>
+        <li> <a href="app/controllers/logout.php">Logout</a></li>
+       </ol>
+    </nav>
 
-<form method="POST" action="app/controllers/login.php">
+
+<form method="POST" action="app/controllers/login.php" class="login-form">
         <input type="text" name="username" required placeholder="Username">
         <input type="password" name="password" required placeholder="Password">
         <button type="submit">Login</button>
