@@ -73,7 +73,7 @@
 .home .form-container .login-form .input-box input:focus:invalid {
   color: grba(red, 7);
 }
-.home .form-container .login-form .input-box .fa-solid {
+.home .form-container .login-form .input-box .fa-solid, .home .form-container .login-form .input-box .fa, .home .form-container .login-form .input-box .fas {
   color: red;
   font-size: 15px;
   width: 15px;
