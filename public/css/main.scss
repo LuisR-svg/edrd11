@@ -14,7 +14,27 @@ $accent: #ffffff;
         font-size: 0.8rem;
         z-index: 2;
         white-space: nowrap;
-    
+        &:hover{
+            transform: translate(0, -3px);
+            box-shadow: 0 20px 80px -10px $primary-color;
+        }
+    @mixin secondary-btn{
+        
+            padding: 0.5em 2em;
+            background-color: $secondary-color;
+            color: $text;
+            border-radius: 0.5em;
+            display: inline-block;
+            font-size: 0.8rem;
+            z-index: 1;
+            cursor: pointer;
+            transition: transform ease 0.2s;
+            white-space: nowrap;               
+            &:hover {
+                    transform: translate(0, -3px);
+                    transition: transform ease 0.2s;
+                }
+    }
 }
 .home{
         margin: 0;
