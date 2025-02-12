@@ -15,4 +15,3 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-
