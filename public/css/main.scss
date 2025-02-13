@@ -63,9 +63,7 @@ body{
                 vertical-align: middle;     
                 &:hover,
                 &:active{
-                    a{
-                    color: $secondary-color;
-                   &:after{
+                    &:after{
                         content: "";
                         position: absolute;
                         left: 0;
@@ -75,6 +73,8 @@ body{
                         background: $accent;
                         transition: ease-in-out all .3s;
                         }
+                    a{
+                    color: $secondary-color;                   
                     }      
                 }
                 a{
