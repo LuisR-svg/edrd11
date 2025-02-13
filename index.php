@@ -20,8 +20,8 @@
     <main class="form-container">
         <form method="POST" action="app/controllers/login.php" class="login-form">
           <div class="form-header">
-                <i class="fa-solid fa-compass-drafting"></i>
-                <h1>Masonic Treasury</h1>
+                
+                <h1>M<i class="fa-solid fa-compass-drafting"></i>sonic Treasury</h1>
                 <h2>Estrella Del Rey David #11</h2>
           </div>
             <div class="input-container">

@@ -77,6 +77,10 @@ body .home .form-container .form-header h1 {
   align-items: center;
   justify-content: center;
 }
+body .home .form-container .form-header h1 i {
+  font-size: calc(50px + 50 * (100vw - 320px) / 1600);
+  color: white;
+}
 body .home .form-container .login-form {
   display: flex;
   flex-direction: column;
