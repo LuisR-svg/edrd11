@@ -2,6 +2,7 @@ body {
   margin: 0;
 }
 body nav {
+  width: 100%;
   position: fixed;
   background: #020969;
   margin: auto;
