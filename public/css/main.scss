@@ -52,11 +52,23 @@ body{
         background: $primary-color;
         margin: auto;
         z-index: 9;
+        overflow: hidden;
         ul{
+            margin: 0;
             li{
-                list-style-type: none;
-                color: $text;
-                
+                list-style-type: none;   
+                float: left;
+                margin: 20px;
+                padding: 10px;
+                vertical-align: middle;             
+                a{
+                    color: $text;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: auto;
+                    
+                }
+
             }
         }
     }
