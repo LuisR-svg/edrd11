@@ -71,7 +71,9 @@ body{
           }
         h1 {
             // font-size: 4.210rem;
-            font-size: calc(18px + (40px - 18px) * ((100vw - 320px) / (1920px - 320px)));
+            $min-font: 16px;
+            $max-font: 35px;
+            font-size: calc(#{$min-font} + (#{$max-font} - #{$min-font}) * ((100vw - 320px) / (1920 - 320)));
         }
         h2 {
             font-size: 3.158rem;
