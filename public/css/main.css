@@ -15,18 +15,22 @@ body nav ul {
 body nav ul li {
   list-style-type: none;
   float: left;
+  position: relative;
   padding: 20px;
   vertical-align: middle;
 }
-body nav ul li:hover:after, body nav ul li:active:after {
+body nav ul li::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: -5px;
   height: 1px;
-  width: 100%;
+  width: 0%;
   background: #00b2ff;
-  transition: ease-in-out all 0.3s;
+  transition: width 0.3s ease-in-out;
+}
+body nav ul li:hover:after, body nav ul li:active:after {
+  width: 100%;
 }
 body nav ul li:hover a, body nav ul li:active a {
   color: #443dff;
