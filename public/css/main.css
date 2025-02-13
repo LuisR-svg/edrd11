@@ -25,6 +25,16 @@ body nav ul li a {
   display: inline-block;
   margin: auto;
 }
+body nav ul li a:hover, body nav ul li a:active {
+  color: #443dff;
+}
+body nav ul li a:hover ::after, body nav ul li a:active ::after {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: #00b2ff;
+  transition: ease-in-out all 0.3s;
+}
 body .home {
   font-family: "Inter";
   font-weight: 400;
