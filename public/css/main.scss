@@ -109,14 +109,18 @@ $accent: #ffffff;
                 width: calc(100% - 5px);
                 border: solid $secondary-color 1px;
                 background: transparent;
+                color: $text;
                 &:not(:placeholder-shown):valid{
                     outline-color: green;
+                    background: transparent;
                 }
                 &:not(:placeholder-shown):invalid{
                     outline-color: red;
+                    background: transparent;
                 }
                 &:focus:invalid{
-                color: grba(red, 07);
+                color: grba(red, 0.7);
+                background: transparent;
                 }
                 &:hover,
                 &:active{
