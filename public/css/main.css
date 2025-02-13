@@ -64,27 +64,33 @@
   width: calc(100% - 5px);
   border: solid #443dff 1px;
   background: transparent;
+  color: #ffffff;
 }
 .home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):valid, .home .form-container .login-form .input-box input[type=text]:not(:-moz-placeholder-shown):valid, .home .form-container .login-form .input-box textarea:not(:-moz-placeholder-shown):valid {
   outline-color: green;
+  background: transparent;
 }
 .home .form-container .login-form .input-box input:not(:placeholder-shown):valid,
 .home .form-container .login-form .input-box input[type=text]:not(:placeholder-shown):valid,
 .home .form-container .login-form .input-box textarea:not(:placeholder-shown):valid {
   outline-color: green;
+  background: transparent;
 }
 .home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):invalid, .home .form-container .login-form .input-box input[type=text]:not(:-moz-placeholder-shown):invalid, .home .form-container .login-form .input-box textarea:not(:-moz-placeholder-shown):invalid {
   outline-color: red;
+  background: transparent;
 }
 .home .form-container .login-form .input-box input:not(:placeholder-shown):invalid,
 .home .form-container .login-form .input-box input[type=text]:not(:placeholder-shown):invalid,
 .home .form-container .login-form .input-box textarea:not(:placeholder-shown):invalid {
   outline-color: red;
+  background: transparent;
 }
 .home .form-container .login-form .input-box input:focus:invalid,
 .home .form-container .login-form .input-box input[type=text]:focus:invalid,
 .home .form-container .login-form .input-box textarea:focus:invalid {
-  color: grba(red, 7);
+  color: grba(red, 0.7);
+  background: transparent;
 }
 .home .form-container .login-form .input-box input:hover, .home .form-container .login-form .input-box input:active,
 .home .form-container .login-form .input-box input[type=text]:hover,
