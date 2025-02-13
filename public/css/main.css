@@ -7,10 +7,23 @@ body nav {
   background: #020969;
   margin: auto;
   z-index: 9;
+  overflow: hidden;
+}
+body nav ul {
+  margin: 0;
 }
 body nav ul li {
   list-style-type: none;
+  float: left;
+  margin: 20px;
+  padding: 10px;
+  vertical-align: middle;
+}
+body nav ul li a {
   color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
 }
 body .home {
   font-family: "Inter";
