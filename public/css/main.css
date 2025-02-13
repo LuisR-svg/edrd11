@@ -5,13 +5,16 @@
   margin: 0;
   padding: 0;
   height: 100vh;
-  background: #020969;
+  background: src("/images/bg.jpg");
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
 }
 .home h1, .home h2, .home h3, .home h4, .home h5 {
   font-family: "Inter";
   font-weight: 700;
   color: #ffffff;
+  margin: 0;
 }
 .home h1 {
   font-size: 4.21rem;
