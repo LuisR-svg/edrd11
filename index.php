@@ -22,7 +22,7 @@
                     <h5>password</h5>
                     <div class="input-box">
                 
-                        <input type="password" name="password" required placeholder="Enter your password" minlength="6">
+                        <input type="password" name="password" required placeholder="Enter your password" minlength="3">
                         <i class="fa-solid fa-lock"></i>
                     </div>
                 </div>  
