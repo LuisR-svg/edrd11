@@ -19,10 +19,10 @@ body nav ul li {
   padding: 10px;
   vertical-align: middle;
 }
-body nav ul li:hover, body nav ul li:active {
+body nav ul li:hover + a, body nav ul li:active + a {
   color: #443dff;
 }
-body nav ul li:hover ::after, body nav ul li:active ::after {
+body nav ul li:hover + a ::after, body nav ul li:active + a ::after {
   content: "";
   height: 1px;
   width: 100%;
