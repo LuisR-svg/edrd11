@@ -8,33 +8,35 @@
     <link rel="stylesheet" href="/public/css/main.css">
     <title>EDRD11</title>
 </head>
-<body class="home">
+<body class="home-page">
     <nav>
        <ol>
         <li> <a href="app/controllers/logout.php">Logout</a></li>
        </ol>
     </nav>
-<main class="form-container">
-    <form method="POST" action="app/controllers/login.php" class="login-form">
-        <h1>Login</h1>
-          <div class="input-container">
-                <h5>User Name</h5>
-            <div class="input-box">                 
-                    <input type="text" name="username" required placeholder="Enter your username">
-                    <i class="fa-solid fa-user-tie"></i>
-                </div>
-          </div>
-          <div class="input-container">
-                <h5>password</h5>
-                <div class="input-box">
-            
-                    <input type="password" name="password" required placeholder="Enter your password" minlength="6">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-            </div>  
-            <button type="submit">Login</button>       
-    </form>
-</main>
+    <div class="home">
+    <main class="form-container">
+        <form method="POST" action="app/controllers/login.php" class="login-form">
+            <h1>Login</h1>
+            <div class="input-container">
+                    <h5>User Name</h5>
+                <div class="input-box">                 
+                        <input type="text" name="username" required placeholder="Enter your username">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+            </div>
+            <div class="input-container">
+                    <h5>password</h5>
+                    <div class="input-box">
+                
+                        <input type="password" name="password" required placeholder="Enter your password" minlength="6">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                </div>  
+                <button type="submit">Login</button>       
+        </form>
+    </main>
+</div>
 
 
 <form method="POST" action="app/views/register.php">
