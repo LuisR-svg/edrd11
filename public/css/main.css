@@ -52,7 +52,7 @@
   flex-wrap: nowrap;
 }
 .home .form-container .login-form .input-box input {
-  min-height: 19px;
+  min-height: 20px;
   padding: 10px;
   margin: 10px auto;
   border-radius: 0.5rem;
@@ -82,7 +82,7 @@
   position: absolute;
   right: 25px;
   top: 50%;
-  transform: translate(0, -12px);
+  transform: translate(0, -50%);
 }
 .home .form-container button {
   padding: 0.5em 3em;
