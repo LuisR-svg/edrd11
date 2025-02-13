@@ -17,13 +17,15 @@
 <main class="form-container">
     <form method="POST" action="app/controllers/login.php" class="login-form">
         <h1>Login</h1>
+        <h5>User Name</h5>
            <div class="input-box"> 
-            <h3>User Name</h3>
+            
                 <input type="text" name="username" required placeholder="Enter your username">
                 <i class="fa-solid fa-user-tie"></i>
             </div>
+            <h5>password</h5>
             <div class="input-box">
-            <h3>password</h3>
+         
                 <input type="password" name="password" required placeholder="Enter your password" minlength="6">
                 <i class="fa-solid fa-lock"></i>
             </div>
