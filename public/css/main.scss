@@ -61,21 +61,20 @@ body{
                 position: relative;
                 padding: 20px;
                 vertical-align: middle;   
-                
-                &::after {
+                &:after{
                     content: "";
                     position: absolute;
                     left: 0;
                     bottom: -5px;
                     height: 1px;
-                    width: 0%;  // Start with 0 width
+                    width: 0%;   
                     background: $accent;
-                    transition: width 0.3s ease-in-out; // Animate width
-                }  
+                    transition: ease-in-out all .3s;              
+                    }
                 &:hover,
                 &:active{
-                    &:after{
-                        width: 100%;
+                    &:after{                        
+                        width: 100%;                       
                         }
                     a{
                     color: $secondary-color;                   
