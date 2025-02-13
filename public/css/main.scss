@@ -109,14 +109,19 @@ body{
         @media(max-width:768px){
             width: calc(90% - 10px);
         }
-        h1{
-            margin: auto;
+        .form-header{
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
             position: absolute;
             top: -65%;
+            h1{
+                margin: auto;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                }
         }
     .login-form{
         display: flex;
@@ -127,6 +132,7 @@ body{
         padding: 20px;           
         h5{
             text-transform: capitalize;
+            margin: 10px;
         }
         .input-container{
             display: flex;
@@ -150,7 +156,6 @@ body{
                     border-radius: .5rem;
                     width: calc(90% - 10px);
                     border: solid $primary-color 1px;
-                    margin: 0;
                     &:not(:placeholder-shown):valid{
                         outline-color: green;
                         background: transparent;
