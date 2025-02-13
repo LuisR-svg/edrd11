@@ -63,9 +63,9 @@ body{
                 vertical-align: middle;     
                 &:hover,
                 &:active{
-                    + a{
+                    a{
                     color: $secondary-color;
-                    ::after{
+                   &::after{
                         content: "";
                         height: 1px;
                         width: 100%;
