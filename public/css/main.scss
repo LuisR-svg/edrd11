@@ -71,7 +71,9 @@ body{
           }
         h1 {
             // font-size: 4.210rem;
-            font-size: clamp(2.210rem, 4.210rem, 5.210rem);
+            $base-font-size: 4.210rem;
+            $scale-factor: 1vw;
+            font-size: calc(#{$base-font-size} + #{$scale-factor});
         }
         h2 {
             font-size: 3.158rem;
