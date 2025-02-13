@@ -89,11 +89,15 @@ $accent: #ffffff;
         h1{
         
         }
+        h5{
+            text-transform: capitalize;
+        }
          .input-box{
             position: relative;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             flex-wrap: nowrap;
+           
 
             input{
                 min-height: 20px;
@@ -101,7 +105,8 @@ $accent: #ffffff;
                 margin: 10px auto;
                 border-radius: .5rem;
                 width: calc(100% - 5px);
-                border: none;
+                border: solid $secondary-color 1;
+                background: transparent;
                 &:not(:placeholder-shown):valid{
                     outline-color: green;
                 }
@@ -110,6 +115,11 @@ $accent: #ffffff;
                 }
                 &:focus:invalid{
                 color: grba(red, 07);
+                }
+                &:hover,
+                &:active{
+                    transform: translate(0, -3px);
+                    box-shadow: 0 20px 80px -10px $secondary-color;
                 }
             }
             .fa-solid, .fa , .fas{
