@@ -99,7 +99,9 @@ $accent: #ffffff;
             flex-wrap: nowrap;
            
 
-            input{
+            input, 
+            input[type="text"], 
+            textarea {
                 min-height: 20px;
                 padding: 10px;
                 margin: 10px auto;
@@ -125,7 +127,7 @@ $accent: #ffffff;
                 }
                 &:hover + i,
                 &:active + i{
-                    transform: translate(0, -3px);
+                    transform: translate(0, -10px);
                     // box-shadow: 0 20px 80px -10px $secondary-color;
                 }
 

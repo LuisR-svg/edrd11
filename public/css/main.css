@@ -54,7 +54,9 @@
   flex-direction: column;
   flex-wrap: nowrap;
 }
-.home .form-container .login-form .input-box input {
+.home .form-container .login-form .input-box input,
+.home .form-container .login-form .input-box input[type=text],
+.home .form-container .login-form .input-box textarea {
   min-height: 20px;
   padding: 10px;
   margin: 10px auto;
@@ -63,27 +65,41 @@
   border: solid #443dff 1px;
   background: transparent;
 }
-.home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):valid {
+.home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):valid, .home .form-container .login-form .input-box input[type=text]:not(:-moz-placeholder-shown):valid, .home .form-container .login-form .input-box textarea:not(:-moz-placeholder-shown):valid {
   outline-color: green;
 }
-.home .form-container .login-form .input-box input:not(:placeholder-shown):valid {
+.home .form-container .login-form .input-box input:not(:placeholder-shown):valid,
+.home .form-container .login-form .input-box input[type=text]:not(:placeholder-shown):valid,
+.home .form-container .login-form .input-box textarea:not(:placeholder-shown):valid {
   outline-color: green;
 }
-.home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):invalid {
+.home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):invalid, .home .form-container .login-form .input-box input[type=text]:not(:-moz-placeholder-shown):invalid, .home .form-container .login-form .input-box textarea:not(:-moz-placeholder-shown):invalid {
   outline-color: red;
 }
-.home .form-container .login-form .input-box input:not(:placeholder-shown):invalid {
+.home .form-container .login-form .input-box input:not(:placeholder-shown):invalid,
+.home .form-container .login-form .input-box input[type=text]:not(:placeholder-shown):invalid,
+.home .form-container .login-form .input-box textarea:not(:placeholder-shown):invalid {
   outline-color: red;
 }
-.home .form-container .login-form .input-box input:focus:invalid {
+.home .form-container .login-form .input-box input:focus:invalid,
+.home .form-container .login-form .input-box input[type=text]:focus:invalid,
+.home .form-container .login-form .input-box textarea:focus:invalid {
   color: grba(red, 7);
 }
-.home .form-container .login-form .input-box input:hover, .home .form-container .login-form .input-box input:active {
+.home .form-container .login-form .input-box input:hover, .home .form-container .login-form .input-box input:active,
+.home .form-container .login-form .input-box input[type=text]:hover,
+.home .form-container .login-form .input-box input[type=text]:active,
+.home .form-container .login-form .input-box textarea:hover,
+.home .form-container .login-form .input-box textarea:active {
   transform: translate(0, -3px);
   box-shadow: 0 20px 80px -10px #443dff;
 }
-.home .form-container .login-form .input-box input:hover + i, .home .form-container .login-form .input-box input:active + i {
-  transform: translate(0, -3px);
+.home .form-container .login-form .input-box input:hover + i, .home .form-container .login-form .input-box input:active + i,
+.home .form-container .login-form .input-box input[type=text]:hover + i,
+.home .form-container .login-form .input-box input[type=text]:active + i,
+.home .form-container .login-form .input-box textarea:hover + i,
+.home .form-container .login-form .input-box textarea:active + i {
+  transform: translate(0, -10px);
 }
 .home .form-container .login-form .input-box .fa-solid, .home .form-container .login-form .input-box .fa, .home .form-container .login-form .input-box .fas {
   color: #443dff;
