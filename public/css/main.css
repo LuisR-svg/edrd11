@@ -20,12 +20,12 @@ body .home {
   overflow: hidden;
 }
 body .home h1, body .home h2, body .home h3, body .home h4, body .home h5 {
-  font-family: "aviano-copper-variable", sans-serif;
   font-weight: 700;
   color: #ffffff;
   margin: 0;
 }
 body .home h1 {
+  font-family: "aviano-copper-variable", sans-serif;
   font-size: calc(50px + 50 * (100vw - 320px) / 1600);
 }
 body .home h2 {
@@ -67,6 +67,8 @@ body .home .form-container h1 {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: -65%;
 }
 body .home .form-container .login-form {
   display: flex;
@@ -101,8 +103,7 @@ body .home .form-container .login-form .input-container .input-box textarea {
   border-radius: 0.5rem;
   width: calc(90% - 10px);
   border: solid #020969 1px;
-  background: transparent;
-  color: #ffffff;
+  margin: 0;
 }
 body .home .form-container .login-form .input-container .input-box input:not(:-moz-placeholder-shown):valid, body .home .form-container .login-form .input-container .input-box input[type=text]:not(:-moz-placeholder-shown):valid, body .home .form-container .login-form .input-container .input-box textarea:not(:-moz-placeholder-shown):valid {
   outline-color: green;
