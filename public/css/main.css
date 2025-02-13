@@ -27,13 +27,13 @@ body .home h1, body .home h2, body .home h3, body .home h4, body .home h5 {
 }
 body .home h1 {
   font-family: "aviano-copper-variable", sans-serif;
-  font-size: calc(50px + 50 * (100vw - 320px) / 1600);
-}
-body .home h2 {
   font-size: calc(40px + 50 * (100vw - 320px) / 1600);
 }
-body .home h3 {
+body .home h2 {
   font-size: calc(30px + 50 * (100vw - 320px) / 1600);
+}
+body .home h3 {
+  font-size: calc(25px + 50 * (100vw - 320px) / 1600);
 }
 body .home h4 {
   font-size: calc(20px + 50 * (100vw - 320px) / 1600);
