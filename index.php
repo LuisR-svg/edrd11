@@ -18,11 +18,13 @@
     <form method="POST" action="app/controllers/login.php" class="login-form">
         <h1>Login</h1>
            <div class="input-box"> 
-                <input type="text" name="username" required placeholder="Username">
+            <h3>User Name</h3>
+                <input type="text" name="username" required placeholder="Enter your username">
                 <i class="fa-solid fa-user-tie"></i>
             </div>
             <div class="input-box">
-                <input type="password" name="password" required placeholder="Password" minlength="6">
+            <h3>password</h3>
+                <input type="password" name="password" required placeholder="Enter your password" minlength="6">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <button type="submit">Login</button>       
