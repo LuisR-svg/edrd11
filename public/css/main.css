@@ -6,6 +6,7 @@ body nav {
   position: fixed;
   background: #020969;
   margin: auto;
+  z-index: 9;
 }
 body .home {
   font-family: "Inter";
@@ -52,7 +53,7 @@ body .home .form-container {
   width: calc(40% - 10px);
   margin: 5px auto;
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -72,14 +73,11 @@ body .home .form-container .form-header {
 }
 body .home .form-container .form-header h1 {
   margin: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 }
 body .home .form-container .form-header h1 i {
   font-size: calc(50px + 50 * (100vw - 320px) / 1600);
-  color: white;
+  color: #020969;
+  color: #ffffff;
 }
 body .home .form-container .login-form {
   display: flex;

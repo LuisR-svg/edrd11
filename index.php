@@ -22,7 +22,7 @@
           <div class="form-header">
                 
                 <h1>M<i class="fa-solid fa-compass-drafting"></i>sonic Treasury</h1>
-                <h2>Estrella Del Rey David #11</h2>
+                <h2>Estrell<i class="fa-sharp-duotone fa-solid fa-star-of-david"></i> Del Rey David #11</h2>
           </div>
             <div class="input-container">
                     <h5>User Name</h5>

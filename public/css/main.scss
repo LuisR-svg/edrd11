@@ -6,7 +6,7 @@ $text: #ffffff;
 $background: #0c142c;
 $primary-color: #020969;
 $secondary-color: #443dff;
-$accent: #ffffff;
+$accent: #00b2ff;
 // ==============================Global variables end==============================================================================================
 
 // ==============================Global Mixins==============================================================================================
@@ -51,6 +51,7 @@ body{
         position: fixed;
         background: $primary-color;
         margin: auto;
+        z-index: 9;
     }
 .home { 
     font-family: 'Inter';
@@ -103,7 +104,8 @@ body{
         width: calc(40% - 10px);
         margin: 5px auto;
         position: absolute;
-        top: 50%;
+        // top: 50%;
+        top: 60%;
         left: 50%;
         transform: translate(-50%, -50%);
         @media(max-width:768px){
@@ -120,13 +122,14 @@ body{
           
             h1{
                 margin: auto;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
+                // display: flex;
+                // flex-direction: row;
+                // align-items: center;
+                // justify-content: center;
                     i{
                         font-size: calc(50px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
-                        color: white;
+                        color:$primary-color;
+                        color: $text;
                     }
                 }
         }
