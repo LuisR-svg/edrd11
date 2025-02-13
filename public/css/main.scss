@@ -55,18 +55,24 @@ body{
         overflow: hidden;
         ul{
             margin: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-around;
             li{
                 list-style-type: none;   
                 float: left;
                 position: relative;
-                padding: 20px;
+                padding: 15px;
                 vertical-align: middle;   
+                margin: 0 5px;
                 &:after{
                     content: "";
                     position: absolute;
                     left: 0;
-                    bottom: -5px;
-                    height: 1px;
+                    bottom: 14px;
+                    height: 2px;
                     width: 0%;   
                     background: $accent;
                     transition: ease-in-out all .3s;              
@@ -84,10 +90,9 @@ body{
                     color: $text;
                     text-decoration: none;
                     display: inline-block;
-                    margin: auto;
-                   
+                    margin: auto; 
+                    font-size: calc(15px + (30 - 15)*((100vw - 320px) /(1920 - 320))); //h5 font size       
                 }
-
             }
         }
     }

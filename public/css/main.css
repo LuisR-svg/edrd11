@@ -11,20 +11,26 @@ body nav {
 }
 body nav ul {
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-around;
 }
 body nav ul li {
   list-style-type: none;
   float: left;
   position: relative;
-  padding: 20px;
+  padding: 15px;
   vertical-align: middle;
+  margin: 0 5px;
 }
 body nav ul li:after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -5px;
-  height: 1px;
+  bottom: 14px;
+  height: 2px;
   width: 0%;
   background: #00b2ff;
   transition: ease-in-out all 0.3s;
@@ -40,6 +46,7 @@ body nav ul li a {
   text-decoration: none;
   display: inline-block;
   margin: auto;
+  font-size: calc(15px + 15 * (100vw - 320px) / 1600);
 }
 body .home {
   font-family: "Inter";
