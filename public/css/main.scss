@@ -71,8 +71,8 @@ body{
           }
         h1 {
             // font-size: 4.210rem;
-            $min-font-size: 4.210rem; // Smallest font size
-            $max-font-size: 5.210rem; // Largest font size
+            $min-font-size: 14px; // Smallest font size
+            $max-font-size: 24px; // Largest font size
             $scaling-factor: 1vw; // Adjust font size based on viewport width
             font-size: calc(#{$min-font-size} + (#{$max-font-size} - #{$min-font-size}) * ((100vw - 320px) / (1920px - 320px)));
         }
