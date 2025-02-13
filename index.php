@@ -18,7 +18,11 @@
     <div class="home">
     <main class="form-container">
         <form method="POST" action="app/controllers/login.php" class="login-form">
-            <h1>Login</h1>
+          <div class="form-header">
+                <span><img src="/public/images/compas.gif" alt=""> </span>
+                <h1>Masonic Treasury</h1>
+                <h2>Estrella Del Rey David #11</h2>
+          </div>
             <div class="input-container">
                     <h5>User Name</h5>
                 <div class="input-box">                 
