@@ -10,7 +10,7 @@
     <title>EDRD11</title>
 </head>
 <body class="home-page">
-    <?php include '/app/helpers/navBar.php'; ?>
+    <?php include 'app/helpers/navBar.php'; ?>
     <div class="home">
     <main class="form-container">
         <form method="POST" action="app/controllers/login.php" class="login-form">
