@@ -83,7 +83,7 @@
   box-shadow: 0 20px 80px -10px #443dff;
 }
 .home .form-container .login-form .input-box .fa-solid, .home .form-container .login-form .input-box .fa, .home .form-container .login-form .input-box .fas {
-  color: red;
+  color: #443dff;
   font-size: 20px;
   width: 15px;
   height: 15px;
@@ -91,6 +91,10 @@
   right: 25px;
   top: 50%;
   transform: translate(0, -50%);
+}
+.home .form-container .login-form .input-box .fa-solid:hover, .home .form-container .login-form .input-box .fa-solid:active, .home .form-container .login-form .input-box .fa:hover, .home .form-container .login-form .input-box .fa:active, .home .form-container .login-form .input-box .fas:hover, .home .form-container .login-form .input-box .fas:active {
+  transform: translate(0, -3px);
+  box-shadow: 0 20px 80px -10px #443dff;
 }
 .home .form-container button {
   padding: 0.5em 3em;

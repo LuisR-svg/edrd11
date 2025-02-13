@@ -120,10 +120,11 @@ $accent: #ffffff;
                 &:active{
                     transform: translate(0, -3px);
                     box-shadow: 0 20px 80px -10px $secondary-color;
+                   
                 }
             }
             .fa-solid, .fa , .fas{
-                color: red;
+                color: $secondary-color;
                 font-size: 20px;
                 width: 15px;
                 height: 15px; 
@@ -131,6 +132,12 @@ $accent: #ffffff;
                 right: 25px;
                 top: 50%;
                 transform: translate(0, -50%);
+                &:hover,
+                &:active{
+                    transform: translate(0, -3px);
+                    box-shadow: 0 20px 80px -10px $secondary-color;
+                   
+                }
             }
          }
            }
