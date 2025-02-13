@@ -19,21 +19,21 @@ body nav ul li {
   padding: 10px;
   vertical-align: middle;
 }
-body nav ul li a {
-  color: #ffffff;
-  text-decoration: none;
-  display: inline-block;
-  margin: auto;
-}
-body nav ul li a:hover, body nav ul li a:active {
+body nav ul li:hover, body nav ul li:active {
   color: #443dff;
 }
-body nav ul li a:hover ::after, body nav ul li a:active ::after {
+body nav ul li:hover ::after, body nav ul li:active ::after {
   content: "";
   height: 1px;
   width: 100%;
   background: #00b2ff;
   transition: ease-in-out all 0.3s;
+}
+body nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+  margin: auto;
 }
 body .home {
   font-family: "Inter";
