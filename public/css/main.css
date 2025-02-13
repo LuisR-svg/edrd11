@@ -18,10 +18,7 @@ body nav ul li {
   padding: 20px;
   vertical-align: middle;
 }
-body nav ul li:hover a, body nav ul li:active a {
-  color: #443dff;
-}
-body nav ul li:hover a:after, body nav ul li:active a:after {
+body nav ul li:hover:after, body nav ul li:active:after {
   content: "";
   position: absolute;
   left: 0;
@@ -30,6 +27,9 @@ body nav ul li:hover a:after, body nav ul li:active a:after {
   width: 100%;
   background: #00b2ff;
   transition: ease-in-out all 0.3s;
+}
+body nav ul li:hover a, body nav ul li:active a {
+  color: #443dff;
 }
 body nav ul li a {
   color: #ffffff;
