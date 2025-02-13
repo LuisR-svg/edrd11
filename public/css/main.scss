@@ -52,6 +52,13 @@ body{
         background: $primary-color;
         margin: auto;
         z-index: 9;
+        ul{
+            li{
+                list-style-type: none;
+                color: $text;
+                
+            }
+        }
     }
 .home { 
     font-family: 'Inter';

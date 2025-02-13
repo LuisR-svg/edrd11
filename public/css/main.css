@@ -8,6 +8,10 @@ body nav {
   margin: auto;
   z-index: 9;
 }
+body nav ul li {
+  list-style-type: none;
+  color: #ffffff;
+}
 body .home {
   font-family: "Inter";
   font-weight: 400;
