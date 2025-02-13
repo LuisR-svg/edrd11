@@ -58,20 +58,24 @@ body{
             li{
                 list-style-type: none;   
                 float: left;
-                // margin: 20px;
+                position: relative;
                 padding: 20px;
-                vertical-align: middle;     
+                vertical-align: middle;   
+                
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -5px;
+                    height: 1px;
+                    width: 0%;  // Start with 0 width
+                    background: $accent;
+                    transition: width 0.3s ease-in-out; // Animate width
+                }  
                 &:hover,
                 &:active{
                     &:after{
-                        content: "";
-                        position: absolute;
-                        left: 0;
-                        bottom: -5px;
-                        height: 1px;
                         width: 100%;
-                        background: $accent;
-                        transition: ease-in-out all .3s;
                         }
                     a{
                     color: $secondary-color;                   
