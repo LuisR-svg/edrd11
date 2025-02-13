@@ -105,7 +105,7 @@ $accent: #ffffff;
                 margin: 10px auto;
                 border-radius: .5rem;
                 width: calc(100% - 5px);
-                border: solid $secondary-color 1;
+                border: solid $secondary-color 1px;
                 background: transparent;
                 &:not(:placeholder-shown):valid{
                     outline-color: green;
