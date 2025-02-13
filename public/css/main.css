@@ -132,6 +132,14 @@ body .home .form-container .login-form .input-container .input-box textarea:hove
 body .home .form-container .login-form .input-container .input-box textarea:active + i {
   transform: translate(0, -10px);
 }
+body .home .form-container .login-form .input-container .input-box input::-moz-placeholder, body .home .form-container .login-form .input-container .input-box input[type=text]::-moz-placeholder, body .home .form-container .login-form .input-container .input-box textarea::-moz-placeholder {
+  color: #020969;
+}
+body .home .form-container .login-form .input-container .input-box input::placeholder,
+body .home .form-container .login-form .input-container .input-box input[type=text]::placeholder,
+body .home .form-container .login-form .input-container .input-box textarea::placeholder {
+  color: #020969;
+}
 body .home .form-container .login-form .input-container .input-box .fa-solid, body .home .form-container .login-form .input-container .input-box .fa, body .home .form-container .login-form .input-container .input-box .fas {
   color: #020969;
   font-size: 20px;
