@@ -71,9 +71,9 @@ body{
           }
         h1 {
             // font-size: 4.210rem;
-            $min-font: 16px;
-            $max-font: 35px;
-            font-size: calc(#{$min-font} + (#{$max-font} - #{$min-font}) * ((100vw - 320px) / (1920 - 320)));
+    
+            font-size: calc(20px + (100 - 20) * ((100vw - 320px) / (1920 - 320)));
+         
         }
         h2 {
             font-size: 3.158rem;
@@ -85,7 +85,8 @@ body{
             font-size: 1.777rem;
         }
         h5 {
-            font-size: 1.333rem; 
+            // font-size: 1.333rem; 
+            font-size: calc(15px + (30 - 15)*((100vw - 320px) /(1920 - 320)));
         }
 
    .form-container{
@@ -103,6 +104,9 @@ body{
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        @media(max-width:768px){
+            width: calc(90% - 10px);
+        }
     .login-form{
         display: flex;
         flex-direction: column;

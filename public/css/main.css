@@ -26,7 +26,7 @@ body .home h1, body .home h2, body .home h3, body .home h4, body .home h5 {
   margin: 0;
 }
 body .home h1 {
-  font-size: calc(16px + (35px - 16px) * (100vw - 320px) / 1600);
+  font-size: calc(20px + 80 * (100vw - 320px) / 1600);
 }
 body .home h2 {
   font-size: 3.158rem;
@@ -38,7 +38,7 @@ body .home h4 {
   font-size: 1.777rem;
 }
 body .home h5 {
-  font-size: 1.333rem;
+  font-size: calc(15px + 15 * (100vw - 320px) / 1600);
 }
 body .home .form-container {
   background: rgba(255, 255, 255, 0.1);
@@ -55,6 +55,11 @@ body .home .form-container {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+@media (max-width: 768px) {
+  body .home .form-container {
+    width: calc(90% - 10px);
+  }
 }
 body .home .form-container .login-form {
   display: flex;
