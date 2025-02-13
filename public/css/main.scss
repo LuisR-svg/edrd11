@@ -71,10 +71,11 @@ body{
           }
         h1 {
             // font-size: 4.210rem;
-            $min-font-size: 14px; // Smallest font size
-            $max-font-size: 24px; // Largest font size
-            $scaling-factor: 1vw; // Adjust font size based on viewport width
-            font-size: calc(#{$min-font-size} + (#{$max-font-size} - #{$min-font-size}) * ((100vw - 320px) / (1920px - 320px)));
+            $min-font-size: 14px; // Minimum font size
+            $max-font-size: 24px; // Maximum font size
+            $min-width: 320px; // Minimum viewport width (mobile)
+            $max-width: 1920px; // Maximum viewport width (desktop)
+            font-size: calc(#{$min-font-size} + (#{ $max-font-size } - #{ $min-font-size }) * ((100vw - #{ $min-width }) / (#{ $max-width } - #{ $min-width })));
         }
         h2 {
             font-size: 3.158rem;
