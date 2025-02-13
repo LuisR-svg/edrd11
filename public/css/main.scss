@@ -16,6 +16,7 @@ $accent: #ffffff;
         font-size: 1.2rem;
         z-index: 2;
         white-space: nowrap;
+        border: none;
         &:hover{
             transform: translate(0, -3px);
             box-shadow: 0 20px 80px -10px $primary-color;
@@ -29,6 +30,7 @@ $accent: #ffffff;
     display: inline-block;
     font-size: 1.2rem;
     z-index: 1;
+    border: none;
     cursor: pointer;
     transition: transform ease 0.2s;
     white-space: nowrap;               
@@ -92,12 +94,14 @@ $accent: #ffffff;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
+
             input{
                 min-height: 19px;
                 padding: 10px;
                 margin: 10px auto;
                 border-radius: .5rem;
-                width: calc(80% - 3px);
+                width: calc(100% - 5px);
+                border: none;
                 &:not(:placeholder-shown):valid{
                     outline-color: green;
                 }
@@ -113,10 +117,10 @@ $accent: #ffffff;
                 font-size: 15px;
                 width: 15px;
                 height: 15px; 
-                background: white;
-                right: 17px;
+                position: absolute;               
+                right: 25px;
                 top: 50%;
-                transform: translate(0, -7px);
+                transform: translate(0, -12px);
             }
          }
            }
