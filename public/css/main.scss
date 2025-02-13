@@ -60,23 +60,24 @@ body{
                 float: left;
                 margin: 20px;
                 padding: 10px;
-                vertical-align: middle;             
+                vertical-align: middle;     
+                &:hover,
+                &:active{
+                    color: $secondary-color;
+                    ::after{
+                        content: "";
+                        height: 1px;
+                        width: 100%;
+                        background: $accent;
+                        transition: ease-in-out all .3s;
+                    }
+                }       
                 a{
                     color: $text;
                     text-decoration: none;
                     display: inline-block;
                     margin: auto;
-                    &:hover,
-                    &:active{
-                        color: $secondary-color;
-                        ::after{
-                            content: "";
-                            height: 1px;
-                            width: 100%;
-                            background: $accent;
-                            transition: ease-in-out all .3s;
-                        }
-                    }
+                   
                 }
 
             }
