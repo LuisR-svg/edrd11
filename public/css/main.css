@@ -60,7 +60,7 @@
   margin: 10px auto;
   border-radius: 0.5rem;
   width: calc(100% - 5px);
-  border: solid #443dff 1;
+  border: solid #443dff 1px;
   background: transparent;
 }
 .home .form-container .login-form .input-box input:not(:-moz-placeholder-shown):valid {
