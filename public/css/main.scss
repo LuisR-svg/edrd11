@@ -124,6 +124,10 @@ body{
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
+                    i{
+                        font-size: calc(50px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
+                        color: white;
+                    }
                 }
         }
     .login-form{
