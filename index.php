@@ -14,12 +14,13 @@
        <ol>
         <li> <a href="app/controllers/logout.php">Logout</a></li>
        </ol>
+       <!-- <span><img src="/public/images/compas.gif" alt=""> </span> -->
     </nav>
     <div class="home">
     <main class="form-container">
         <form method="POST" action="app/controllers/login.php" class="login-form">
           <div class="form-header">
-                <span><img src="/public/images/compas.gif" alt=""> </span>
+                <i class="fa-solid fa-compass-drafting"></i>
                 <h1>Masonic Treasury</h1>
                 <h2>Estrella Del Rey David #11</h2>
           </div>
