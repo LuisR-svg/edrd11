@@ -65,7 +65,7 @@ body{
                 &:active{
                     a{
                     color: $secondary-color;
-                   &::after{
+                   &:after{
                         content: "";
                         height: 1px;
                         width: 100%;

@@ -22,7 +22,7 @@ body nav ul li {
 body nav ul li:hover a, body nav ul li:active a {
   color: #443dff;
 }
-body nav ul li:hover a::after, body nav ul li:active a::after {
+body nav ul li:hover a:after, body nav ul li:active a:after {
   content: "";
   height: 1px;
   width: 100%;
