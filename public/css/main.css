@@ -19,7 +19,7 @@ body nav ul li {
   padding: 20px;
   vertical-align: middle;
 }
-body nav ul li::after {
+body nav ul li:after {
   content: "";
   position: absolute;
   left: 0;
@@ -27,7 +27,7 @@ body nav ul li::after {
   height: 1px;
   width: 0%;
   background: #00b2ff;
-  transition: width 0.3s ease-in-out;
+  transition: ease-in-out all 0.3s;
 }
 body nav ul li:hover:after, body nav ul li:active:after {
   width: 100%;
