@@ -82,9 +82,8 @@
   transform: translate(0, -3px);
   box-shadow: 0 20px 80px -10px #443dff;
 }
-.home .form-container .login-form .input-box input:hover + .fa, .home .form-container .login-form .input-box input:hover + .fasolid, .home .form-container .login-form .input-box input:hover + .fas {
+.home .form-container .login-form .input-box input:hover + i, .home .form-container .login-form .input-box input:active + i {
   transform: translate(0, -3px);
-  box-shadow: 0 20px 80px -10px #443dff;
 }
 .home .form-container .login-form .input-box .fa-solid, .home .form-container .login-form .input-box .fa, .home .form-container .login-form .input-box .fas {
   color: #443dff;

@@ -120,15 +120,16 @@ $accent: #ffffff;
                 &:active{
                     transform: translate(0, -3px);
                     box-shadow: 0 20px 80px -10px $secondary-color;
+                    
                    
                 }
-
-                &:hover + .fa,
-                &:hover + .fasolid,
-                &:hover + .fas{
+                &:hover + i,
+                &:active + i{
                     transform: translate(0, -3px);
-                    box-shadow: 0 20px 80px -10px $secondary-color;
+                    // box-shadow: 0 20px 80px -10px $secondary-color;
                 }
+
+                
             }
             .fa-solid, .fa , .fas{
                 color: $secondary-color;
