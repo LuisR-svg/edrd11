@@ -72,17 +72,20 @@ body{
         h1 {
             // font-size: 4.210rem;
     
-            font-size: calc(20px + (100 - 20) * ((100vw - 320px) / (1920 - 320)));
+            font-size: calc(50px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
          
         }
         h2 {
-            font-size: 3.158rem;
+            // font-size: 3.158rem;
+            font-size: calc(40px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
         }
         h3 {
-            font-size: 2.369rem;
+            // font-size: 2.369rem;
+            font-size: calc(30px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
         }
         h4 {
-            font-size: 1.777rem;
+            // font-size: 1.777rem;
+            font-size: calc(20px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
         }
         h5 {
             // font-size: 1.333rem; 
