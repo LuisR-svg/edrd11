@@ -16,7 +16,7 @@
                 <div class="input-box">                 
                         <input type="text" name="username" required placeholder="Enter your username">
                         <i class="fa-solid fa-user-tie"></i>
-                    </div>
+                    </div>  
             </div>
             <div class="input-container">
                     <h5>password</h5>
@@ -26,7 +26,7 @@
                         <i class="fa-solid fa-lock"></i>
                     </div>
                 </div>  
-                <button type="submit">Login</button>       
+                <button type="submit">Login <span></span> </button>       
         </form>
     </main>
 </div>
