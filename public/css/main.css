@@ -14,11 +14,11 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: calc(4vw - 5px) calc(3vw - 5px);
-  border-radius: 0 50px;
 }
 .home-page main .left-side .login-form {
   background: rgba(29, 29, 29, 0.6);
+  padding: calc(4vw - 5px) calc(3vw - 5px);
+  border-radius: 0 50px;
 }
 .home-page main .left-side .input-container h5 {
   font-family: "aviano-copper-variable", sans-serif;
