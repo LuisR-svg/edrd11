@@ -23,4 +23,5 @@
 }
 .home-page .home .form-container .right-side {
   width: calc(50% - 10px);
+  background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
 }
