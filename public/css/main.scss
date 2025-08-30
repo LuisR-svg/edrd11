@@ -280,9 +280,11 @@ $font-family: "aviano-copper-variable", sans-serif;
             justify-content: center;
             flex-direction: column;
             .login-form{
-            background: rgba(#1D1D1D, 0.6);            }
+            background: rgba(#1D1D1D, 0.6);    
             padding: calc(4vw - 5px) calc(3vw - 5px);
-            border-radius: 0 50px;
+            border-radius: 0 50px;         
+                        }
+           
             .input-container{
                 h5{
                     font-family: $font-family;
