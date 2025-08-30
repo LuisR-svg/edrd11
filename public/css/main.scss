@@ -282,13 +282,18 @@ $font-family: "aviano-copper-variable", sans-serif;
                 flex-wrap: wrap;
             form{
                 background: black;
-                width: calc(50% - 10px);
+                width: 100vw;
                 height: 100vh;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
                 justify-content: center;
                 .form-bg{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
                     .form-header{
 
                     }

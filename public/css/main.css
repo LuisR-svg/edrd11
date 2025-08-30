@@ -17,12 +17,19 @@
 }
 .home-page .home .form-container form {
   background: black;
-  width: calc(50% - 10px);
+  width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+.home-page .home .form-container form .form-bg {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 .home-page .home .form-container .right-side {
   width: calc(50% - 10px);
