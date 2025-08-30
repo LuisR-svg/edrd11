@@ -42,11 +42,12 @@
 <body class="home-page">
 <main>
         <div class="left-side">
-            <form method="POST" action="app/controllers/login.php" class="login-form">
-                    <div class="form-header">
+            <div class="form-header">
                         <h1>M<i class="fa-solid fa-compass-drafting"></i>sonic Treasury</h1>
                         <h2>Estrell<i class="fa-sharp-duotone fa-solid fa-star-of-david"></i> Del Rey David #11</h2>
                     </div>
+            <form method="POST" action="app/controllers/login.php" class="login-form">
+                    
                     <div class="input-container">
                             <h5>User Name</h5>
                         <div class="input-box">                 
