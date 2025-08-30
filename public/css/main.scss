@@ -278,6 +278,7 @@ $font-family: "aviano-copper-variable", sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             .login-form{
             background: rgba(#1D1D1D, 0.6);            }
             padding: calc(4vw - 5px) calc(3vw - 5px);
@@ -285,13 +286,11 @@ $font-family: "aviano-copper-variable", sans-serif;
             .input-container{
                 h5{
                     font-family: $font-family;
-                    color: white;
-                    
+                    color: white;                   
 
                 }
                 .input-box{
                     width: 100%;
-
                 }
             }
         }
