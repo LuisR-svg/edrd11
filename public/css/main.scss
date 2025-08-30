@@ -278,9 +278,21 @@ $font-family: "aviano-copper-variable", sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            .form{
+            .login-form{
             background: rgba(#1D1D1D, 0.6);            }
+            padding: calc(4vw - 5px) calc(3vw - 5px);
+            border-radius: 0 50px;
+            .input-container{
+                h5{
+                    font-family: $font-family;
+                    color: white;
+                    
 
+                }
+                .input-box{
+
+                }
+            }
         }
         .right-side{
              width: calc(50% - 10px);
