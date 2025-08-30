@@ -20,8 +20,10 @@
 }
 .home-page .home .form-container form .left-side {
   width: calc(50% - 10px);
+  height: 100vh;
 }
 .home-page .home .form-container .right-side {
   width: calc(50% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
+  height: 100vh;
 }
