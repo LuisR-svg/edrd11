@@ -26,4 +26,7 @@
   width: calc(50% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
   height: 100vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
