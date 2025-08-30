@@ -4,16 +4,24 @@
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  background: black;
 }
 .home-page main .left-side {
   width: calc(50% - 10px);
+  height: 100vh;
   background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.home-page main .left-side .form {
+  background: rgba(29, 29, 29, 0.6);
 }
 .home-page main .right-side {
   width: calc(50% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
   height: 100vh;
-  background-position: center;
+  background-position: top left;
   background-size: cover;
   background-repeat: no-repeat;
 }
