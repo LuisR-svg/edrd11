@@ -23,6 +23,9 @@
   font-family: "aviano-copper-variable", sans-serif;
   color: white;
 }
+.home-page main .left-side .input-container .input-box {
+  width: 100%;
+}
 .home-page main .right-side {
   width: calc(50% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
