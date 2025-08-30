@@ -266,15 +266,30 @@ $secondary-color: white;
 $font-family: "aviano-copper-variable", sans-serif;
 
 .home-page{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     .home{
         .form-container{
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
             form{
+                background: black;
         .left-side{
+            width: calc(50% - 10px);
             
         }
             }
             .right-side{
-                
+                width: calc(50% - 10px);
+
             }
         }
     }
