@@ -1,37 +1,15 @@
 /* ----------------Login Form--------------------*/
-.home-page {
+.home-page main {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.home-page .home .form-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.home-page .home .form-container form {
-  background: black;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.home-page .home .form-container form .form-bg {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-evenly;
-  flex-wrap: wrap;
+  align-items: center;
 }
-.home-page .home .form-container .right-side {
+.home-page main .left-side {
+  width: calc(50% - 10px);
+  background: black;
+}
+.home-page main .right-side {
   width: calc(50% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
   height: 100vh;
