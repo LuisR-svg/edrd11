@@ -20,8 +20,7 @@
                     </div>  
             </div>
             <div class="input-container">
-          </div>
-                    <h5>password</h5>
+                           <h5>password</h5>
                     <div class="input-box">
                 
                         <input type="password" name="password" required placeholder="Enter your password" minlength="3">
