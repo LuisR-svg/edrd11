@@ -284,7 +284,16 @@ $font-family: "aviano-copper-variable", sans-serif;
                 background: black;
                 width: calc(50% - 10px);
                 height: 100vh;
-            
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                .form-header{
+
+                }
+                .input-container{
+                    
+                }
        
             }
             .right-side{
