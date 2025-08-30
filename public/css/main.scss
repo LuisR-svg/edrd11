@@ -273,21 +273,15 @@ $font-family: "aviano-copper-variable", sans-serif;
     height: 100vh;
     .home{
         .form-container{
-                width: 100vw;
-                height: 100vh;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: wrap;
-            form{
-                background: black;
+               background: black;
                 width: calc(50% - 10px);
                 height: 100vh;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+            form{
+                width: calc(80% - 10px);
                 .form-bg{
                     .form-header{
 
