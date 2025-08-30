@@ -17,8 +17,6 @@
 }
 .home-page .home .form-container form {
   background: black;
-}
-.home-page .home .form-container form .left-side {
   width: calc(50% - 10px);
   height: 100vh;
 }
