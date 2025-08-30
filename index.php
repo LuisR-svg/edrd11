@@ -26,9 +26,10 @@
                 
                         <input type="password" name="password" required placeholder="Enter your password" minlength="3">
                         <i class="fa-solid fa-lock"></i>
+                        <button type="submit">Login <span></span> </button>  
                     </div>
                 </div>  
-                <button type="submit">Login <span></span> </button>       
+                     
         </form>
         <div class="right-side"></div>
     </main>
