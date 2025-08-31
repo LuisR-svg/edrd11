@@ -53,17 +53,13 @@
   padding: calc(5vw - 5px) calc(3vw - 5px);
   border-radius: 0 60px;
   max-width: 100%;
+  min-width: 16vw;
 }
 .home-page main .left-side .login-form h2 {
   color: white;
   font-family: "aviano-copper-variable", sans-serif;
-  font-size: clamp(24px, 5vw, 36px);
+  font-size: clamp(17px, 3vw, 23px);
   text-transform: uppercase;
-}
-@media (max-width: 768px) {
-  .home-page main .left-side .login-form h2 {
-    text-align: center;
-  }
 }
 .home-page main .left-side .login-form .input-container {
   margin: 20px 0;
