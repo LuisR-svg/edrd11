@@ -89,7 +89,13 @@
   color: white;
   padding-left: 10px;
 }
-.home-page main .left-side .login-form .input-container .input-box button {
+.home-page main .left-side .login-form .input-container .input-box input:-webkit-autofill {
+  background: rgba(29, 29, 29, 0.6);
+}
+.home-page main .left-side .login-form .input-container .input-box input:autofill {
+  background: rgba(29, 29, 29, 0.6);
+}
+.home-page main .left-side .login-form .input-container button {
   padding: 10px 0;
   background: white;
   border-radius: 0.5rem;
