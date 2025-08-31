@@ -332,9 +332,10 @@ $font-family: "aviano-copper-variable", sans-serif;
               background: rgba(#1d1d1d, 0.6);
               border: 2px solid white;
               padding: 10px 0;
-              &:placeholder-shown {
+              border-radius: 0.5rem;
+              &[type="text"] {
                 color: white;
-                border-radius: 0.5rem;
+                background: rgba(#1d1d1d, 0.6);
               }
             }
           }

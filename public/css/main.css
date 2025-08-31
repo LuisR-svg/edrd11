@@ -70,14 +70,11 @@
   background: rgba(29, 29, 29, 0.6);
   border: 2px solid white;
   padding: 10px 0;
-}
-.home-page main .left-side .login-form .input-container .input-box input:-moz-placeholder {
-  color: white;
   border-radius: 0.5rem;
 }
-.home-page main .left-side .login-form .input-container .input-box input:placeholder-shown {
+.home-page main .left-side .login-form .input-container .input-box input[type=text] {
   color: white;
-  border-radius: 0.5rem;
+  background: rgba(29, 29, 29, 0.6);
 }
 .home-page main .left-side .login-form .input-container button {
   padding: 10px 0;
