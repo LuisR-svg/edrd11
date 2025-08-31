@@ -362,11 +362,11 @@ $font-family: "aviano-copper-variable", sans-serif;
             color: black;
             border: none;
             transition: all 0.3s ease-in-out;
-            ::after {
-              content: "";
-              width: 0;
-              height: 2px;
-              background: white;
+            &:hover {
+              background: $secondary-color;
+              cursor: pointer;
+              transform: translateY(-3px);
+              box-shadow: 0 20px 80px -10px $secondary-color;
             }
           }
         }
@@ -386,4 +386,5 @@ $font-family: "aviano-copper-variable", sans-serif;
     }
   }
 }
+
 /* ----------------Login Form end--------------------*/
