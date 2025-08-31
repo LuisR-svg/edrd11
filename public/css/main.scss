@@ -271,7 +271,7 @@ $font-family: "aviano-copper-variable", sans-serif;
     align-items: center;
     background: $primary-color;
     .left-side {
-      width: calc(70% - 10px);
+      width: 70%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -373,7 +373,7 @@ $font-family: "aviano-copper-variable", sans-serif;
       }
     }
     .right-side {
-      width: calc(30% - 10px);
+      width: 30%;
       background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
         black;
       height: 100vh;
