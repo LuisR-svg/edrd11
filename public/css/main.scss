@@ -271,7 +271,12 @@ $font-family: "aviano-copper-variable", sans-serif;
     .left-side {
       .form-header {
         color: white;
-        font-size: clamp(24px, 36px, 36px);
+        h1 {
+          font-size: clamp(24px, 64px, 36px);
+        }
+        h2 {
+          font-size: clamp(18px, 20px, 22px);
+        }
       }
       width: calc(50% - 10px);
 
@@ -291,6 +296,7 @@ $font-family: "aviano-copper-variable", sans-serif;
           text-transform: uppercase;
         }
         .input-container {
+          margin: 20px auto;
           //   h5 {
           //     font-family: $font-family;
           //     color: white;
@@ -302,6 +308,7 @@ $font-family: "aviano-copper-variable", sans-serif;
               width: 100%;
               background: transparent;
               border: 2px solid white;
+              padding: 10px 0;
               &:placeholder-shown {
                 color: white;
               }

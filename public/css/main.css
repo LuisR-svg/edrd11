@@ -16,7 +16,12 @@
 }
 .home-page main .left-side .form-header {
   color: white;
+}
+.home-page main .left-side .form-header h1 {
   font-size: 36px;
+}
+.home-page main .left-side .form-header h2 {
+  font-size: 20px;
 }
 .home-page main .left-side .login-form {
   background: rgba(29, 29, 29, 0.6);
@@ -29,6 +34,9 @@
   font-size: 36px;
   text-transform: uppercase;
 }
+.home-page main .left-side .login-form .input-container {
+  margin: 20px auto;
+}
 .home-page main .left-side .login-form .input-container .input-box {
   width: 100%;
 }
@@ -36,6 +44,7 @@
   width: 100%;
   background: transparent;
   border: 2px solid white;
+  padding: 10px 0;
 }
 .home-page main .left-side .login-form .input-container .input-box input:-moz-placeholder {
   color: white;
