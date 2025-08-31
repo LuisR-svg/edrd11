@@ -1,4 +1,8 @@
 /* ----------------Login Form--------------------*/
+.home-page {
+  margin: 0;
+  padding: 0;
+}
 .home-page main {
   display: flex;
   flex-direction: row;
@@ -8,6 +12,9 @@
 }
 .home-page main .left-side {
   width: calc(70% - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .home-page main .left-side .form-header {
   color: white;
