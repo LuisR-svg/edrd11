@@ -346,17 +346,20 @@ $font-family: "aviano-copper-variable", sans-serif;
                 color: white;
                 padding-left: 10px;
               }
+              &:autofill {
+                background: rgba(#1d1d1d, 0.6);
+              }
             }
-            button {
-              padding: 10px 0;
-              background: white;
-              border-radius: 0.5rem;
-              margin: 20px auto;
-              background: white;
-              width: 100%;
-              color: black;
-              border: none;
-            }
+          }
+          button {
+            padding: 10px 0;
+            background: white;
+            border-radius: 0.5rem;
+            margin: 20px auto;
+            background: white;
+            width: 100%;
+            color: black;
+            border: none;
           }
         }
       }
