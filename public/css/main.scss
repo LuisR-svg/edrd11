@@ -320,6 +320,7 @@ $font-family: "aviano-copper-variable", sans-serif;
         }
         .input-container {
           margin: 20px auto;
+          width: 90%;
           //   h5 {
           //     font-family: $font-family;
           //     color: white;
@@ -336,39 +337,42 @@ $font-family: "aviano-copper-variable", sans-serif;
               &[type="text"] {
                 color: white;
                 background: rgba(#1d1d1d, 0.6);
-                padding-left: 5px;
               }
               &[type="password"] {
                 color: white;
                 background: rgba(#1d1d1d, 0.6);
-                padding-left: 5px;
+              }
+              &::placeholder {
+                color: white;
+                padding-left: 10px;
               }
             }
-          }
-          button {
-            padding: 10px 0;
-            background: white;
-            border-radius: 0.5rem;
-            margin: 20px auto;
-            background: white;
-            width: 100%;
-            color: black;
-            border: none;
+            button {
+              padding: 10px 0;
+              background: white;
+              border-radius: 0.5rem;
+              margin: 20px auto;
+              background: white;
+              width: 100%;
+              color: black;
+              border: none;
+            }
           }
         }
       }
-    }
-    .right-side {
-      width: calc(30% - 10px);
-      background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
-        black;
-      height: 100vh;
-      background-position: top left;
-      background-size: cover;
-      background-repeat: no-repeat;
-      @media (max-width: 768px) {
-        display: none;
+      .right-side {
+        width: calc(30% - 10px);
+        background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
+          black;
+        height: 100vh;
+        background-position: top left;
+        background-size: cover;
+        background-repeat: no-repeat;
+        @media (max-width: 768px) {
+          display: none;
+        }
       }
     }
   }
 }
+/* ----------------Login Form end--------------------*/

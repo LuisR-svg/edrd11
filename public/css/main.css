@@ -61,6 +61,7 @@
 }
 .home-page main .left-side .login-form .input-container {
   margin: 20px auto;
+  width: 90%;
 }
 .home-page main .left-side .login-form .input-container .input-box {
   width: 100%;
@@ -75,14 +76,20 @@
 .home-page main .left-side .login-form .input-container .input-box input[type=text] {
   color: white;
   background: rgba(29, 29, 29, 0.6);
-  padding-left: 5px;
 }
 .home-page main .left-side .login-form .input-container .input-box input[type=password] {
   color: white;
   background: rgba(29, 29, 29, 0.6);
-  padding-left: 5px;
 }
-.home-page main .left-side .login-form .input-container button {
+.home-page main .left-side .login-form .input-container .input-box input::-moz-placeholder {
+  color: white;
+  padding-left: 10px;
+}
+.home-page main .left-side .login-form .input-container .input-box input::placeholder {
+  color: white;
+  padding-left: 10px;
+}
+.home-page main .left-side .login-form .input-container .input-box button {
   padding: 10px 0;
   background: white;
   border-radius: 0.5rem;
@@ -92,7 +99,7 @@
   color: black;
   border: none;
 }
-.home-page main .right-side {
+.home-page main .left-side .right-side {
   width: calc(30% - 10px);
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
   height: 100vh;
@@ -101,7 +108,9 @@
   background-repeat: no-repeat;
 }
 @media (max-width: 768px) {
-  .home-page main .right-side {
+  .home-page main .left-side .right-side {
     display: none;
   }
 }
+
+/* ----------------Login Form end--------------------*/
