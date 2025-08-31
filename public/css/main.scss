@@ -271,6 +271,12 @@ $font-family: "aviano-copper-variable", sans-serif;
     .left-side {
       .form-header {
         color: white;
+        width: calc(70% - 10px);
+        background: $primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
         h1 {
           font-size: clamp(24px, 64px, 36px);
           text-align: center;
@@ -282,13 +288,6 @@ $font-family: "aviano-copper-variable", sans-serif;
           color: rgba(#ffffff, 0.3);
         }
       }
-      width: calc(50% - 10px);
-
-      background: $primary-color;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
       .login-form {
         background: rgba(#1d1d1d, 0.6);
         padding: calc(4vw - 5px) calc(3vw - 5px);
@@ -310,19 +309,26 @@ $font-family: "aviano-copper-variable", sans-serif;
             width: 100%;
             input {
               width: 100%;
-              background: transparent;
+              background: rgba(#1d1d1d, 0.6);
               border: 2px solid white;
               padding: 10px 0;
               &:placeholder-shown {
                 color: white;
+                border-radius: 0.5rem;
               }
             }
+          }
+          button {
+            padding: 10px 0;
+            background: white;
+            border-radius: 0.5rem;
+            margin: 20px auto;
           }
         }
       }
     }
     .right-side {
-      width: calc(50% - 10px);
+      width: calc(30% - 10px);
       background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
         black;
       height: 100vh;
