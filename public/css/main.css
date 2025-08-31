@@ -15,16 +15,26 @@
   justify-content: center;
   flex-direction: column;
 }
+.home-page main .left-side .form-header {
+  color: white;
+  font-size: 36px;
+}
 .home-page main .left-side .login-form {
   background: rgba(29, 29, 29, 0.6);
   padding: calc(4vw - 5px) calc(3vw - 5px);
   border-radius: 0 50px;
 }
-.home-page main .left-side .input-container h5 {
+.home-page main .left-side .login-form h2 {
+  color: white;
+  font-family: "aviano-copper-variable", sans-serif;
+  font-size: 36px;
+}
+.home-page main .left-side .login-form .input-container h5 {
   font-family: "aviano-copper-variable", sans-serif;
   color: white;
+  font-size: clamp(18px, 3vw, 24px);
 }
-.home-page main .left-side .input-container .input-box {
+.home-page main .left-side .login-form .input-container .input-box {
   width: 100%;
 }
 .home-page main .right-side {

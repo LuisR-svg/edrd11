@@ -269,6 +269,10 @@ $font-family: "aviano-copper-variable", sans-serif;
     align-items: center;
     background: $primary-color;
     .left-side {
+      .form-header {
+        color: white;
+        font-size: clamp(24px, 36px, 36px);
+      }
       width: calc(50% - 10px);
       height: 100vh;
       background: $primary-color;
@@ -280,15 +284,20 @@ $font-family: "aviano-copper-variable", sans-serif;
         background: rgba(#1d1d1d, 0.6);
         padding: calc(4vw - 5px) calc(3vw - 5px);
         border-radius: 0 50px;
-      }
-
-      .input-container {
-        h5 {
-          font-family: $font-family;
+        h2 {
           color: white;
+          font-family: $font-family;
+          font-size: clamp(24px, 64px, 36px);
         }
-        .input-box {
-          width: 100%;
+        .input-container {
+          h5 {
+            font-family: $font-family;
+            color: white;
+            font-size: clamp(18px, 3vw, 24px);
+          }
+          .input-box {
+            width: 100%;
+          }
         }
       }
     }
