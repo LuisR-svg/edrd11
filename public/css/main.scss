@@ -269,23 +269,29 @@ $font-family: "aviano-copper-variable", sans-serif;
     align-items: center;
     background: $primary-color;
     .left-side {
+      width: calc(70% - 10px);
       .form-header {
         color: white;
-        width: calc(70% - 10px);
-        background: $primary-color;
+        // width: calc(70% - 10px);
+        width: 100%;
+        background: black;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        padding-bottom: 30px;
         h1 {
           font-size: clamp(24px, 64px, 36px);
           text-align: center;
           color: rgba(#ffffff, 0.3);
+          margin: 5px auto;
         }
         h2 {
-          font-size: clamp(18px, 20px, 22px);
+          //   font-size: clamp(18px, 20px, 22px);
+          font-size: clamp(24px, 64px, 36px);
           text-align: center;
           color: rgba(#ffffff, 0.3);
+          margin: 5px auto;
         }
       }
       .login-form {
