@@ -307,6 +307,7 @@ $font-family: "aviano-copper-variable", sans-serif;
           text-align: center;
           color: rgba(#ffffff, 0.3);
           margin: 5px auto;
+          max-width: 100%;
         }
       }
       .login-form {
@@ -316,7 +317,7 @@ $font-family: "aviano-copper-variable", sans-serif;
         h2 {
           color: white;
           font-family: $font-family;
-          font-size: clamp(24px, 64px, 36px);
+          font-size: clamp(20px, 25px, 30px);
           text-transform: uppercase;
         }
         .input-container {
