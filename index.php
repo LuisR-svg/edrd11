@@ -27,7 +27,6 @@
                 placeholder="Enter your username"
                 autocomplete="username"
               />
-              >
               <!-- <i class="fa-solid fa-user-tie"></i> -->
             </div>
           </div>
