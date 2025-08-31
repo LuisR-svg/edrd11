@@ -24,12 +24,12 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    justify-content: center;
   }
 }
 .home-page main .left-side .form-header {
   color: white;
   width: 100%;
-  background: black;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +51,7 @@
 .home-page main .left-side .login-form {
   background: rgba(29, 29, 29, 0.6);
   padding: calc(4vw - 5px) calc(3vw - 5px);
-  border-radius: 0 50px;
+  border-radius: 0 60px;
 }
 .home-page main .left-side .login-form h2 {
   color: white;
@@ -84,6 +84,9 @@
   background: white;
   border-radius: 0.5rem;
   margin: 20px auto;
+  background: rgba(29, 29, 29, 0.6);
+  width: 100%;
+  color: black;
 }
 .home-page main .right-side {
   width: calc(30% - 10px);
