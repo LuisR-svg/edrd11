@@ -273,9 +273,13 @@ $font-family: "aviano-copper-variable", sans-serif;
         color: white;
         h1 {
           font-size: clamp(24px, 64px, 36px);
+          text-align: center;
+          color: rgba(#ffffff, 0.3);
         }
         h2 {
           font-size: clamp(18px, 20px, 22px);
+          text-align: center;
+          color: rgba(#ffffff, 0.3);
         }
       }
       width: calc(50% - 10px);
