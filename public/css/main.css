@@ -107,11 +107,11 @@
   border: none;
   transition: all 0.3s ease-in-out;
 }
-.home-page main .left-side .login-form .input-container button ::after {
-  content: "";
-  width: 0;
-  height: 2px;
+.home-page main .left-side .login-form .input-container button:hover {
   background: white;
+  cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: 0 20px 80px -10px white;
 }
 .home-page main .right-side {
   width: calc(30% - 10px);
