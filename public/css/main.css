@@ -37,13 +37,13 @@
   padding-bottom: 30px;
 }
 .home-page main .left-side .form-header h1 {
-  font-size: clamp(30px, 6vw, 36px);
+  font-size: clamp(30px, 8vw, 55px);
   text-align: center;
   color: rgba(255, 255, 255, 0.3);
   margin: 5px auto;
 }
 .home-page main .left-side .form-header h2 {
-  font-size: clamp(30px, 5vw, 36px);
+  font-size: clamp(26px, 5vw, 36px);
   text-align: center;
   color: rgba(255, 255, 255, 0.3);
   margin: 5px auto;
@@ -58,7 +58,6 @@
   color: white;
   font-family: "aviano-copper-variable", sans-serif;
   font-size: clamp(24px, 5vw, 36px);
-  margin-right: 20px;
   text-transform: uppercase;
 }
 @media (max-width: 768px) {
@@ -67,7 +66,7 @@
   }
 }
 .home-page main .left-side .login-form .input-container {
-  margin: 20px auto;
+  margin: 20px 0;
   width: 90%;
 }
 .home-page main .left-side .login-form .input-container .input-box {
