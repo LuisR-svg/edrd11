@@ -363,17 +363,17 @@ $font-family: "aviano-copper-variable", sans-serif;
           }
         }
       }
-      .right-side {
-        width: calc(30% - 10px);
-        background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
-          black;
-        height: 100vh;
-        background-position: top left;
-        background-size: cover;
-        background-repeat: no-repeat;
-        @media (max-width: 768px) {
-          display: none;
-        }
+    }
+    .right-side {
+      width: calc(30% - 10px);
+      background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png")
+        black;
+      height: 100vh;
+      background-position: top left;
+      background-size: cover;
+      background-repeat: no-repeat;
+      @media (max-width: 768px) {
+        display: none;
       }
     }
   }
