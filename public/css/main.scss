@@ -357,9 +357,17 @@ $font-family: "aviano-copper-variable", sans-serif;
             border-radius: 0.5rem;
             margin: 20px auto;
             background: white;
+            font-weight: bold;
             width: 100%;
             color: black;
             border: none;
+            transition: all 0.3s ease-in-out;
+            ::after {
+              content: "";
+              width: 0;
+              height: 2px;
+              background: white;
+            }
           }
         }
       }
