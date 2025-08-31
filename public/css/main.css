@@ -11,7 +11,7 @@
   background: black;
 }
 .home-page main .left-side {
-  width: calc(70% - 10px);
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,7 +116,7 @@
   box-shadow: 0 20px 80px -10px white;
 }
 .home-page main .right-side {
-  width: calc(30% - 10px);
+  width: 30%;
   background: url("https://edrd11.creativeworkspace-bz.com/public/images/login-hero-image.png") black;
   height: 100vh;
   background-position: top left;
