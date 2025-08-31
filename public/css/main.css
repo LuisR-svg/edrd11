@@ -8,7 +8,6 @@
 }
 .home-page main .left-side {
   width: calc(50% - 10px);
-  height: 100vh;
   background: black;
   display: flex;
   align-items: center;
@@ -28,14 +27,21 @@
   color: white;
   font-family: "aviano-copper-variable", sans-serif;
   font-size: 36px;
-}
-.home-page main .left-side .login-form .input-container h5 {
-  font-family: "aviano-copper-variable", sans-serif;
-  color: white;
-  font-size: clamp(18px, 3vw, 24px);
+  text-transform: uppercase;
 }
 .home-page main .left-side .login-form .input-container .input-box {
   width: 100%;
+}
+.home-page main .left-side .login-form .input-container .input-box input {
+  width: 100%;
+  background: transparent;
+  border: 2px solid white;
+}
+.home-page main .left-side .login-form .input-container .input-box input:-moz-placeholder {
+  color: white;
+}
+.home-page main .left-side .login-form .input-container .input-box input:placeholder-shown {
+  color: white;
 }
 .home-page main .right-side {
   width: calc(50% - 10px);
