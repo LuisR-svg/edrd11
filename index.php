@@ -46,7 +46,7 @@
                         <!-- <h1>M<i class="fa-solid fa-compass-drafting"></i>sonic Treasury</h1>
                         <h2>Estrell<i class="fa-sharp-duotone fa-solid fa-star-of-david"></i> Del Rey David #11</h2> -->
                         <h1>Masonic Treasury</h1>
-                        <h2>Estrella Del Rey David #11</h2>
+                        <h2>Estrella De El Rey David #11</h2>
                     </div>
             <form method="POST" action="app/controllers/login.php" class="login-form">
                     <h2>Welcome</h2>
