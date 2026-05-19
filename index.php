@@ -1,53 +1,287 @@
+<?php
+/**
+ * index.php — Public Homepage
+ * Estrella Del Rey David Numero 11
+ * ============================================================
+ * This is the main public-facing page.
+ * Shows: hero, pillars, history, news, stats, contact.
+ * Also handles the login modal trigger via ?login=member|admin
+ * ============================================================
+ */
+
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/db.php';
+
+secure_session_start();
+
+// If already logged in, redirect to dashboards
+if (is_admin())  { header('Location: /admin/dashboard.php'); exit; }
+if (is_member()) { header('Location: /member/dashboard.php'); exit; }
+
+// Fetch public news (last 3)
+$news = [];
+try {
+    $news = DB::get()->query("SELECT * FROM news WHERE published=1 ORDER BY created_at DESC LIMIT 3")->fetchAll();
+} catch (Exception $e) { /* silence on DB not set up yet */ }
+
+$showLogin = get_param('login'); // 'member' or 'admin'
+?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'app/helpers/head.php'; ?>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Estrella Del Rey David Numero 11 - Fraternidad, Caridad y Verdad. Portal oficial de la Logia.">
+  <!-- SECURITY HEADERS (also set these in .htaccess) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <!-- CSRF token for JavaScript -->
+  <meta name="csrf-token" content="<?= csrf_token() ?>">
+  <title>Estrella Del Rey David Numero 11 — Logia Masónica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="home-page">
-    <main>
-      <div class="left-side">
-        <div class="form-header">
-          <!-- <h1>M<i class="fa-solid fa-compass-drafting"></i>sonic Treasury</h1>
-                        <h2>Estrell<i class="fa-sharp-duotone fa-solid fa-star-of-david"></i> Del Rey David #11</h2> -->
-          <h1>Masonic Treasury</h1>
-          <h2>Estrella De El Rey David #11</h2>
-        </div>
-        <form
-          method="POST"
-          action="app/controllers/login.php"
-          class="login-form"
-        >
-          <h2>Welcome</h2>
-          <div class="input-container">
-            <!-- <h5>User Name</h5> -->
-            <div class="input-box">
-              <input
-                type="text"
-                name="username"
-                required
-                placeholder="Enter your username"
-                autocomplete="username"
-              />
-              <!-- <i class="fa-solid fa-user-tie"></i> -->
-            </div>
-          </div>
-          <div class="input-container">
-            <!-- <h5>password</h5> -->
-            <div class="input-box">
-              <input
-                type="password"
-                name="password"
-                required
-                placeholder="Enter your password"
-                minlength="3"
-                autocomplete="password"
-              />
-              <!-- <i class="fa-solid fa-lock"></i> -->
-            </div>
-            <button type="submit">Login <span></span></button>
-          </div>
-        </form>
+<body>
+
+<!-- ── NAVIGATION ──────────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner">
+    <div class="navbar-brand" onclick="window.location='/'">
+      <span class="symbol" aria-hidden="true">⬡</span>
+      <div class="brand-text">
+        <div class="brand-name">Estrella Del Rey David</div>
+        <div class="brand-sub">Numero 11 — Est. 1952</div>
       </div>
-      <div class="right-side"></div>
-    </main>
-  </body>
+    </div>
+    <div class="navbar-links">
+      <a href="/#about"   class="nav-link">About</a>
+      <a href="/#history" class="nav-link">History</a>
+      <a href="/#news"    class="nav-link">News</a>
+      <a href="/#contact" class="nav-link">Contact</a>
+      <button class="nav-link" onclick="openModal('modal-member-login')">Member Login</button>
+      <button class="nav-link gold" onclick="openModal('modal-admin-login')">Admin</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero" aria-label="Welcome">
+  <div class="hero-bg-overlay" aria-hidden="true"></div>
+  <div class="hero-pattern"    aria-hidden="true"></div>
+  <div class="hero-content">
+    <span class="hero-symbol animate-fadeUp" aria-hidden="true">⬡</span>
+    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David</h1>
+    <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica Numero 11 — Fundada 1952</p>
+    <p class="hero-desc animate-fadeUp delay-3">
+      Una fraternidad dedicada al crecimiento moral, espiritual e intelectual de sus miembros
+      y al servicio de nuestra comunidad, sustentada en los principios de
+      Fraternidad, Caridad y Verdad.
+    </p>
+    <div class="hero-actions animate-fadeUp delay-4">
+      <button class="btn btn-gold" onclick="openModal('modal-member-login')">
+        <span>⬡</span> Acceso de Miembros
+      </button>
+      <a href="#about" class="btn btn-outline">Conoce la Logia</a>
+    </div>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">↓</div>
+</section>
+
+<!-- ── ABOUT / PILLARS ───────────────────────────────────── -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <h2 class="section-title animate-fadeUp">Nuestros Ideales</h2>
+    <p class="section-sub">Fraternidad · Caridad · Verdad</p>
+    <div class="divider"></div>
+    <div class="pillars-grid">
+      <article class="card pillar animate-fadeUp delay-1">
+        <div class="pillar-icon" aria-hidden="true">⚖</div>
+        <h3>Amor Fraternal</h3>
+        <p>Consideramos a la humanidad entera como una sola familia. Nos esforzamos en practicar la tolerancia, el respeto y la comprensión hacia todos nuestros semejantes.</p>
+      </article>
+      <article class="card pillar animate-fadeUp delay-2">
+        <div class="pillar-icon" aria-hidden="true">✦</div>
+        <h3>Auxilio</h3>
+        <p>Es nuestro deber aliviar la angustia de los necesitados. En cada caso de necesidad, extendemos la mano de la generosidad y la caridad fraterna.</p>
+      </article>
+      <article class="card pillar animate-fadeUp delay-3">
+        <div class="pillar-icon" aria-hidden="true">◈</div>
+        <h3>Verdad</h3>
+        <p>Buscamos la sabiduría y el conocimiento a lo largo de nuestro camino masónico, comprometidos con la integridad y la mejora constante del ser humano.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── HISTORY ───────────────────────────────────────────── -->
+<section class="section" id="history" style="background:rgba(10,22,40,0.5)">
+  <div class="section-inner">
+    <h2 class="section-title">Historia de la Logia</h2>
+    <p class="section-sub">Más de 70 años de Fraternidad</p>
+    <div class="divider"></div>
+    <div class="grid-2">
+      <div>
+        <div class="timeline animate-fadeUp">
+          <div class="timeline-item">
+            <div class="timeline-year">1952</div>
+            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David Numero 11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1970s</div>
+            <div class="timeline-text">Crecimiento significativo en membresía. La logia consolida su presencia en la comunidad con programas de beneficencia y educación.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1990s</div>
+            <div class="timeline-text">Renovación del templo y expansión de los programas comunitarios. Se establecen fondos para becas estudiantiles.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Hoy</div>
+            <div class="timeline-text">Con más de 70 años de historia, seguimos trabajando en la formación moral e intelectual de nuestros hermanos y en el servicio a la comunidad.</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats-grid" style="align-content:start">
+        <div class="stat-card animate-fadeUp delay-1">
+          <div class="stat-label">Años de Historia</div>
+          <div class="stat-value"><?= date('Y') - 1952 ?></div>
+        </div>
+        <div class="stat-card animate-fadeUp delay-2">
+          <div class="stat-label">Hermanos Activos</div>
+          <div class="stat-value"><?= count($news) > 0 ? '30+' : '—' ?></div>
+        </div>
+        <div class="stat-card animate-fadeUp delay-3">
+          <div class="stat-label">Programas Comunitarios</div>
+          <div class="stat-value">12</div>
+        </div>
+        <div class="stat-card animate-fadeUp delay-4">
+          <div class="stat-label">Grado Máximo</div>
+          <div class="stat-value">33°</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWS ──────────────────────────────────────────────── -->
+<section class="section" id="news">
+  <div class="section-inner">
+    <h2 class="section-title">Comunicados</h2>
+    <p class="section-sub">Últimas noticias de la Logia</p>
+    <div class="divider"></div>
+    <?php if (empty($news)): ?>
+      <p style="text-align:center;color:var(--text-muted)">No hay comunicados disponibles en este momento.</p>
+    <?php else: ?>
+    <div class="grid-3">
+      <?php foreach ($news as $n): ?>
+      <article class="card card-gold animate-fadeUp">
+        <div class="news-date"><?= e(date('d M Y', strtotime($n['created_at']))) ?> · <?= e($n['author']) ?></div>
+        <h3 class="news-title"><?= e($n['title']) ?></h3>
+        <p class="news-body"><?= e(mb_substr($n['body'], 0, 180)) . (mb_strlen($n['body']) > 180 ? '…' : '') ?></p>
+        <div style="margin-top:1rem">
+          <button class="btn btn-outline btn-sm" onclick="openModal('modal-member-login')">Leer más →</button>
+        </div>
+      </article>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+  </div>
+</section>
+
+<!-- ── CONTACT ───────────────────────────────────────────── -->
+<section class="section" id="contact" style="background:rgba(10,22,40,0.5)">
+  <div class="section-inner" style="max-width:700px">
+    <h2 class="section-title">Contacto</h2>
+    <p class="section-sub">¿Deseas conocer más sobre la Masonería?</p>
+    <div class="divider"></div>
+    <div class="card" style="text-align:center;padding:2.5rem">
+      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.05rem;line-height:1.9">
+        La Logia Estrella Del Rey David Numero 11 da la bienvenida a hombres de buena moral
+        que deseen conocer nuestros principios y ser parte de nuestra hermandad.
+        Para mayor información, contáctanos a través de un miembro activo de la logia.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="openModal('modal-member-login')">Acceso de Miembros</button>
+        <button class="btn btn-outline" onclick="openModal('modal-admin-login')">Admin</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────── -->
+<footer>
+  <span class="footer-symbol" aria-hidden="true">⬡</span>
+  <div class="footer-name">Estrella Del Rey David Numero 11</div>
+  <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
+  <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David Numero 11 · Todos los derechos reservados · Fundada 1952</p>
+</footer>
+
+<!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
+
+<!-- Member Login Modal -->
+<div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="member-login-title">
+  <div class="modal">
+    <span class="login-symbol" aria-hidden="true">⬡</span>
+    <h2 class="modal-title" id="member-login-title">Acceso de Miembros</h2>
+    <p class="login-sub">Estrella Del Rey David No. 11</p>
+    <?php if (isset($_SESSION['login_error_member'])): ?>
+      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_member']) ?></div>
+      <?php unset($_SESSION['login_error_member']); ?>
+    <?php endif; ?>
+    <form method="POST" action="/api/auth.php" id="member-login-form">
+      <?= csrf_field() ?>
+      <input type="hidden" name="type" value="member">
+      <div class="form-group">
+        <label class="form-label" for="member-email">Correo Electrónico</label>
+        <input type="email" id="member-email" name="email" class="form-control" placeholder="tu@correo.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="member-pin">PIN de Acceso</label>
+        <input type="password" id="member-pin" name="pin" class="form-control" placeholder="••••" maxlength="8" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Entrar a la Logia</button>
+    </form>
+    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-member-login')">Cancelar</button>
+  </div>
+</div>
+
+<!-- Admin Login Modal -->
+<div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+  <div class="modal">
+    <span class="login-symbol" aria-hidden="true">⬡</span>
+    <h2 class="modal-title" id="admin-login-title">Acceso Administrativo</h2>
+    <p class="login-sub">Solo personal autorizado</p>
+    <?php if (isset($_SESSION['login_error_admin'])): ?>
+      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_admin']) ?></div>
+      <?php unset($_SESSION['login_error_admin']); ?>
+    <?php endif; ?>
+    <form method="POST" action="/api/auth.php" id="admin-login-form">
+      <?= csrf_field() ?>
+      <input type="hidden" name="type" value="admin">
+      <div class="form-group">
+        <label class="form-label" for="admin-username">Usuario</label>
+        <input type="text" id="admin-username" name="username" class="form-control" placeholder="admin" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="admin-password">Contraseña</label>
+        <input type="password" id="admin-password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Ingresar</button>
+    </form>
+    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-admin-login')">Cancelar</button>
+  </div>
+</div>
+
+<!-- Auto-open login modal if URL param present -->
+<?php if ($showLogin === 'member'): ?>
+<script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-member-login'));</script>
+<?php elseif ($showLogin === 'admin'): ?>
+<script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-admin-login'));</script>
+<?php endif; ?>
+
+<script src="/assets/js/app.js"></script>
+</body>
 </html>
