@@ -35,7 +35,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <meta name="description" content="Estrella Del Rey David Numero 11 - Fraternidad, Caridad y Verdad. Portal oficial de la Logia.">
   <!-- SECURITY HEADERS (also set these in .htaccess) -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
+  <!-- <meta http-equiv="X-Frame-Options" content="DENY"> -->
   <!-- CSRF token for JavaScript -->
   <meta name="csrf-token" content="<?= csrf_token() ?>">
   <title>Estrella Del Rey David Numero 11 — Logia Masónica</title>
