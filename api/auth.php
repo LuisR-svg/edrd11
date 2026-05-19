@@ -6,7 +6,9 @@
  * All form submissions go here. Uses brute-force protection.
  * ============================================================
  */
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/db.php';
 
@@ -60,7 +62,7 @@ if ($type === 'member') {
         $_SESSION['member_name'] = $member['name'];
         $_SESSION['member_role'] = $member['role'];
         $_SESSION['_created']    = time();
-        header('Location: /member/dashboard.php');
+        header('Location: ../member/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $email, 'member', false);
