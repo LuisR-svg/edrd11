@@ -84,7 +84,8 @@ if ($type === 'admin') {
     }
 
     $pdo  = DB::get();
-    var_dump($username);
+   
+var_dump($pdo->query("SELECT DATABASE()")->fetch());
 exit;
     $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username = ? AND active = 1 LIMIT 1");
     $stmt->execute([$username]);
