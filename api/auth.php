@@ -111,3 +111,5 @@ if ($type === 'admin') {
 // Invalid type
 header('Location: /');
 exit;
+
+echo password_hash("password", PASSWORD_BCRYPT);
