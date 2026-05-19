@@ -84,7 +84,11 @@ if ($type === 'admin') {
     }
 
     $pdo  = DB::get();
-    
+    var_dump($_POST['password']);
+var_dump(strlen($_POST['password']));
+var_dump($admin['password_hash']);
+var_dump(password_verify($_POST['password'], $admin['password_hash']));
+exit;
     $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username = ? AND active = 1 LIMIT 1");
     $stmt->execute([$username]);
     $admin = $stmt->fetch();
