@@ -28,7 +28,7 @@ csrf_protect();
 
 $type = post('type'); // 'member' or 'admin'
 $ip   = get_ip();
-
+echo password_hash("password", PASSWORD_BCRYPT);
 // ── MEMBER LOGIN ─────────────────────────────────────────
 if ($type === 'member') {
     $email = post('email');
@@ -112,4 +112,3 @@ if ($type === 'admin') {
 header('Location: /');
 exit;
 
-echo password_hash("password", PASSWORD_BCRYPT);
