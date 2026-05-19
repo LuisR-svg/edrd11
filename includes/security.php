@@ -21,7 +21,7 @@ function secure_session_start(): void {
             'path'     => '/',
             'secure'   => true,          // HTTPS only — change to false if no SSL during dev
             'httponly' => true,          // JavaScript cannot read the cookie
-            'samesite' => 'Strict',      // CSRF protection
+            'samesite' => 'Lax',      // CSRF protection
         ]);
         session_name('LODGE11_SESS');
         session_start();
