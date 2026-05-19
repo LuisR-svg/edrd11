@@ -85,14 +85,9 @@ if ($type === 'admin') {
 
     $pdo  = DB::get();
     
-    // $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username = ? AND active = 1 LIMIT 1");
-    // $stmt->execute([$username]);
-    // $admin = $stmt->fetch();
-    $stmt = $pdo->query("SELECT * FROM admin_users WHERE username = 'admin' AND active = 1");
-$admin = $stmt->fetch(PDO::FETCH_ASSOC);
-var_dump($admin);
-exit;
-
+    $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username = ? AND active = 1 LIMIT 1");
+    $stmt->execute([$username]);
+    $admin = $stmt->fetch();
 
     if ($admin && password_verify($password, $admin['password_hash'])) {
         record_attempt($ip, $username, 'admin', true);
