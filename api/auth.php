@@ -96,7 +96,7 @@ if ($type === 'admin') {
         $_SESSION['_created']   = time();
         // Update last login
         $pdo->prepare("UPDATE admin_users SET last_login=NOW() WHERE id=?")->execute([$admin['id']]);
-        header('Location: /admin/dashboard.php');
+        header('Location: ../admin/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $username, 'admin', false);
