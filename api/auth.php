@@ -62,7 +62,7 @@ if ($type === 'member') {
         $_SESSION['member_name'] = $member['name'];
         $_SESSION['member_role'] = $member['role'];
         $_SESSION['_created']    = time();
-        header('Location: ../member/dashboard.php');
+        header('Location: /member/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $email, 'member', false);
@@ -98,7 +98,7 @@ if ($type === 'admin') {
         $_SESSION['_created']   = time();
         // Update last login
         $pdo->prepare("UPDATE admin_users SET last_login=NOW() WHERE id=?")->execute([$admin['id']]);
-        header('Location: ../admin/dashboard.php');
+        header('Location: /admin/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $username, 'admin', false);
