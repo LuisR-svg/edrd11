@@ -38,7 +38,7 @@ define('APP_VERSION', '1.0.0');
 // SECURITY SETTINGS
 // ─────────────────────────────────────────────────────────
 define('MAX_LOGIN_ATTEMPTS', 100);       // Lock after this many failed tries
-// define('LOCKOUT_MINUTES',    15);      // Minutes to lock out after too many attempts
+// define('LOCKOUT_MINUTES',    1);      // Minutes to lock out after too many attempts
 define('SESSION_LIFETIME',   3600);    // Session expires after 1 hour (seconds)
 define('BCRYPT_COST',        12);      // bcrypt work factor (12 is safe default)
 
