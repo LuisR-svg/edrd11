@@ -98,7 +98,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     </p>
     <div class="hero-actions animate-fadeUp delay-4">
       <button class="btn btn-gold" onclick="openModal('modal-member-login')">
-        <span><i class="fa-solid fa-star-of-david"></span> Acceso de Miembros
+        <span><i class="fa-solid fa-star-of-david"></i></span> Acceso de Miembros
       </button>
       <a href="#about" class="btn btn-outline">Conoce la Logia</a>
     </div>
@@ -231,7 +231,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 
 <!-- ── FOOTER ────────────────────────────────────────────── -->
 <footer>
-  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></span>
+  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
   <div class="footer-name">Estrella Del Rey David Numero 11</div>
   <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
   <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David Numero 11 · Todos los derechos reservados · Fundada 1952</p>
