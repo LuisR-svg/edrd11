@@ -2,13 +2,12 @@
 /**
  * api/auth.php — Login & Logout Handler
  * ============================================================
- * Handles POST requests for member login, admin login, logout.
- * All form submissions go here. Uses brute-force protection.
+ * FIX APPLIED: Passwords/PINs now read from $_POST directly,
+ * NOT through the post() helper which calls strip_tags().
+ * strip_tags() can corrupt passwords containing < > characters.
  * ============================================================
  */
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/db.php';
 
@@ -28,21 +27,22 @@ csrf_protect();
 
 $type = post('type'); // 'member' or 'admin'
 $ip   = get_ip();
+
 // ── MEMBER LOGIN ─────────────────────────────────────────
 if ($type === 'member') {
-    $email = post('email');
-    $pin   = post('pin');
+    $email = post('email');                        // email is safe to sanitize
+    $pin   = trim($_POST['pin'] ?? '');            // FIX: read PIN raw — no strip_tags on credentials
 
     // Brute-force check
     if (is_locked_out($ip, 'member')) {
-        $_SESSION['login_error_member'] = 'Too many failed attempts. Please wait ' . LOCKOUT_MINUTES . ' minutes.';
+        $_SESSION['login_error_member'] = 'Demasiados intentos fallidos. Por favor espere ' . LOCKOUT_MINUTES . ' minuto(s).';
         header('Location: /?login=member');
         exit;
     }
 
     if (!valid_email($email) || empty($pin)) {
         record_attempt($ip, $email, 'member', false);
-        $_SESSION['login_error_member'] = 'Please enter a valid email and PIN.';
+        $_SESSION['login_error_member'] = 'Por favor ingrese un correo y PIN válidos.';
         header('Location: /?login=member');
         exit;
     }
@@ -55,18 +55,17 @@ if ($type === 'member') {
     if ($member && password_verify($pin, $member['pin_hash'])) {
         record_attempt($ip, $email, 'member', true);
         clear_attempts($ip, 'member');
-        // Regenerate session to prevent fixation
         session_regenerate_id(true);
         $_SESSION['member_id']   = $member['id'];
         $_SESSION['member_name'] = $member['name'];
         $_SESSION['member_role'] = $member['role'];
         $_SESSION['_created']    = time();
+        $_SESSION['_initiated']  = true;
         header('Location: /member/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $email, 'member', false);
-        // Use generic error message (don't reveal if email exists)
-        $_SESSION['login_error_member'] = 'Email or PIN not found. Please try again.';
+        $_SESSION['login_error_member'] = 'Correo o PIN no encontrado. Por favor intente de nuevo.';
         header('Location: /?login=member');
         exit;
     }
@@ -74,11 +73,17 @@ if ($type === 'member') {
 
 // ── ADMIN LOGIN ──────────────────────────────────────────
 if ($type === 'admin') {
-    $username = post('username');
-    $password = post('password');
+    $username = trim($_POST['username'] ?? '');    // FIX: read raw — no strip_tags
+    $password = trim($_POST['password'] ?? '');    // FIX: read raw — passwords must not be sanitized
 
     if (is_locked_out($ip, 'admin')) {
-        $_SESSION['login_error_admin'] = 'Too many failed attempts. Please wait ' . LOCKOUT_MINUTES . ' minutes.';
+        $_SESSION['login_error_admin'] = 'Demasiados intentos fallidos. Por favor espere ' . LOCKOUT_MINUTES . ' minuto(s).';
+        header('Location: /?login=admin');
+        exit;
+    }
+
+    if (empty($username) || empty($password)) {
+        $_SESSION['login_error_admin'] = 'Por favor ingrese usuario y contraseña.';
         header('Location: /?login=admin');
         exit;
     }
@@ -95,19 +100,18 @@ if ($type === 'admin') {
         $_SESSION['admin_id']   = $admin['id'];
         $_SESSION['admin_name'] = $admin['name'];
         $_SESSION['_created']   = time();
-        // Update last login
+        $_SESSION['_initiated'] = true;
         $pdo->prepare("UPDATE admin_users SET last_login=NOW() WHERE id=?")->execute([$admin['id']]);
         header('Location: /admin/dashboard.php');
         exit;
     } else {
         record_attempt($ip, $username, 'admin', false);
-        $_SESSION['login_error_admin'] = 'Invalid credentials.';
+        $_SESSION['login_error_admin'] = 'Credenciales inválidas.';
         header('Location: /?login=admin');
         exit;
     }
 }
 
-// Invalid type
+// Invalid type — redirect home
 header('Location: /');
 exit;
-

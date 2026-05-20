@@ -1,0 +1,334 @@
+<?php
+/**
+ * ============================================================
+ * setup_tool.php — ONE-TIME Password Setup & Login Debugger
+ * Estrella Del Rey David Numero 11
+ * ============================================================
+ * INSTRUCTIONS:
+ * 1. Upload this file to your site ROOT (same folder as index.php)
+ * 2. Visit: https://yourdomain.com/setup_tool.php
+ * 3. Use it to set your admin password and create the first member
+ * 4. !! DELETE THIS FILE IMMEDIATELY AFTER USE !!
+ *    It has no authentication — anyone who finds it can change passwords
+ * ============================================================
+ */
+
+// --- Load your app config and database ---
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/db.php';
+
+// Simple secret key to prevent accidental public access
+// Change this to something only you know, then visit:
+// setup_tool.php?key=YOUR_SECRET_KEY
+$ACCESS_KEY = 'lodge11setup2025'; // CHANGE THIS before uploading
+
+if (($_GET['key'] ?? '') !== $ACCESS_KEY) {
+    http_response_code(403);
+    die('<h2 style="font-family:sans-serif;color:#c00">Access Denied. Add ?key=YOUR_SECRET_KEY to the URL.</h2>');
+}
+
+$pdo     = DB::get();
+$message = '';
+$error   = '';
+$debug   = [];
+
+// ── ACTION: Set Admin Password ───────────────────────────
+if ($_POST['action'] ?? '' === 'set_admin_password') {
+    $username = trim($_POST['username'] ?? 'admin');
+    $password = $_POST['new_password'] ?? '';
+    $confirm  = $_POST['confirm_password'] ?? '';
+
+    if (strlen($password) < 6) {
+        $error = 'Password must be at least 6 characters.';
+    } elseif ($password !== $confirm) {
+        $error = 'Passwords do not match.';
+    } else {
+        $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+        // Check if admin user exists
+        $check = $pdo->prepare("SELECT id FROM admin_users WHERE username=?");
+        $check->execute([$username]);
+        if ($check->fetch()) {
+            $pdo->prepare("UPDATE admin_users SET password_hash=? WHERE username=?")->execute([$hash, $username]);
+            $message = "✓ Admin password for '{$username}' updated successfully! Hash: <code>" . htmlspecialchars($hash) . "</code>";
+        } else {
+            // Insert new admin
+            $pdo->prepare("INSERT INTO admin_users (username, password_hash, name, email) VALUES (?,?,'Administrator','admin@lodge11.org')")
+                ->execute([$username, $hash]);
+            $message = "✓ Admin user '{$username}' created with new password!";
+        }
+    }
+}
+
+// ── ACTION: Add/Fix Member ───────────────────────────────
+if ($_POST['action'] ?? '' === 'add_member') {
+    $name  = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $pin   = trim($_POST['pin'] ?? '');
+    $role  = trim($_POST['role'] ?? 'Member');
+
+    if (!$name || !$email || strlen($pin) < 4 || !ctype_digit($pin)) {
+        $error = 'Name, valid email, and 4+ digit numeric PIN are required.';
+    } else {
+        $pin_hash = password_hash($pin, PASSWORD_BCRYPT, ['cost' => 12]);
+        // Check if exists
+        $check = $pdo->prepare("SELECT id FROM members WHERE email=?");
+        $check->execute([$email]);
+        if ($check->fetch()) {
+            // Update PIN
+            $pdo->prepare("UPDATE members SET pin_hash=?, name=?, role=? WHERE email=?")->execute([$pin_hash, $name, $role, $email]);
+            $message = "✓ Member '{$name}' PIN updated. They can now log in with email: {$email} and PIN: {$pin}";
+        } else {
+            $pdo->prepare("INSERT INTO members (name, email, pin_hash, role, degree, degree_name, active, joined_date) VALUES (?,?,?,'Member',3,'Master Mason',1,NOW())")
+                ->execute([$name, $email, $pin_hash]);
+            $message = "✓ Member '{$name}' created! Login: email={$email}, PIN={$pin}";
+        }
+    }
+}
+
+// ── DIAGNOSTIC: Test existing admin login ────────────────
+if ($_POST['action'] ?? '' === 'test_login') {
+    $username = trim($_POST['test_username'] ?? '');
+    $password = $_POST['test_password'] ?? '';
+
+    $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username=? LIMIT 1");
+    $stmt->execute([$username]);
+    $admin = $stmt->fetch();
+
+    $debug['username_found']    = $admin ? 'YES' : 'NO — username does not exist in DB';
+    $debug['active']            = $admin ? ($admin['active'] ? 'YES' : 'NO — account is inactive') : 'N/A';
+    $debug['hash_in_db']        = $admin ? substr($admin['password_hash'], 0, 20) . '...' : 'N/A';
+    $debug['password_verify']   = $admin ? (password_verify($password, $admin['password_hash']) ? '✓ MATCH — password is correct' : '✗ NO MATCH — wrong password') : 'N/A';
+    $debug['hash_is_bcrypt']    = $admin ? (str_starts_with($admin['password_hash'], '$2y$') ? 'YES — properly hashed' : 'NO — may be stored as plain text!') : 'N/A';
+    $debug['table_row_count']   = $pdo->query("SELECT COUNT(*) FROM admin_users")->fetchColumn() . ' admin(s) in database';
+}
+
+// ── DIAGNOSTIC: Test member login ───────────────────────
+if ($_POST['action'] ?? '' === 'test_member') {
+    $email = trim($_POST['test_email'] ?? '');
+    $pin   = $_POST['test_pin'] ?? '';
+
+    $stmt = $pdo->prepare("SELECT * FROM members WHERE email=? LIMIT 1");
+    $stmt->execute([$email]);
+    $member = $stmt->fetch();
+
+    $debug['email_found']     = $member ? 'YES' : 'NO — email does not exist in members table';
+    $debug['active']          = $member ? ($member['active'] ? 'YES' : 'NO — account is inactive') : 'N/A';
+    $debug['hash_in_db']      = $member ? substr($member['pin_hash'], 0, 20) . '...' : 'N/A';
+    $debug['pin_verify']      = $member ? (password_verify($pin, $member['pin_hash']) ? '✓ MATCH — PIN is correct' : '✗ NO MATCH — wrong PIN') : 'N/A';
+    $debug['hash_is_bcrypt']  = $member ? (str_starts_with($member['pin_hash'], '$2y$') ? 'YES — properly hashed' : 'NO — may be stored as plain text!') : 'N/A';
+    $debug['member_count']    = $pdo->query("SELECT COUNT(*) FROM members")->fetchColumn() . ' member(s) in database';
+}
+
+// ── Current DB State ─────────────────────────────────────
+$adminCount  = $pdo->query("SELECT COUNT(*) FROM admin_users")->fetchColumn();
+$memberCount = $pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
+$admins      = $pdo->query("SELECT id, username, name, active, last_login FROM admin_users")->fetchAll();
+$members     = $pdo->query("SELECT id, name, email, role, active FROM members ORDER BY name")->fetchAll();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lodge Setup Tool</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0a1628; color: #e8f0f8; padding: 2rem; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: #c9a84c; margin-bottom: .25rem; }
+  .warning { background: #9b2335; border-radius: 8px; padding: 14px 18px; margin: 1rem 0; font-weight: bold; }
+  .success { background: #1a5c38; border-radius: 8px; padding: 14px 18px; margin: 1rem 0; }
+  .error   { background: #7a1a2a; border-radius: 8px; padding: 14px 18px; margin: 1rem 0; }
+  .card { background: #102850; border: 1px solid #2952a3; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; }
+  h2 { color: #c9a84c; margin-bottom: 1rem; font-size: 1.1rem; }
+  label { display: block; font-size: 12px; color: #7aa0d4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; margin-top: 12px; }
+  input[type=text], input[type=password], input[type=email] {
+    width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #2952a3;
+    background: #0a1628; color: #e8f0f8; font-size: 14px;
+  }
+  button[type=submit] {
+    margin-top: 1rem; padding: 10px 24px; background: linear-gradient(135deg, #c9a84c, #8a6f30);
+    color: #0a1628; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 1rem; }
+  th { background: #1a3a6b; color: #c9a84c; padding: 8px 12px; text-align: left; }
+  td { padding: 8px 12px; border-bottom: 1px solid #1a3a6b; }
+  .debug { background: #0d1f3c; border-radius: 6px; padding: 1rem; margin-top: 1rem; }
+  .debug-row { display: flex; gap: 1rem; padding: 5px 0; border-bottom: 1px solid #1a3a6b; font-size: 13px; }
+  .debug-key { color: #7aa0d4; min-width: 180px; }
+  .debug-val { color: #e8f0f8; }
+  code { background: #0a1628; padding: 2px 6px; border-radius: 4px; font-size: 12px; word-break: break-all; }
+  .step { display: inline-block; background: #c9a84c; color: #0a1628; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; font-weight: bold; margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⬡ Lodge 11 Setup & Debug Tool</h1>
+  <p style="color:#7aa0d4;margin-bottom:1rem">Estrella Del Rey David Numero 11 — One-Time Setup Utility</p>
+
+  <div class="warning">
+    ⚠ DELETE THIS FILE after you finish! It allows password changes without authentication.
+    File path: <code>setup_tool.php</code>
+  </div>
+
+  <?php if ($message): ?>
+  <div class="success"><?= $message ?></div>
+  <?php endif; ?>
+  <?php if ($error): ?>
+  <div class="error">✗ <?= htmlspecialchars($error) ?></div>
+  <?php endif; ?>
+
+  <!-- Current State -->
+  <div class="card">
+    <h2>📊 Current Database State</h2>
+    <p style="color:#7aa0d4;font-size:13px">DB: <strong style="color:#fff"><?= DB_NAME ?></strong> | Host: <strong style="color:#fff"><?= DB_HOST ?></strong></p>
+
+    <table>
+      <thead><tr><th>Admin Users (<?= $adminCount ?>)</th><th>Active</th><th>Last Login</th></tr></thead>
+      <tbody>
+        <?php foreach ($admins as $a): ?>
+        <tr>
+          <td><strong><?= htmlspecialchars($a['username']) ?></strong> — <?= htmlspecialchars($a['name']) ?></td>
+          <td style="color:<?= $a['active']?'#4caf7d':'#e57373' ?>"><?= $a['active']?'✓ Active':'✗ Inactive' ?></td>
+          <td style="color:#7aa0d4;font-size:12px"><?= $a['last_login'] ?? 'Never' ?></td>
+        </tr>
+        <?php endforeach; ?>
+        <?php if (!$admins): ?><tr><td colspan="3" style="color:#e57373">⚠ NO ADMIN USERS FOUND — run the database_setup.sql first!</td></tr><?php endif; ?>
+      </tbody>
+    </table>
+
+    <table style="margin-top:1rem">
+      <thead><tr><th>Members (<?= $memberCount ?>)</th><th>Role</th><th>Active</th></tr></thead>
+      <tbody>
+        <?php foreach ($members as $m): ?>
+        <tr>
+          <td><?= htmlspecialchars($m['name']) ?><br><span style="color:#7aa0d4;font-size:11px"><?= htmlspecialchars($m['email']) ?></span></td>
+          <td><?= htmlspecialchars($m['role']) ?></td>
+          <td style="color:<?= $m['active']?'#4caf7d':'#e57373' ?>"><?= $m['active']?'✓':'✗' ?></td>
+        </tr>
+        <?php endforeach; ?>
+        <?php if (!$members): ?><tr><td colspan="3" style="color:#7aa0d4">No members yet — add one below.</td></tr><?php endif; ?>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid">
+    <!-- Fix Admin Password -->
+    <div class="card">
+      <h2><span class="step">1</span> Set Admin Password</h2>
+      <p style="color:#7aa0d4;font-size:13px;margin-bottom:.5rem">
+        The default seeded password is <strong style="color:#fff">"password"</strong>.<br>
+        Use this to set a new secure password.
+      </p>
+      <form method="POST">
+        <input type="hidden" name="action" value="set_admin_password">
+        <label>Admin Username</label>
+        <input type="text" name="username" value="admin" required>
+        <label>New Password</label>
+        <input type="password" name="new_password" required placeholder="Min 6 characters">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" required placeholder="Repeat password">
+        <button type="submit">Set Password</button>
+      </form>
+    </div>
+
+    <!-- Add/Fix Member -->
+    <div class="card">
+      <h2><span class="step">2</span> Add or Reset Member PIN</h2>
+      <p style="color:#7aa0d4;font-size:13px;margin-bottom:.5rem">
+        Add a new member or reset an existing member's PIN.
+      </p>
+      <form method="POST">
+        <input type="hidden" name="action" value="add_member">
+        <label>Full Name</label>
+        <input type="text" name="name" required placeholder="e.g. Juan García">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="juan@correo.com">
+        <label>Role</label>
+        <input type="text" name="role" value="Worshipful Master">
+        <label>PIN (4-8 digits only)</label>
+        <input type="text" name="pin" required placeholder="e.g. 1234" maxlength="8" pattern="[0-9]+">
+        <button type="submit">Add / Update Member</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Test Admin Login -->
+    <div class="card">
+      <h2><span class="step">3</span> Test Admin Login</h2>
+      <p style="color:#7aa0d4;font-size:13px;margin-bottom:.5rem">
+        Diagnose exactly why a login fails.
+      </p>
+      <form method="POST">
+        <input type="hidden" name="action" value="test_login">
+        <label>Username to Test</label>
+        <input type="text" name="test_username" value="admin">
+        <label>Password to Test</label>
+        <input type="password" name="test_password" placeholder="Enter password to verify">
+        <button type="submit">Run Diagnostic</button>
+      </form>
+      <?php if (!empty($debug) && isset($debug['username_found'])): ?>
+      <div class="debug">
+        <?php foreach ($debug as $k => $v): ?>
+        <div class="debug-row">
+          <span class="debug-key"><?= htmlspecialchars($k) ?></span>
+          <span class="debug-val"><?= htmlspecialchars($v) ?></span>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+
+    <!-- Test Member Login -->
+    <div class="card">
+      <h2><span class="step">4</span> Test Member Login</h2>
+      <p style="color:#7aa0d4;font-size:13px;margin-bottom:.5rem">
+        Check if a member's email + PIN combination works.
+      </p>
+      <form method="POST">
+        <input type="hidden" name="action" value="test_member">
+        <label>Email to Test</label>
+        <input type="email" name="test_email" placeholder="member@email.com">
+        <label>PIN to Test</label>
+        <input type="password" name="test_pin" placeholder="Enter PIN to verify" maxlength="8">
+        <button type="submit">Run Diagnostic</button>
+      </form>
+      <?php if (!empty($debug) && isset($debug['email_found'])): ?>
+      <div class="debug">
+        <?php foreach ($debug as $k => $v): ?>
+        <div class="debug-row">
+          <span class="debug-key"><?= htmlspecialchars($k) ?></span>
+          <span class="debug-val"><?= htmlspecialchars($v) ?></span>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <!-- Quick Fix SQL -->
+  <div class="card">
+    <h2>🔧 Quick Fix — Direct SQL (if all else fails)</h2>
+    <p style="color:#7aa0d4;font-size:13px;margin-bottom:1rem">
+      Run these in phpMyAdmin → SQL tab to manually set the admin password to <strong style="color:#fff">Lodge11Admin!</strong>
+    </p>
+    <?php
+    // Generate a hash for a sample password to show in SQL
+    $sample_hash = password_hash('Lodge11Admin!', PASSWORD_BCRYPT, ['cost' => 12]);
+    ?>
+    <code style="display:block;background:#0a1628;padding:1rem;border-radius:6px;font-size:12px;line-height:1.8;word-break:break-all">
+      -- Run this in phpMyAdmin SQL tab:<br>
+      UPDATE admin_users SET password_hash='<?= $sample_hash ?>' WHERE username='admin';<br><br>
+      -- This sets the password to: Lodge11Admin!<br>
+      -- Change immediately after logging in!
+    </code>
+  </div>
+
+  <div class="warning" style="margin-top:2rem">
+    🚨 REMEMBER: Delete <strong>setup_tool.php</strong> from your server now!
+  </div>
+</div>
+</body>
+</html>
