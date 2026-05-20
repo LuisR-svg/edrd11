@@ -49,10 +49,10 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Estrella Del Rey David Numero 11 — Fraternidad, Caridad y Verdad.">
+  <meta name="description" content="Estrella Del Rey David #11 — Fraternidad, Caridad y Verdad.">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Estrella Del Rey David Numero 11 — Logia Masónica</title>
+  <title>Estrella Del Rey David #11 — Logia Masónica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     <div class="navbar-brand" onclick="window.location='/'">
       <span class="symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
       <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David Numero 11</div>
+        <div class="brand-name">Estrella Del Rey David #11</div>
         <!-- <div class="brand-sub">— Est. 1952</div> -->
       </div>
     </div>
@@ -88,8 +88,8 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <div class="hero-bg-overlay" aria-hidden="true"></div>
   <div class="hero-pattern"    aria-hidden="true"></div>
   <div class="hero-content">
-    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David Numero 11"></span>
-    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David Numero 11</h1>
+    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David #11"></span>
+    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David #11</h1>
     <!-- <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica  — Fundada 1952</p> -->
     <p class="hero-desc animate-fadeUp delay-3">
       Una fraternidad dedicada al crecimiento moral, espiritual e intelectual de sus miembros
@@ -143,7 +143,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
         <div class="timeline animate-fadeUp">
           <div class="timeline-item">
             <div class="timeline-year">1952</div>
-            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David Numero 11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
+            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David #11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
           </div>
           <div class="timeline-item">
             <div class="timeline-year">1970s</div>
@@ -217,7 +217,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     <div class="divider"></div>
     <div class="card" style="text-align:center;padding:2.5rem">
       <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.05rem;line-height:1.9">
-        La Logia Estrella Del Rey David Numero 11 da la bienvenida a hombres de buena moral
+        La Logia Estrella Del Rey David #11 da la bienvenida a hombres de buena moral
         que deseen conocer nuestros principios y ser parte de nuestra hermandad.
         Para mayor información, contáctanos a través de un miembro activo de la logia.
       </p>
@@ -232,9 +232,9 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- ── FOOTER ────────────────────────────────────────────── -->
 <footer>
   <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-  <div class="footer-name">Estrella Del Rey David Numero 11</div>
+  <div class="footer-name">Estrella Del Rey David #11</div>
   <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
-  <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David Numero 11 · Todos los derechos reservados · Fundada 1952</p>
+  <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David #11 · Todos los derechos reservados · Fundada 1952</p>
 </footer>
 
 <!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
