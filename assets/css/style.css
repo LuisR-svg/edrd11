@@ -5,6 +5,7 @@
 
 /* ── CUSTOM PROPERTIES ── */
 :root {
+  --star-color: #0035b9;
   --royal-950: #060e1c;
   --royal-900: #0a1628;
   --royal-800: #0d1f3c;
@@ -225,7 +226,7 @@ img {
 }
 .navbar-brand .symbol .fa-star-of-david {
   font-size: 32px;
-  color: #0035b9;
+  color: var(--star-color);
   filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.5));
   animation: glow 3s ease-in-out infinite;
 }
@@ -1044,7 +1045,7 @@ footer {
 }
 .footer-symbol .fa-star-of-david {
   font-size: 36px;
-  color: var(--gold);
+  color: var(--star-color);
   display: block;
   margin-bottom: 1rem;
   animation: glow 3s ease-in-out infinite;
