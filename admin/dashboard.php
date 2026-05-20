@@ -95,7 +95,7 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
   <meta name="csrf-token" content="<?= csrf_token() ?>">
   <title>Admin Panel — <?= APP_NAME ?></title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css?v=1.6">
   <style>
    
   </style>
