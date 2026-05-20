@@ -1089,7 +1089,7 @@ footer {
 }
 .login-symbol .fa-star-of-david {
   font-size: 50px;
-  color: var(--gold);
+  color: var(--star-color);
   display: block;
   text-align: center;
   margin-bottom: 1rem;
