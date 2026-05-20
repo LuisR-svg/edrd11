@@ -283,7 +283,6 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
         ?>
         <td style="text-align:center;font-size:11px">
           <?php if (!$d): ?><span style="color:#aaa">—</span>
-          <!-- <?php elseif ($d['paid']): ?> -->
             <?php elseif ($d['paid'] == 1): ?>
             <span class="paid">✓</span>
           <?php else: ?><span class="unpaid">✗</span>
