@@ -1048,6 +1048,8 @@ footer {
   color: var(--star-color);
   display: block;
   margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   animation: glow 3s ease-in-out infinite;
 }
 .footer-name {
