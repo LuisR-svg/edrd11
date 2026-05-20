@@ -568,6 +568,15 @@ img {
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--royal-900);
+}
+.btn-gold:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.4);
+}
 .btn-gold .fa-star-of-david {
   background: linear-gradient(135deg, var(--gold-dark), var(--gold));
   /* color: var(--royal-900); */
