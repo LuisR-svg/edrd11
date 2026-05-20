@@ -87,7 +87,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <div class="hero-bg-overlay" aria-hidden="true"></div>
   <div class="hero-pattern"    aria-hidden="true"></div>
   <div class="hero-content">
-    <span class="hero-symbol animate-fadeUp" aria-hidden="true">⬡</span>
+    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David Numero 11"></span>
     <h1 class="animate-fadeUp delay-1">Estrella Del Rey David Numero 11</h1>
     <!-- <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica  — Fundada 1952</p> -->
     <p class="hero-desc animate-fadeUp delay-3">
