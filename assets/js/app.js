@@ -481,3 +481,220 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   });
 });
+
+// NOTE: This is a code reference file showing what needs to be added to assets/js/app.js
+// Copy the functions below into your existing app.js file
+
+// ═══════════════════════════════════════════════════════════
+// ADD THESE FUNCTIONS TO assets/js/app.js
+// ═══════════════════════════════════════════════════════════
+
+// ── Tab Management ──────────────────────────────────────────
+function initTabs() {
+  document.querySelectorAll("[data-tabs]").forEach((tabGroup) => {
+    const buttons = tabGroup.querySelectorAll(".tab-btn");
+    const contents = tabGroup.querySelectorAll(".tab-content");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tabId = btn.getAttribute("data-tab");
+
+        // Remove active class from all buttons and contents
+        buttons.forEach((b) => b.classList.remove("active"));
+        contents.forEach((c) => c.classList.remove("active"));
+
+        // Add active class to clicked button and corresponding content
+        btn.classList.add("active");
+        const activeContent = tabGroup.querySelector(
+          `[data-tab-content="${tabId}"]`,
+        );
+        if (activeContent) activeContent.classList.add("active");
+      });
+    });
+  });
+}
+
+// ── Modal Management ────────────────────────────────────────
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+}
+
+// Close modal on overlay click
+document.querySelectorAll(".modal-overlay").forEach((overlay) => {
+  overlay.addEventListener("click", function (e) {
+    if (e.target === this) {
+      this.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  });
+});
+
+// ── Hamburger Menu (FIXED) ──────────────────────────────────
+const hamburger = document.getElementById("hamburger");
+const navbar = document.querySelector(".navbar-links");
+
+if (hamburger && navbar) {
+  hamburger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navbar.style.display = navbar.style.display === "flex" ? "none" : "flex";
+    navbar.style.position = "absolute";
+    navbar.style.top = "70px";
+    navbar.style.left = "0";
+    navbar.style.right = "0";
+    navbar.style.width = "100%";
+    navbar.style.flexDirection = "column";
+    navbar.style.background = "var(--royal-900)";
+    navbar.style.zIndex = "999";
+    navbar.style.padding = "1rem";
+    navbar.style.gap = "0.5rem";
+  });
+
+  // Close menu when a link is clicked
+  navbar.querySelectorAll("a, button").forEach((el) => {
+    el.addEventListener("click", () => {
+      navbar.style.display = "none";
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".navbar")) {
+      navbar.style.display = "none";
+    }
+  });
+}
+
+// ── Format Utilities ────────────────────────────────────────
+function fmt(num) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(num || 0);
+}
+
+function fmtDate(dateStr) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+// ── CSRF Token from Meta Tag ────────────────────────────────
+function csrfToken() {
+  return document.querySelector('meta[name="csrf-token"]')?.content || "";
+}
+
+// ── Toast Notifications ────────────────────────────────────
+function toast(msg, type = "success") {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+
+  const el = document.createElement("div");
+  el.className = `toast toast-${type}`;
+  el.textContent = msg;
+  el.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    background: ${type === "success" ? "#1a7a4a" : type === "error" ? "#9b2335" : "#2952a3"};
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    animation: slideUp 0.3s ease;
+  `;
+
+  document.body.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transition = "opacity 0.4s ease";
+    setTimeout(() => el.remove(), 400);
+  }, 3000);
+}
+
+// ── API Fetch Wrapper ───────────────────────────────────────
+async function api(endpoint, data = {}, method = "POST") {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken(),
+      "X-Requested-With": "XMLHttpRequest",
+    },
+  };
+
+  if (method === "POST" || method === "PUT") {
+    options.body = JSON.stringify(data);
+  }
+
+  try {
+    const r = await fetch(endpoint, options);
+    const j = await r.json();
+    if (!j.success) throw new Error(j.error || "Error");
+    return j;
+  } catch (err) {
+    toast(err.message, "error");
+    throw err;
+  }
+}
+
+// ── Intersection Observer for Scroll Animations ─────────────
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: "0px 0px -100px 0px",
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = "1";
+      entry.target.style.transform = "translateY(0)";
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('[class*="animate-"]').forEach((el) => {
+  el.style.opacity = "0";
+  el.style.transform = "translateY(20px)";
+  el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+  observer.observe(el);
+});
+
+// ── Initialize on DOM Ready ─────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  initTabs();
+
+  // Auto-dismiss error messages
+  document.querySelectorAll(".auto-dismiss").forEach((el) => {
+    setTimeout(() => {
+      el.style.opacity = "0";
+      el.style.transition = "opacity 0.4s ease";
+      setTimeout(() => el.remove(), 400);
+    }, 4000);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// END OF ADDITIONS
+// Make sure to add these BEFORE the closing </script> tag
+// in your HTML files
+// ─────────────────────────────────────────────────────────────

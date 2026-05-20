@@ -2,8 +2,8 @@
 /**
  * api/reports.php — Financial Reports Export
  * ============================================================
+ * FIXED: Now shows outstanding dues, correct net balance with donations
  * Generates CSV (for Google Sheets/Excel) or print-ready HTML
- * that the browser can save as PDF via Ctrl+P / Print dialog.
  *
  * Types: financial, dues, donations, annual, monthly
  * Formats: csv, pdf
@@ -16,15 +16,13 @@ require_once __DIR__ . '/../includes/db.php';
 secure_session_start();
 require_admin();
 
-$type   = get_param('type',   'financial'); // financial|dues|donations|annual|monthly
-$format = get_param('format', 'pdf');        // csv|pdf
+$type   = get_param('type',   'financial');
+$format = get_param('format', 'pdf');
 $year   = int_val(get_param('year', date('Y')));
-$month  = int_val(get_param('month', 0));    // 0 = all months
+$month  = int_val(get_param('month', 0));
 $pdo    = DB::get();
 
 // ── FETCH DATA ───────────────────────────────────────────
-
-// All transactions (optionally filtered)
 function getTransactions($pdo, $year, $month) {
     $sql    = "SELECT t.*, m.name as member_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id WHERE YEAR(t.date)=?";
     $params = [$year];
@@ -34,13 +32,11 @@ function getTransactions($pdo, $year, $month) {
     return $s->fetchAll();
 }
 
-// All dues (optionally filtered by year)
 function getDues($pdo, $year) {
     $s = $pdo->prepare("SELECT d.*, m.name, m.email, m.role FROM dues d JOIN members m ON d.member_id=m.id WHERE d.year=? ORDER BY m.name, d.month");
     $s->execute([$year]); return $s->fetchAll();
 }
 
-// All donations (optionally filtered)
 function getDonations($pdo, $year, $month) {
     $sql    = "SELECT * FROM donations WHERE YEAR(date)=?";
     $params = [$year];
@@ -50,7 +46,6 @@ function getDonations($pdo, $year, $month) {
     return $s->fetchAll();
 }
 
-// Monthly breakdown
 function getMonthlyBreakdown($pdo, $year) {
     $s = $pdo->prepare(
         "SELECT MONTH(date) as m,
@@ -71,28 +66,43 @@ if ($format === 'csv') {
     header('Cache-Control: no-cache, no-store');
 
     $out = fopen('php://output', 'w');
-    // BOM for Excel UTF-8 compatibility
     fputs($out, "\xEF\xBB\xBF");
 
     if ($type === 'financial' || $type === 'annual' || $type === 'monthly') {
         $txs = getTransactions($pdo, $year, $month);
+        $dons = getDonations($pdo, $year, $month);
         $title = $month ? "{$months[$month]} $year Financial Report" : "$year Annual Financial Report";
+        
         fputcsv($out, ["Estrella Del Rey David Numero 11 — $title"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Date','Type','Description','Category','Member','Reference','Amount']);
-        $totalIncome = 0; $totalExpense = 0;
+        
+        $totalIncome = 0; $totalExpense = 0; $totalDons = 0;
+        
         foreach ($txs as $t) {
             fputcsv($out, [$t['date'], strtoupper($t['type']), $t['description'], $t['category'], $t['member_name'] ?? '', $t['reference'] ?? '', number_format($t['amount'],2)]);
             if ($t['type']==='income')  $totalIncome  += $t['amount'];
             if ($t['type']==='expense') $totalExpense += $t['amount'];
         }
+        
+        foreach ($dons as $d) {
+            $donor = $d['anonymous'] ? '[Anonymous]' : ($d['donor_name'] ?? '');
+            fputcsv($out, [$d['date'], 'DONATION', $donor, $d['category'], '', '', number_format($d['amount'],2)]);
+            $totalDons += $d['amount'];
+        }
+
         fputcsv($out, []);
         fputcsv($out, ['','','','','','Total Income:',  number_format($totalIncome,2)]);
+        fputcsv($out, ['','','','','','Total Donations:', number_format($totalDons,2)]);
         fputcsv($out, ['','','','','','Total Expenses:', number_format($totalExpense,2)]);
-        fputcsv($out, ['','','','','','Net Balance:',   number_format($totalIncome-$totalExpense,2)]);
+        fputcsv($out, ['','','','','','Net Balance:',   number_format($totalIncome + $totalDons - $totalExpense,2)]);
 
         // Monthly breakdown
+        $dues = getDues($pdo, $year);
+        $totalOwed = array_sum(array_column(array_filter($dues, fn($d)=>!$d['paid']), 'amount'));
+        fputcsv($out, ['','','','','','Outstanding Dues:', number_format($totalOwed,2)]);
+
         fputcsv($out, []);
         fputcsv($out, ['--- Monthly Breakdown ---']);
         fputcsv($out, ['Month','Income','Expenses','Balance']);
@@ -139,11 +149,11 @@ $dons = getDonations($pdo, $year, $month);
 $dues = getDues($pdo, $year);
 $breakdown = getMonthlyBreakdown($pdo, $year);
 
-$totalIncome  = array_sum(array_column(array_filter($txs, fn($t)=>$t['type']==='income'),  'amount'));
-$totalExpense = array_sum(array_column(array_filter($txs, fn($t)=>$t['type']==='expense'), 'amount'));
-$totalDons    = array_sum(array_column($dons, 'amount'));
-$totalDues    = array_sum(array_column(array_filter($dues, fn($d)=>!$d['paid']), 'amount'));
-$balance      = $totalIncome + $totalDons - $totalExpense;
+$totalIncome   = array_sum(array_column(array_filter($txs, fn($t)=>$t['type']==='income'),  'amount'));
+$totalExpense  = array_sum(array_column(array_filter($txs, fn($t)=>$t['type']==='expense'), 'amount'));
+$totalDons     = array_sum(array_column($dons, 'amount'));
+$totalOwed     = array_sum(array_column(array_filter($dues, fn($d)=>!$d['paid']), 'amount'));
+$balance       = $totalIncome + $totalDons - $totalExpense;
 
 $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 
@@ -160,10 +170,10 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
   .header h2 { font-size: 16px; color: #2952a3; margin-top: 4px; }
   .header .meta { font-size: 11px; color: #666; margin-top: 6px; }
   .symbol { font-size: 36px; color: #c9a84c; }
-  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
   .summary-box { border: 1px solid #b8cfe8; border-radius: 8px; padding: 12px; text-align: center; }
   .summary-box .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #2952a3; margin-bottom: 4px; }
-  .summary-box .val { font-size: 20px; font-weight: bold; }
+  .summary-box .val { font-size: 18px; font-weight: bold; }
   .income-val  { color: #1a7a4a; }
   .expense-val { color: #9b2335; }
   .balance-val { color: #1a3a6b; }
@@ -200,12 +210,13 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
     <div class="meta">Generated: <?= date('F j, Y \a\t g:i A') ?> · CONFIDENTIAL</div>
   </div>
 
-  <!-- Summary Boxes -->
+  <!-- Summary Boxes — FIXED to include outstanding dues -->
   <div class="summary-grid">
-    <div class="summary-box"><div class="lbl">Total Income</div><div class="val income-val">$<?= number_format($totalIncome + $totalDons, 2) ?></div></div>
+    <div class="summary-box"><div class="lbl">Total Income</div><div class="val income-val">$<?= number_format($totalIncome, 2) ?></div></div>
+    <div class="summary-box"><div class="lbl">Total Donations</div><div class="val income-val">$<?= number_format($totalDons, 2) ?></div></div>
     <div class="summary-box"><div class="lbl">Total Expenses</div><div class="val expense-val">$<?= number_format($totalExpense, 2) ?></div></div>
     <div class="summary-box"><div class="lbl">Net Balance</div><div class="val balance-val">$<?= number_format($balance, 2) ?></div></div>
-    <div class="summary-box"><div class="lbl">Outstanding Dues</div><div class="val dues-val">$<?= number_format($totalDues, 2) ?></div></div>
+    <div class="summary-box"><div class="lbl">Outstanding Dues</div><div class="val dues-val">$<?= number_format($totalOwed, 2) ?></div></div>
   </div>
 
   <!-- Monthly Breakdown -->
@@ -252,11 +263,31 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
       </tr>
       <?php endforeach; ?>
       <tr class="total-row">
-        <td colspan="5">Net Balance</td>
+        <td colspan="5">Subtotal Transactions</td>
         <td>$<?= number_format($totalIncome-$totalExpense,2) ?></td>
       </tr>
     </tbody>
   </table>
+
+  <!-- Donations -->
+  <?php if (!empty($dons)): ?>
+  <h3>Donations — <?= e($periodLabel) ?></h3>
+  <table>
+    <thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Category</th><th>Note</th></tr></thead>
+    <tbody>
+      <?php foreach ($dons as $d): ?>
+      <tr>
+        <td><?= e($d['date']) ?></td>
+        <td><?= $d['anonymous'] ? '[Anonymous]' : e($d['donor_name'] ?? '—') ?></td>
+        <td class="income-td">$<?= number_format($d['amount'],2) ?></td>
+        <td><?= e($d['category']) ?></td>
+        <td><?= e($d['note'] ?? '') ?></td>
+      </tr>
+      <?php endforeach; ?>
+      <tr class="total-row"><td colspan="2">Total Donations</td><td class="income-td">$<?= number_format($totalDons,2) ?></td><td colspan="2"></td></tr>
+    </tbody>
+  </table>
+  <?php endif; ?>
 
   <!-- Dues Summary -->
   <h3>Dues Status — <?= $year ?></h3>
@@ -264,7 +295,6 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
     <thead><tr><th>Member</th><th>Role</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Outstanding</th></tr></thead>
     <tbody>
       <?php
-      // Group dues by member
       $duesMap = [];
       foreach ($dues as $d) $duesMap[$d['member_id']][$d['month']] = $d;
       $members = $pdo->query("SELECT id,name,role FROM members WHERE active=1 ORDER BY name")->fetchAll();
@@ -288,24 +318,10 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
         <td class="<?= $owed>0?'unpaid':'paid' ?>">$<?= number_format($owed,2) ?></td>
       </tr>
       <?php endforeach; ?>
-    </tbody>
-  </table>
-
-  <!-- Donations -->
-  <h3>Donations — <?= e($periodLabel) ?></h3>
-  <table>
-    <thead><tr><th>Date</th><th>Donor</th><th>Amount</th><th>Category</th><th>Note</th></tr></thead>
-    <tbody>
-      <?php foreach ($dons as $d): ?>
-      <tr>
-        <td><?= e($d['date']) ?></td>
-        <td><?= $d['anonymous'] ? '[Anonymous]' : e($d['donor_name'] ?? '—') ?></td>
-        <td class="income-td">$<?= number_format($d['amount'],2) ?></td>
-        <td><?= e($d['category']) ?></td>
-        <td><?= e($d['note'] ?? '') ?></td>
+      <tr class="total-row">
+        <td colspan="14">Total Outstanding Dues</td>
+        <td class="dues-val">$<?= number_format($totalOwed,2) ?></td>
       </tr>
-      <?php endforeach; ?>
-      <tr class="total-row"><td colspan="2">Total Donations</td><td class="income-td">$<?= number_format($totalDons,2) ?></td><td colspan="2"></td></tr>
     </tbody>
   </table>
 
@@ -314,7 +330,6 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
   </div>
 </div>
 <script>
-  // Auto-open print dialog
   window.addEventListener('load', () => {
     if (window.location.search.includes('autoprint=1')) window.print();
   });
