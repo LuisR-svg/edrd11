@@ -1,26 +1,25 @@
 /**
  * assets/js/app.js — Estrella Del Rey David Numero 11
- * Main frontend JavaScript
  * ============================================================
- * Handles: tabs, modals, toast notifications, API calls,
- * financial charts, report exports, form validation.
+ * Handles: tabs, modals, toasts, API calls, charts,
+ * report exports, hamburger menu, dues management.
  * ============================================================
  */
 
 "use strict";
 
 // ─────────────────────────────────────────────────────────
-// UTILITY FUNCTIONS
+// UTILITIES
 // ─────────────────────────────────────────────────────────
 
-/** Format currency */
+/** Format number as currency string */
 const fmt = (n) =>
   "$" +
   parseFloat(n || 0)
     .toFixed(2)
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-/** Format date to readable */
+/** Format ISO date string to readable */
 const fmtDate = (d) =>
   d
     ? new Date(d + "T00:00:00").toLocaleDateString("en-US", {
@@ -30,7 +29,7 @@ const fmtDate = (d) =>
       })
     : "—";
 
-/** Month names */
+/** Month name arrays */
 const MONTHS = [
   "Jan",
   "Feb",
@@ -64,9 +63,10 @@ const MONTHS_FULL = [
 const csrfToken = () =>
   document.querySelector('meta[name="csrf-token"]')?.content || "";
 
-/** Show toast notification */
+// ─────────────────────────────────────────────────────────
+// TOAST NOTIFICATIONS
+// ─────────────────────────────────────────────────────────
 function toast(msg, type = "success") {
-  // Remove existing
   document.querySelectorAll(".toast").forEach((t) => t.remove());
   const el = document.createElement("div");
   el.className = `toast toast-${type}`;
@@ -79,7 +79,9 @@ function toast(msg, type = "success") {
   }, 3000);
 }
 
-/** Make authenticated API call */
+// ─────────────────────────────────────────────────────────
+// API FETCH WRAPPER
+// ─────────────────────────────────────────────────────────
 async function api(endpoint, data = null, method = "POST") {
   try {
     const opts = {
@@ -102,19 +104,11 @@ async function api(endpoint, data = null, method = "POST") {
   }
 }
 
-/** Show confirmation dialog */
-function confirm_dialog(msg, onConfirm) {
-  if (window.confirm(msg)) onConfirm();
-}
-
 // ─────────────────────────────────────────────────────────
 // TABS SYSTEM
 // ─────────────────────────────────────────────────────────
-function initTabs(containerSelector) {
-  const containers = document.querySelectorAll(
-    containerSelector || "[data-tabs]",
-  );
-  containers.forEach((container) => {
+function initTabs() {
+  document.querySelectorAll("[data-tabs]").forEach((container) => {
     container.querySelectorAll(".tab-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.dataset.tab;
@@ -141,20 +135,103 @@ function openModal(id) {
   const m = document.getElementById(id);
   if (m) {
     m.style.display = "flex";
-    m.classList.add("animate-fadeIn");
+    document.body.style.overflow = "hidden";
   }
 }
+
 function closeModal(id) {
   const m = document.getElementById(id);
-  if (m) m.style.display = "none";
+  if (m) {
+    m.style.display = "none";
+    document.body.style.overflow = "";
+  }
 }
+
 // Close on backdrop click
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("modal-overlay")) closeModal(e.target.id);
+  if (e.target.classList.contains("modal-overlay")) {
+    closeModal(e.target.id);
+  }
 });
 
 // ─────────────────────────────────────────────────────────
-// ADMIN: FINANCIAL CHART (monthly bar chart)
+// HAMBURGER MENU (mobile)
+// ─────────────────────────────────────────────────────────
+function initHamburger() {
+  const hamburger = document.getElementById("hamburger");
+  const navLinks = document.querySelector(".navbar-links");
+  if (!hamburger || !navLinks) return;
+
+  let menuOpen = false;
+
+  hamburger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menuOpen = !menuOpen;
+
+    if (menuOpen) {
+      navLinks.style.display = "flex";
+      navLinks.style.flexDirection = "column";
+      navLinks.style.position = "fixed";
+      navLinks.style.top = "64px";
+      navLinks.style.left = "0";
+      navLinks.style.right = "0";
+      navLinks.style.width = "100%";
+      navLinks.style.background = "var(--royal-950, #050f1e)";
+      navLinks.style.zIndex = "9998";
+      navLinks.style.padding = "1rem 1.5rem";
+      navLinks.style.gap = "0.5rem";
+      navLinks.style.borderBottom =
+        "1px solid var(--border, rgba(74,114,196,0.3))";
+      navLinks.style.boxShadow = "0 8px 24px rgba(0,0,0,0.4)";
+      hamburger.textContent = "✕";
+    } else {
+      closeHamburger();
+    }
+  });
+
+  function closeHamburger() {
+    menuOpen = false;
+    navLinks.style.display = "";
+    navLinks.style.position = "";
+    // Reset all styles applied by open
+    [
+      "flexDirection",
+      "top",
+      "left",
+      "right",
+      "width",
+      "background",
+      "zIndex",
+      "padding",
+      "gap",
+      "borderBottom",
+      "boxShadow",
+    ].forEach((p) => (navLinks.style[p] = ""));
+    hamburger.textContent = "☰";
+  }
+
+  // Close when a nav link or button is clicked
+  navLinks.querySelectorAll("a, button").forEach((el) => {
+    el.addEventListener("click", () => {
+      if (menuOpen) closeHamburger();
+    });
+  });
+
+  // Close when clicking outside the navbar
+  document.addEventListener("click", (e) => {
+    if (menuOpen && !e.target.closest(".navbar")) {
+      closeHamburger();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menuOpen) closeHamburger();
+  });
+}
+
+// ─────────────────────────────────────────────────────────
+// MONTHLY BAR CHART (admin dashboard)
 // ─────────────────────────────────────────────────────────
 function renderMonthlyChart(monthlyData) {
   const wrap = document.getElementById("monthly-chart");
@@ -180,16 +257,15 @@ function renderMonthlyChart(monthlyData) {
     })
     .join("");
 
-  // Legend
   const legend = document.getElementById("chart-legend");
   if (legend)
     legend.innerHTML = `
-    <span style="color:var(--success);font-size:12px">■ Income</span>
-    <span style="color:var(--danger);font-size:12px;margin-left:12px">■ Expenses</span>`;
+    <span style="color:var(--success);font-size:12px">■ Ingresos</span>
+    <span style="color:var(--danger);font-size:12px;margin-left:12px">■ Egresos</span>`;
 }
 
 // ─────────────────────────────────────────────────────────
-// ADMIN: ADD TRANSACTION — month selector for dues payments
+// TRANSACTION FORM (dues month selector)
 // ─────────────────────────────────────────────────────────
 function initTransactionForm() {
   const categoryEl = document.getElementById("tx-category");
@@ -205,7 +281,6 @@ function initTransactionForm() {
   categoryEl.addEventListener("change", toggleDuesUI);
   toggleDuesUI();
 
-  // Month checkboxes: select/deselect all
   const selectAll = document.getElementById("dues-select-all");
   if (selectAll) {
     selectAll.addEventListener("click", () => {
@@ -229,7 +304,7 @@ function updateDuesTotal() {
 }
 
 // ─────────────────────────────────────────────────────────
-// ADMIN: SUBMIT ADD TRANSACTION
+// SUBMIT TRANSACTION
 // ─────────────────────────────────────────────────────────
 async function submitTransaction(form) {
   const fd = new FormData(form);
@@ -244,12 +319,12 @@ async function submitTransaction(form) {
     category: fd.get("category"),
     member_id: fd.get("member_id") || null,
     reference: fd.get("reference") || null,
-    dues_months: months, // array of month numbers being paid
+    dues_months: months,
     dues_year: fd.get("dues_year") || new Date().getFullYear(),
   };
   try {
     await api("transactions.php", data);
-    toast("Transaction recorded!");
+    toast("Transacción guardada!");
     form.reset();
     initTransactionForm();
     setTimeout(() => location.reload(), 1200);
@@ -257,7 +332,7 @@ async function submitTransaction(form) {
 }
 
 // ─────────────────────────────────────────────────────────
-// ADMIN: INLINE EDIT TRANSACTION
+// INLINE EDIT TRANSACTION ROW
 // ─────────────────────────────────────────────────────────
 function enableEditRow(id) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
@@ -267,8 +342,8 @@ function enableEditRow(id) {
     const type = cell.dataset.edit;
     if (type === "select-type") {
       cell.innerHTML = `<select class="form-control" style="padding:4px 8px;width:110px">
-        <option value="income" ${val === "income" ? "selected" : ""}>Income</option>
-        <option value="expense" ${val === "expense" ? "selected" : ""}>Expense</option>
+        <option value="income"  ${val === "income" ? "selected" : ""}>Ingreso</option>
+        <option value="expense" ${val === "expense" ? "selected" : ""}>Egreso</option>
       </select>`;
     } else if (type === "number") {
       cell.innerHTML = `<input type="number" class="form-control" style="padding:4px 8px;width:100px" value="${val}" step="0.01" min="0">`;
@@ -294,68 +369,108 @@ async function saveEditRow(id) {
   });
   try {
     await api("transactions.php?action=update", data);
-    toast("Transaction updated!");
+    toast("Transacción actualizada!");
     setTimeout(() => location.reload(), 1000);
   } catch {}
 }
 
+// ─────────────────────────────────────────────────────────
+// DELETE HELPERS
+// ─────────────────────────────────────────────────────────
 async function deleteTransaction(id) {
-  confirm_dialog(
-    "Delete this transaction? This cannot be undone.",
-    async () => {
-      try {
-        await api("transactions.php?action=delete", { id });
-        toast("Transaction deleted");
-        document.querySelector(`tr[data-id="${id}"]`)?.remove();
-      } catch {}
-    },
-  );
+  if (!confirm("¿Eliminar esta transacción? Esta acción no se puede deshacer."))
+    return;
+  try {
+    await api("transactions.php?action=delete", { id });
+    toast("Transacción eliminada");
+    document.querySelector(`tr[data-id="${id}"]`)?.remove();
+  } catch {}
 }
 
 async function deleteMember(id) {
-  confirm_dialog(
-    "Deactivate this member? Their financial records will be kept.",
-    async () => {
-      try {
-        await api("members.php?action=toggle", { id });
-        toast("Member status updated");
-        setTimeout(() => location.reload(), 1000);
-      } catch {}
-    },
-  );
+  if (
+    !confirm(
+      "¿Desactivar este miembro? Sus registros financieros se conservarán.",
+    )
+  )
+    return;
+  try {
+    await api("members.php?action=toggle", { id });
+    toast("Estado del miembro actualizado");
+    setTimeout(() => location.reload(), 1000);
+  } catch {}
 }
 
 async function deleteDonation(id) {
-  confirm_dialog("Delete this donation record?", async () => {
-    try {
-      await api("donations.php?action=delete", { id });
-      toast("Donation deleted");
-      document.querySelector(`tr[data-don-id="${id}"]`)?.remove();
-    } catch {}
-  });
+  if (!confirm("¿Eliminar este registro de donación?")) return;
+  try {
+    await api("donations.php?action=delete", { id });
+    toast("Donación eliminada");
+    document.querySelector(`tr[data-don-id="${id}"]`)?.remove();
+  } catch {}
 }
 
 async function deleteNews(id) {
-  confirm_dialog("Delete this notice?", async () => {
-    try {
-      await api("news.php?action=delete", { id });
-      toast("Notice deleted");
-      document.querySelector(`[data-news-id="${id}"]`)?.remove();
-    } catch {}
+  if (!confirm("¿Eliminar este comunicado?")) return;
+  try {
+    await api("news.php?action=delete", { id });
+    toast("Comunicado eliminado");
+    document.querySelector(`[data-news-id="${id}"]`)?.remove();
+  } catch {}
+}
+
+// ─────────────────────────────────────────────────────────
+// DUES MONTH TOGGLE (admin — click month cell to adjust)
+// ─────────────────────────────────────────────────────────
+async function toggleDueMonth(memberId, year, month, currentPaid) {
+  const monthName = MONTHS_FULL[month - 1] || `Mes ${month}`;
+  const newState = currentPaid ? "pendiente" : "pagada";
+  if (!confirm(`¿Cambiar cuota de ${monthName} ${year} a "${newState}"?`))
+    return;
+  try {
+    await api("dues_adjustment.php", {
+      member_id: memberId,
+      year,
+      month,
+      paid: !currentPaid,
+    });
+    toast(`Cuota de ${monthName} marcada como ${newState}`);
+    setTimeout(() => location.reload(), 900);
+  } catch {}
+}
+
+// Make dues month cells clickable (call after page load)
+function initDuesCells() {
+  document.querySelectorAll(".month-cell[data-member-id]").forEach((cell) => {
+    cell.style.cursor = "pointer";
+    cell.title = "Click para cambiar estado";
+    cell.addEventListener("click", function () {
+      const memberId = parseInt(this.dataset.memberId);
+      const year = parseInt(this.dataset.year);
+      const month = parseInt(this.dataset.month);
+      const isPaid = this.classList.contains("paid");
+      toggleDueMonth(memberId, year, month, isPaid);
+    });
   });
 }
 
 // ─────────────────────────────────────────────────────────
-// REPORT EXPORT — CSV
+// REPORT EXPORTS
 // ─────────────────────────────────────────────────────────
 async function exportCSV(type) {
   try {
-    const res = await fetch(`/api/reports.php?type=${type}&format=csv`, {
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-        "X-CSRF-Token": csrfToken(),
+    const year =
+      document.getElementById("rpt-year")?.value || new Date().getFullYear();
+    const month = document.getElementById("rpt-month")?.value || 0;
+    const res = await fetch(
+      `/api/reports.php?type=${type}&format=csv&year=${year}&month=${month}`,
+      {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRF-Token": csrfToken(),
+        },
       },
-    });
+    );
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -363,31 +478,38 @@ async function exportCSV(type) {
     a.download = `lodge11_${type}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast("CSV exported!");
+    toast("CSV exportado!");
   } catch {
-    toast("Export failed", "error");
+    toast("Error al exportar", "error");
   }
 }
 
-// ─────────────────────────────────────────────────────────
-// REPORT EXPORT — Print-ready PDF (opens new window)
-// ─────────────────────────────────────────────────────────
 function exportPDF(type) {
-  window.open(`/api/reports.php?type=${type}&format=pdf`, "_blank");
+  const year =
+    document.getElementById("rpt-year")?.value || new Date().getFullYear();
+  const month = document.getElementById("rpt-month")?.value || 0;
+  window.open(
+    `/api/reports.php?type=${type}&format=pdf&year=${year}&month=${month}`,
+    "_blank",
+  );
+}
+
+// Alias used in admin dashboard report tab
+function doExport(type, format) {
+  if (format === "csv") exportCSV(type);
+  else exportPDF(type);
 }
 
 // ─────────────────────────────────────────────────────────
-// FILTER TRANSACTIONS BY PERIOD
+// TRANSACTION PERIOD FILTER (finances tab)
 // ─────────────────────────────────────────────────────────
 function filterByPeriod() {
   const periodType = document.getElementById("filter-period")?.value;
   const month = document.getElementById("filter-month")?.value;
   const year = document.getElementById("filter-year")?.value;
-  const rows = document.querySelectorAll(".tx-row");
 
-  rows.forEach((row) => {
-    const date = row.dataset.date || "";
-    const [y, m] = date.split("-");
+  document.querySelectorAll(".tx-row").forEach((row) => {
+    const [y, m] = (row.dataset.date || "").split("-");
     let show = true;
     if (periodType === "monthly" && month && year)
       show = m === month.padStart(2, "0") && y === year;
@@ -417,16 +539,45 @@ function updateFilteredTotals() {
 }
 
 // ─────────────────────────────────────────────────────────
-// INIT ON PAGE LOAD
+// SCROLL ANIMATIONS (Intersection Observer)
+// ─────────────────────────────────────────────────────────
+function initScrollAnimations() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -60px 0px" },
+  );
+
+  document
+    .querySelectorAll(".card, .stat-card, .pillar, .animate-fadeUp")
+    .forEach((el) => {
+      // Skip elements already visible (e.g. above the fold)
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+      observer.observe(el);
+    });
+}
+
+// ─────────────────────────────────────────────────────────
+// DOM READY — INIT EVERYTHING
 // ─────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  // Init tabs everywhere
-  initTabs("[data-tabs]");
+  // Core UI
+  initTabs();
+  initHamburger();
+  initScrollAnimations();
 
   // Transaction form (admin finances tab)
   initTransactionForm();
 
-  // Amount field updates dues total
   const amtField = document.getElementById("tx-amount");
   if (amtField) amtField.addEventListener("input", updateDuesTotal);
 
@@ -439,262 +590,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Period filter change handlers
+  // Period filter change listeners
   ["filter-period", "filter-month", "filter-year"].forEach((id) => {
     document.getElementById(id)?.addEventListener("change", filterByPeriod);
   });
 
-  // Animate elements on scroll (Intersection Observer)
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = "1";
-          entry.target.style.transform = "translateY(0)";
-        }
-      });
-    },
-    { threshold: 0.1 },
-  );
+  // Dues month cells (admin dues tab — clickable to toggle)
+  initDuesCells();
 
-  document.querySelectorAll(".card, .stat-card, .pillar").forEach((el) => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(20px)";
-    el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-    observer.observe(el);
-  });
-
-  // Hamburger menu (mobile)
-  const hamburger = document.getElementById("hamburger");
-  const mobileMenu = document.getElementById("mobile-menu");
-  if (hamburger && mobileMenu) {
-    hamburger.addEventListener("click", () => {
-      mobileMenu.classList.toggle("open");
-    });
-  }
-
-  // Auto-dismiss alerts
+  // Auto-dismiss alert messages
   document.querySelectorAll(".auto-dismiss").forEach((el) => {
     setTimeout(() => {
       el.style.opacity = "0";
-      setTimeout(() => el.remove(), 300);
-    }, 4000);
-  });
-});
-
-// NOTE: This is a code reference file showing what needs to be added to assets/js/app.js
-// Copy the functions below into your existing app.js file
-
-// ═══════════════════════════════════════════════════════════
-// ADD THESE FUNCTIONS TO assets/js/app.js
-// ═══════════════════════════════════════════════════════════
-
-// ── Tab Management ──────────────────────────────────────────
-function initTabs() {
-  document.querySelectorAll("[data-tabs]").forEach((tabGroup) => {
-    const buttons = tabGroup.querySelectorAll(".tab-btn");
-    const contents = tabGroup.querySelectorAll(".tab-content");
-
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tabId = btn.getAttribute("data-tab");
-
-        // Remove active class from all buttons and contents
-        buttons.forEach((b) => b.classList.remove("active"));
-        contents.forEach((c) => c.classList.remove("active"));
-
-        // Add active class to clicked button and corresponding content
-        btn.classList.add("active");
-        const activeContent = tabGroup.querySelector(
-          `[data-tab-content="${tabId}"]`,
-        );
-        if (activeContent) activeContent.classList.add("active");
-      });
-    });
-  });
-}
-
-// ── Modal Management ────────────────────────────────────────
-function openModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  }
-}
-
-function closeModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) {
-    modal.style.display = "none";
-    document.body.style.overflow = "auto";
-  }
-}
-
-// Close modal on overlay click
-document.querySelectorAll(".modal-overlay").forEach((overlay) => {
-  overlay.addEventListener("click", function (e) {
-    if (e.target === this) {
-      this.style.display = "none";
-      document.body.style.overflow = "auto";
-    }
-  });
-});
-
-// ── Hamburger Menu (FIXED) ──────────────────────────────────
-const hamburger = document.getElementById("hamburger");
-const navbar = document.querySelector(".navbar-links");
-
-if (hamburger && navbar) {
-  hamburger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    navbar.style.display = navbar.style.display === "flex" ? "none" : "flex";
-    navbar.style.position = "absolute";
-    navbar.style.top = "70px";
-    navbar.style.left = "0";
-    navbar.style.right = "0";
-    navbar.style.width = "100%";
-    navbar.style.flexDirection = "column";
-    navbar.style.background = "var(--royal-900)";
-    navbar.style.zIndex = "999";
-    navbar.style.padding = "1rem";
-    navbar.style.gap = "0.5rem";
-  });
-
-  // Close menu when a link is clicked
-  navbar.querySelectorAll("a, button").forEach((el) => {
-    el.addEventListener("click", () => {
-      navbar.style.display = "none";
-    });
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".navbar")) {
-      navbar.style.display = "none";
-    }
-  });
-}
-
-// ── Format Utilities ────────────────────────────────────────
-function fmt(num) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(num || 0);
-}
-
-function fmtDate(dateStr) {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-// ── CSRF Token from Meta Tag ────────────────────────────────
-function csrfToken() {
-  return document.querySelector('meta[name="csrf-token"]')?.content || "";
-}
-
-// ── Toast Notifications ────────────────────────────────────
-function toast(msg, type = "success") {
-  const existing = document.querySelector(".toast");
-  if (existing) existing.remove();
-
-  const el = document.createElement("div");
-  el.className = `toast toast-${type}`;
-  el.textContent = msg;
-  el.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 6px;
-    background: ${type === "success" ? "#1a7a4a" : type === "error" ? "#9b2335" : "#2952a3"};
-    color: #fff;
-    font-size: 13px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 9999;
-    animation: slideUp 0.3s ease;
-  `;
-
-  document.body.appendChild(el);
-  setTimeout(() => {
-    el.style.opacity = "0";
-    el.style.transition = "opacity 0.4s ease";
-    setTimeout(() => el.remove(), 400);
-  }, 3000);
-}
-
-// ── API Fetch Wrapper ───────────────────────────────────────
-async function api(endpoint, data = {}, method = "POST") {
-  const options = {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Token": csrfToken(),
-      "X-Requested-With": "XMLHttpRequest",
-    },
-  };
-
-  if (method === "POST" || method === "PUT") {
-    options.body = JSON.stringify(data);
-  }
-
-  try {
-    const r = await fetch(endpoint, options);
-    const j = await r.json();
-    if (!j.success) throw new Error(j.error || "Error");
-    return j;
-  } catch (err) {
-    toast(err.message, "error");
-    throw err;
-  }
-}
-
-// ── Intersection Observer for Scroll Animations ─────────────
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: "0px 0px -100px 0px",
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = "1";
-      entry.target.style.transform = "translateY(0)";
-      observer.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
-
-document.querySelectorAll('[class*="animate-"]').forEach((el) => {
-  el.style.opacity = "0";
-  el.style.transform = "translateY(20px)";
-  el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-  observer.observe(el);
-});
-
-// ── Initialize on DOM Ready ─────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  initTabs();
-
-  // Auto-dismiss error messages
-  document.querySelectorAll(".auto-dismiss").forEach((el) => {
-    setTimeout(() => {
-      el.style.opacity = "0";
-      el.style.transition = "opacity 0.4s ease";
+      el.style.transition = "opacity 0.4s";
       setTimeout(() => el.remove(), 400);
     }, 4000);
   });
 });
-
-// ─────────────────────────────────────────────────────────────
-// END OF ADDITIONS
-// Make sure to add these BEFORE the closing </script> tag
-// in your HTML files
-// ─────────────────────────────────────────────────────────────
