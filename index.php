@@ -58,7 +58,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
   <link rel="stylesheet" href="/assets/css/style.css?v=1.2">
-  <script src="assets/js/app.js"></script>
 </head>
 <body>
 
@@ -99,7 +98,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     </p>
     <div class="hero-actions animate-fadeUp delay-4">
       <button class="btn btn-gold" onclick="openModal('modal-member-login')">
-        <span>⬡</span> Acceso de Miembros
+        <span><i class="fa-solid fa-star-of-david"></span> Acceso de Miembros
       </button>
       <a href="#about" class="btn btn-outline">Conoce la Logia</a>
     </div>
@@ -232,7 +231,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 
 <!-- ── FOOTER ────────────────────────────────────────────── -->
 <footer>
-  <span class="footer-symbol" aria-hidden="true">⬡</span>
+  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></span>
   <div class="footer-name">Estrella Del Rey David Numero 11</div>
   <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
   <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David Numero 11 · Todos los derechos reservados · Fundada 1952</p>
@@ -243,7 +242,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- Member Login Modal -->
 <div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
   <div class="modal">
-    <span class="login-symbol" aria-hidden="true">⬡</span>
+    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
     <h2 class="modal-title">Acceso de Miembros</h2>
     <p class="login-sub">Estrella Del Rey David No. 11</p>
     <?php if (!empty($_SESSION['login_error_member'])): ?>

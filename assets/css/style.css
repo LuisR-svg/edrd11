@@ -223,9 +223,9 @@ img {
   gap: 14px;
   cursor: pointer;
 }
-.navbar-brand .symbol {
+.navbar-brand .symbol .fa-star-of-david {
   font-size: 32px;
-  color: var(--gold);
+  color: #0035b9;
   filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.5));
   animation: glow 3s ease-in-out infinite;
 }
@@ -348,10 +348,6 @@ img {
   animation: glow 3s ease-in-out infinite;
 }
 
-.hero-symbol .fa-star-of-david {
-  color: #0035b9;
-  animation: glow 3s ease-in-out infinite;
-}
 .hero h1 {
   font-size: clamp(2.2rem, 5vw, 4rem);
   color: var(--gold);
@@ -1046,7 +1042,7 @@ footer {
   margin-top: 4rem;
   text-align: center;
 }
-.footer-symbol {
+.footer-symbol .fa-star-of-david {
   font-size: 36px;
   color: var(--gold);
   display: block;
@@ -1088,7 +1084,7 @@ footer {
   max-width: 420px;
   animation: fadeUp 0.5s ease;
 }
-.login-symbol {
+.login-symbol .fa-star-of-david {
   font-size: 50px;
   color: var(--gold);
   display: block;
