@@ -106,14 +106,14 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol">⬡</span>
+      <span class="symbol"><i class="fa-solid fa-star-of-david"></i></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Panel Administrativo</div>
       </div>
     </a>
     <div class="navbar-links">
-      <span style="color:var(--gold);font-size:13px;margin-right:8px">⬡ <?= $adminName ?></span>
+      <span style="color:var(--gold);font-size:13px;margin-right:8px"><i class="fa-solid fa-star-of-david"></i> <?= $adminName ?></span>
       <a href="/" class="nav-link">Sitio Público</a>
       <a href="/api/auth.php?logout=1" class="nav-link">Cerrar Sesión</a>
     </div>
@@ -131,7 +131,7 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
     <div class="sidebar-lbl">Panel</div>
     <?php
     $tabs = [
-      'dashboard'  => ['⬡','Resumen General'],
+      'dashboard'  => ['<i class="fa-solid fa-star-of-david"></i>','Resumen General'],
       'members'    => ['👤','Miembros'],
       'finances'   => ['💰','Finanzas'],
       'dues'       => ['📋','Cuotas'],
@@ -865,7 +865,7 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
 </div>
 
 <footer style="margin-top:0">
-  <span class="footer-symbol">⬡</span>
+  <span class="footer-symbol"><i class="fa-solid fa-star-of-david"></i></span>
   <div class="footer-name">Estrella Del Rey David Numero 11</div>
   <p class="footer-copy">© <?=date('Y')?> · Panel Administrativo · Confidencial</p>
 </footer>
