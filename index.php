@@ -66,8 +66,8 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     <div class="navbar-brand" onclick="window.location='/'">
       <span class="symbol" aria-hidden="true">⬡</span>
       <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David</div>
-        <div class="brand-sub">Numero 11 — Est. 1952</div>
+        <div class="brand-name">Estrella Del Rey David Numero 11</div>
+        <!-- <div class="brand-sub">— Est. 1952</div> -->
       </div>
     </div>
     <div class="navbar-links">
@@ -88,8 +88,8 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <div class="hero-pattern"    aria-hidden="true"></div>
   <div class="hero-content">
     <span class="hero-symbol animate-fadeUp" aria-hidden="true">⬡</span>
-    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David</h1>
-    <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica Numero 11 — Fundada 1952</p>
+    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David Numero 11</h1>
+    <!-- <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica  — Fundada 1952</p> -->
     <p class="hero-desc animate-fadeUp delay-3">
       Una fraternidad dedicada al crecimiento moral, espiritual e intelectual de sus miembros
       y al servicio de nuestra comunidad, sustentada en los principios de
