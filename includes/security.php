@@ -1,48 +1,41 @@
 <?php
 /**
  * includes/security.php — Security Helpers
- * ============================================================
- * Provides: CSRF tokens, session management, input sanitization,
- * rate limiting, brute-force protection, IP detection.
- * ============================================================
+ * FIX: require_admin() now redirects to /?login=admin (modal on index.php)
+ *      instead of /admin/login.php which doesn't exist and caused redirect loop.
  */
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/db.php';
 
-// ─────────────────────────────────────────────────────────
-// SESSION INITIALIZATION
-// ─────────────────────────────────────────────────────────
 function secure_session_start(): void {
     if (session_status() === PHP_SESSION_NONE) {
-        // Harden cookie settings
         session_set_cookie_params([
             'lifetime' => SESSION_LIFETIME,
             'path'     => '/',
-            'secure'   => true,          // HTTPS only — change to false if no SSL during dev
-            'httponly' => true,          // JavaScript cannot read the cookie
-            'samesite' => 'Strict',      // CSRF protection
+            'secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', // FIX: only true on real HTTPS
+            'httponly' => true,
+            'samesite' => 'Lax', // FIX: changed from Strict to Lax so redirects carry the cookie
         ]);
         session_name('LODGE11_SESS');
         session_start();
 
-        // Regenerate session ID periodically to prevent fixation
         if (!isset($_SESSION['_initiated'])) {
             session_regenerate_id(true);
             $_SESSION['_initiated'] = true;
             $_SESSION['_created']   = time();
         }
-        // Expire session after SESSION_LIFETIME
+        // Expire old sessions — but don't recurse, just clear
         if (isset($_SESSION['_created']) && (time() - $_SESSION['_created']) > SESSION_LIFETIME) {
+            session_unset();
             session_destroy();
-            secure_session_start();
+            session_start();
+            session_regenerate_id(true);
+            $_SESSION['_initiated'] = true;
+            $_SESSION['_created']   = time();
         }
     }
 }
-
-// ─────────────────────────────────────────────────────────
-// CSRF PROTECTION
-// ─────────────────────────────────────────────────────────
 
 /** Generate or return existing CSRF token */
 function csrf_token(): string {
@@ -58,9 +51,10 @@ function csrf_field(): string {
     return '<input type="hidden" name="csrf_token" value="' . csrf_token() . '">';
 }
 
-/** Verify the submitted CSRF token. Returns false on mismatch. */
+/** Verify the submitted CSRF token */
 function csrf_verify(): bool {
     $submitted = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    if (empty($submitted)) return false;
     return hash_equals(csrf_token(), $submitted);
 }
 
@@ -68,73 +62,58 @@ function csrf_verify(): bool {
 function csrf_protect(): void {
     if (!csrf_verify()) {
         http_response_code(403);
+        header('Content-Type: application/json');
         die(json_encode(['error' => 'Invalid security token. Please refresh and try again.']));
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// INPUT SANITIZATION
-// ─────────────────────────────────────────────────────────
-
-/** Sanitize a string for safe output (prevents XSS) */
+/** Sanitize string for HTML output (XSS prevention) */
 function e(string $s): string {
     return htmlspecialchars($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 }
 
-/** Get a sanitized POST value */
+/** Get sanitized POST string — NOT for passwords */
 function post(string $key, string $default = ''): string {
     return trim(strip_tags($_POST[$key] ?? $default));
 }
 
-/** Get a sanitized GET value */
+/** Get sanitized GET string */
 function get_param(string $key, string $default = ''): string {
     return trim(strip_tags($_GET[$key] ?? $default));
 }
 
-/** Validate email format */
+/** Validate email */
 function valid_email(string $email): bool {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-/** Cast to positive integer safely */
+/** Safe positive int cast */
 function int_val(mixed $val): int {
     return max(0, (int) $val);
 }
 
-/** Cast to positive decimal */
+/** Safe positive float cast */
 function float_val(mixed $val): float {
     return max(0.0, (float) $val);
 }
 
-// ─────────────────────────────────────────────────────────
-// IP ADDRESS DETECTION
-// ─────────────────────────────────────────────────────────
+/** Detect real client IP */
 function get_ip(): string {
-    // Check common proxy headers, fall back to REMOTE_ADDR
-    $keys = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
-    foreach ($keys as $key) {
+    foreach (['HTTP_CF_CONNECTING_IP','HTTP_X_FORWARDED_FOR','REMOTE_ADDR'] as $key) {
         if (!empty($_SERVER[$key])) {
-            // Take first IP from comma-separated list
             $ip = trim(explode(',', $_SERVER[$key])[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
+            if (filter_var($ip, FILTER_VALIDATE_IP)) return $ip;
         }
     }
     return '0.0.0.0';
 }
 
-// ─────────────────────────────────────────────────────────
-// RATE LIMITING / BRUTE FORCE PROTECTION
-// ─────────────────────────────────────────────────────────
-
-/** Check if IP is currently locked out. Returns true if locked. */
+/** Check if IP is locked out from too many failed logins */
 function is_locked_out(string $ip, string $type): bool {
-    $pdo = DB::get();
+    $pdo   = DB::get();
     $since = date('Y-m-d H:i:s', time() - (LOCKOUT_MINUTES * 60));
-    $stmt = $pdo->prepare(
-        "SELECT COUNT(*) FROM login_attempts
-         WHERE ip_address = ? AND type = ? AND success = 0 AND attempted_at > ?"
+    $stmt  = $pdo->prepare(
+        "SELECT COUNT(*) FROM login_attempts WHERE ip_address=? AND type=? AND success=0 AND attempted_at>?"
     );
     $stmt->execute([$ip, $type, $since]);
     return (int)$stmt->fetchColumn() >= MAX_LOGIN_ATTEMPTS;
@@ -142,62 +121,59 @@ function is_locked_out(string $ip, string $type): bool {
 
 /** Record a login attempt */
 function record_attempt(string $ip, string $username, string $type, bool $success): void {
-    $pdo = DB::get();
-    $pdo->prepare(
-        "INSERT INTO login_attempts (ip_address, username, type, success) VALUES (?, ?, ?, ?)"
+    DB::get()->prepare(
+        "INSERT INTO login_attempts (ip_address, username, type, success) VALUES (?,?,?,?)"
     )->execute([$ip, $username, $type, $success ? 1 : 0]);
 }
 
-/** Clear login attempts for an IP (on successful login) */
+/** Clear login attempts after successful login */
 function clear_attempts(string $ip, string $type): void {
-    $pdo = DB::get();
-    $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ? AND type = ?")
-        ->execute([$ip, $type]);
+    DB::get()->prepare("DELETE FROM login_attempts WHERE ip_address=? AND type=?")
+             ->execute([$ip, $type]);
 }
 
-// ─────────────────────────────────────────────────────────
-// AUTHENTICATION CHECKS
-// ─────────────────────────────────────────────────────────
-
-/** Check if current visitor is logged in as a member */
+/** Is a member currently logged in? */
 function is_member(): bool {
     secure_session_start();
-    return isset($_SESSION['member_id']) && !empty($_SESSION['member_id']);
+    return !empty($_SESSION['member_id']);
 }
 
-/** Check if current visitor is logged in as admin */
+/** Is an admin currently logged in? */
 function is_admin(): bool {
     secure_session_start();
-    return isset($_SESSION['admin_id']) && !empty($_SESSION['admin_id']);
+    return !empty($_SESSION['admin_id']);
 }
 
-/** Redirect to login if not member */
+/**
+ * Require member login.
+ * FIX: redirects to /?login=member (modal) not a separate page.
+ */
 function require_member(): void {
     if (!is_member()) {
-        header('Location: /index.php?login=member&redirect=' . urlencode($_SERVER['REQUEST_URI']));
+        $redirect = urlencode($_SERVER['REQUEST_URI'] ?? '/member/dashboard.php');
+        header('Location: /?login=member&redirect=' . $redirect);
         exit;
     }
 }
 
-/** Redirect to admin login if not admin */
+/**
+ * Require admin login.
+ * FIX: was redirecting to /admin/login.php which doesn't exist.
+ * Now redirects to /?login=admin which opens the admin modal on index.php.
+ */
 function require_admin(): void {
     if (!is_admin()) {
-        header('Location: /admin/login.php');
+        header('Location: /?login=admin');
         exit;
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// AUDIT LOGGING
-// ─────────────────────────────────────────────────────────
-
-/** Write an audit log entry for any admin action */
+/** Write an audit log entry */
 function audit_log(string $action, string $table = '', int $record_id = 0, array $old = [], array $new = []): void {
     secure_session_start();
-    $pdo = DB::get();
-    $pdo->prepare(
+    DB::get()->prepare(
         "INSERT INTO audit_log (admin_id, action, table_affected, record_id, old_values, new_values, ip_address)
-         VALUES (?, ?, ?, ?, ?, ?, ?)"
+         VALUES (?,?,?,?,?,?,?)"
     )->execute([
         $_SESSION['admin_id'] ?? null,
         $action,
@@ -209,18 +185,14 @@ function audit_log(string $action, string $table = '', int $record_id = 0, array
     ]);
 }
 
-// ─────────────────────────────────────────────────────────
-// JSON API HELPERS
-// ─────────────────────────────────────────────────────────
-
-/** Send a JSON success response and exit */
+/** Send JSON success response */
 function json_ok(array $data = []): void {
     header('Content-Type: application/json');
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
-/** Send a JSON error response and exit */
+/** Send JSON error response */
 function json_error(string $msg, int $code = 400): void {
     http_response_code($code);
     header('Content-Type: application/json');
@@ -228,7 +200,7 @@ function json_error(string $msg, int $code = 400): void {
     exit;
 }
 
-/** Require POST method for API endpoints */
+/** Require POST method */
 function require_post(): void {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         json_error('Method not allowed', 405);

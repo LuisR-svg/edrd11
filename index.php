@@ -1,11 +1,12 @@
 <?php
 /**
  * index.php — Public Homepage
- * Estrella Del Rey David Numero 11
  * ============================================================
- * This is the main public-facing page.
- * Shows: hero, pillars, history, news, stats, contact.
- * Also handles the login modal trigger via ?login=member|admin
+ * FIX: The previous version redirected admins to /admin/dashboard.php
+ * even if that file didn't exist, causing an infinite redirect loop.
+ * Now checks the file exists before redirecting, and shows a safe
+ * fallback if not. In production with all files uploaded, this works
+ * exactly as before.
  * ============================================================
  */
 
@@ -15,15 +16,31 @@ require_once __DIR__ . '/includes/db.php';
 
 secure_session_start();
 
-// If already logged in, redirect to dashboards
-if (is_admin())  { header('Location: /admin/dashboard.php'); exit; }
-if (is_member()) { header('Location: /member/dashboard.php'); exit; }
+// ── REDIRECT ALREADY LOGGED-IN USERS ────────────────────
+// FIX: guard these with file_exists so a missing file can't cause a loop
+if (is_admin()  && file_exists(__DIR__ . '/admin/dashboard.php'))  {
+    header('Location: /admin/dashboard.php');
+    exit;
+}
+if (is_member() && file_exists(__DIR__ . '/member/dashboard.php')) {
+    header('Location: /member/dashboard.php');
+    exit;
+}
+// If admin is logged in but dashboard file is missing, log them out cleanly
+if (is_admin() || is_member()) {
+    session_unset();
+    session_destroy();
+}
 
 // Fetch public news (last 3)
 $news = [];
 try {
-    $news = DB::get()->query("SELECT * FROM news WHERE published=1 ORDER BY created_at DESC LIMIT 3")->fetchAll();
-} catch (Exception $e) { /* silence on DB not set up yet */ }
+    $news = DB::get()->query(
+        "SELECT * FROM news WHERE published=1 ORDER BY created_at DESC LIMIT 3"
+    )->fetchAll();
+} catch (Exception $e) {
+    // Silently ignore if DB not ready yet
+}
 
 $showLogin = get_param('login'); // 'member' or 'admin'
 ?>
@@ -32,11 +49,8 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Estrella Del Rey David Numero 11 - Fraternidad, Caridad y Verdad. Portal oficial de la Logia.">
-  <!-- SECURITY HEADERS (also set these in .htaccess) -->
+  <meta name="description" content="Estrella Del Rey David Numero 11 — Fraternidad, Caridad y Verdad.">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <!-- <meta http-equiv="X-Frame-Options" content="DENY"> -->
-  <!-- CSRF token for JavaScript -->
   <meta name="csrf-token" content="<?= csrf_token() ?>">
   <title>Estrella Del Rey David Numero 11 — Logia Masónica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,11 +71,11 @@ $showLogin = get_param('login'); // 'member' or 'admin'
       </div>
     </div>
     <div class="navbar-links">
-      <a href="/#about"   class="nav-link">About</a>
-      <a href="/#history" class="nav-link">History</a>
-      <a href="/#news"    class="nav-link">News</a>
-      <a href="/#contact" class="nav-link">Contact</a>
-      <button class="nav-link" onclick="openModal('modal-member-login')">Member Login</button>
+      <a href="/#about"   class="nav-link">Acerca de</a>
+      <a href="/#history" class="nav-link">Historia</a>
+      <a href="/#news"    class="nav-link">Comunicados</a>
+      <a href="/#contact" class="nav-link">Contacto</a>
+      <button class="nav-link" onclick="openModal('modal-member-login')">Acceso Miembros</button>
       <button class="nav-link gold" onclick="openModal('modal-admin-login')">Admin</button>
       <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
     </div>
@@ -151,7 +165,10 @@ $showLogin = get_param('login'); // 'member' or 'admin'
         </div>
         <div class="stat-card animate-fadeUp delay-2">
           <div class="stat-label">Hermanos Activos</div>
-          <div class="stat-value"><?= count($news) > 0 ? '30+' : '—' ?></div>
+          <div class="stat-value"><?php
+            try { echo DB::get()->query("SELECT COUNT(*) FROM members WHERE active=1")->fetchColumn(); }
+            catch(Exception $e) { echo '—'; }
+          ?></div>
         </div>
         <div class="stat-card animate-fadeUp delay-3">
           <div class="stat-label">Programas Comunitarios</div>
@@ -222,25 +239,25 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
 
 <!-- Member Login Modal -->
-<div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="member-login-title">
+<div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
   <div class="modal">
     <span class="login-symbol" aria-hidden="true">⬡</span>
-    <h2 class="modal-title" id="member-login-title">Acceso de Miembros</h2>
+    <h2 class="modal-title">Acceso de Miembros</h2>
     <p class="login-sub">Estrella Del Rey David No. 11</p>
-    <?php if (isset($_SESSION['login_error_member'])): ?>
+    <?php if (!empty($_SESSION['login_error_member'])): ?>
       <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_member']) ?></div>
       <?php unset($_SESSION['login_error_member']); ?>
     <?php endif; ?>
-    <form method="POST" action="/api/auth.php" id="member-login-form">
+    <form method="POST" action="/api/auth.php">
       <?= csrf_field() ?>
       <input type="hidden" name="type" value="member">
       <div class="form-group">
-        <label class="form-label" for="member-email">Correo Electrónico</label>
-        <input type="email" id="member-email" name="email" class="form-control" placeholder="tu@correo.com" required autocomplete="email">
+        <label class="form-label">Correo Electrónico</label>
+        <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autocomplete="email">
       </div>
       <div class="form-group">
-        <label class="form-label" for="member-pin">PIN de Acceso</label>
-        <input type="password" id="member-pin" name="pin" class="form-control" placeholder="••••" maxlength="8" required autocomplete="current-password">
+        <label class="form-label">PIN de Acceso</label>
+        <input type="password" name="pin" class="form-control" placeholder="••••" maxlength="8" required autocomplete="current-password">
       </div>
       <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Entrar a la Logia</button>
     </form>
@@ -249,25 +266,25 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 </div>
 
 <!-- Admin Login Modal -->
-<div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+<div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
   <div class="modal">
     <span class="login-symbol" aria-hidden="true">⬡</span>
-    <h2 class="modal-title" id="admin-login-title">Acceso Administrativo</h2>
+    <h2 class="modal-title">Acceso Administrativo</h2>
     <p class="login-sub">Solo personal autorizado</p>
-    <?php if (isset($_SESSION['login_error_admin'])): ?>
+    <?php if (!empty($_SESSION['login_error_admin'])): ?>
       <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_admin']) ?></div>
       <?php unset($_SESSION['login_error_admin']); ?>
     <?php endif; ?>
-    <form method="POST" action="/api/auth.php" id="admin-login-form">
+    <form method="POST" action="/api/auth.php">
       <?= csrf_field() ?>
       <input type="hidden" name="type" value="admin">
       <div class="form-group">
-        <label class="form-label" for="admin-username">Usuario</label>
-        <input type="text" id="admin-username" name="username" class="form-control" placeholder="admin" required autocomplete="username">
+        <label class="form-label">Usuario</label>
+        <input type="text" name="username" class="form-control" placeholder="admin" required autocomplete="username">
       </div>
       <div class="form-group">
-        <label class="form-label" for="admin-password">Contraseña</label>
-        <input type="password" id="admin-password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        <label class="form-label">Contraseña</label>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
       </div>
       <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Ingresar</button>
     </form>
@@ -275,7 +292,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   </div>
 </div>
 
-<!-- Auto-open login modal if URL param present -->
 <?php if ($showLogin === 'member'): ?>
 <script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-member-login'));</script>
 <?php elseif ($showLogin === 'admin'): ?>
