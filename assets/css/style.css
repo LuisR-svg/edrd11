@@ -338,10 +338,12 @@ img {
   z-index: 1;
   padding: 4rem 2rem 5rem;
 }
-.hero-symbol {
+.hero-symbol img {
   font-size: 80px;
   color: var(--gold);
   margin-bottom: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
   display: block;
   animation: glow 3s ease-in-out infinite;
 }

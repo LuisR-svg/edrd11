@@ -64,7 +64,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
     <div class="navbar-brand" onclick="window.location='/'">
-      <span class="symbol" aria-hidden="true">⬡</span>
+      <span class="symbol" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David Numero 11"></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David Numero 11</div>
         <!-- <div class="brand-sub">— Est. 1952</div> -->
