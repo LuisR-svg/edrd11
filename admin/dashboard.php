@@ -97,34 +97,7 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
-    /* ── Admin-specific overrides ── */
-    .admin-wrap   { display:flex; min-height:calc(100vh - 70px); }
-    .sidebar      { width:220px; flex-shrink:0; background:linear-gradient(180deg,var(--royal-800),var(--royal-900)); border-right:1px solid var(--border); padding:1.5rem 0; position:sticky; top:70px; height:calc(100vh - 70px); overflow-y:auto; }
-    .sidebar-lbl  { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); padding:0 1.2rem; margin-bottom:.4rem; }
-    .sidebar-link { display:flex; align-items:center; gap:10px; padding:10px 1.2rem; font-size:13px; color:var(--text-secondary); background:none; border:none; width:100%; text-align:left; cursor:pointer; font-family:var(--font-sans); transition:var(--transition); text-decoration:none; }
-    .sidebar-link:hover { color:var(--text-primary); background:rgba(255,255,255,.04); }
-    .sidebar-link.active { color:var(--gold); background:var(--gold-bg); border-right:2px solid var(--gold); }
-    .main         { flex:1; padding:2rem; overflow-x:hidden; max-width:calc(100vw - 220px); }
-    .tab-panel    { display:none; animation:fadeUp .3s ease; }
-    .tab-panel.active { display:block; }
-    /* inline-edit inputs */
-    .edit-input   { background:rgba(10,22,40,.8); border:1px solid var(--royal-400); border-radius:5px; padding:4px 8px; color:var(--text-primary); font-size:12px; }
-    /* month grid */
-    .month-grid   { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; }
-    .month-cell   { border-radius:6px; padding:8px 6px; text-align:center; font-size:11px; font-weight:600; border:1px solid var(--border); }
-    .month-cell.paid   { background:rgba(76,175,125,.18); border-color:rgba(76,175,125,.4); color:var(--success); }
-    .month-cell.unpaid { background:rgba(229,115,115,.13); border-color:rgba(229,115,115,.3); color:var(--danger); }
-    .month-cell.future { background:rgba(26,58,107,.2); color:var(--text-muted); }
-    /* bar chart */
-    .bar-wrap     { display:flex; align-items:flex-end; gap:4px; height:100px; }
-    .bar-col      { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
-    .bar-in       { width:100%; border-radius:3px 3px 0 0; min-height:3px; background:linear-gradient(180deg,var(--success),rgba(76,175,125,.3)); }
-    .bar-ex       { width:100%; border-radius:3px 3px 0 0; min-height:3px; background:linear-gradient(180deg,var(--danger),rgba(229,115,115,.3)); }
-    .bar-lbl      { font-size:9px; color:var(--text-muted); }
-    @media(max-width:900px){
-      .sidebar { display:none; }
-      .main    { max-width:100vw; padding:1rem; }
-    }
+   
   </style>
 </head>
 <body>
