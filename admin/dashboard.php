@@ -393,7 +393,7 @@ $adminName  = e($_SESSION['admin_name'] ?? 'Administrator');
               <input type="date" name="date" class="form-control" value="<?=date('Y-m-d')?>" required></div>
             <div class="form-group"><label class="form-label">Categoría *</label>
               <select name="category" id="tx-category" class="form-control">
-                <option>General</option><option>Dues</option>
+                <option>General</option><option>Dues</option><option>Donating</option>
                 <option>Events</option><option>Maintenance</option><option>Administrative</option>
                 <option>Operations</option><option>Charity</option><option>Education</option><option>Other</option>
               </select></div>
