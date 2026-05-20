@@ -276,15 +276,11 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
         <td><?= e($mem['role']) ?></td>
         <?php for ($m=1; $m<=12; $m++):
           $d = $duesMap[$mem['id']][$m] ?? null;
-          // if ($d && !$d['paid']) $owed += $d['amount'];
-          if ($d && $d['paid'] == 0) {
-           $owed += $d['amount'];
-          }
+          if ($d && !$d['paid']) $owed += $d['amount'];
         ?>
         <td style="text-align:center;font-size:11px">
           <?php if (!$d): ?><span style="color:#aaa">—</span>
-            <?php elseif ($d['paid'] == 1): ?>
-            <span class="paid">✓</span>
+          <?php elseif ($d['paid']): ?><span class="paid">✓</span>
           <?php else: ?><span class="unpaid">✗</span>
           <?php endif; ?>
         </td>
