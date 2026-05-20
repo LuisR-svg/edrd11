@@ -56,6 +56,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/d4641596a6.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/assets/css/style.css?v=1.0">
 </head>
 <body>
@@ -64,7 +65,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
     <div class="navbar-brand" onclick="window.location='/'">
-      <span class="symbol" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David Numero 11"></span>
+      <span class="symbol fa-star-of-david" aria-hidden="true"></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David Numero 11</div>
         <!-- <div class="brand-sub">— Est. 1952</div> -->
