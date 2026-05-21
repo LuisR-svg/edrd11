@@ -25,7 +25,17 @@ $pdo         = DB::get();
 $activeTab   = get_param('tab', 'dashboard');
 $year        = int_val(get_param('year', date('Y')));
 $filterMonth = int_val(get_param('month', 0));
-
+fetch('/api/data')
+  .then(response => {
+    if (!response.ok) { // Check if status is 4xx or 5xx
+      throw new Error(`Server returned status ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch(error => {
+    console.error('Request failed:', error);
+    // Show a user-friendly "Service Unavailable" message in the UI
+  });
 // ── STATS — wrap each in try/catch so a missing table never crashes the page ──
 try {
     $totalIncome    = (float)$pdo->query("SELECT COALESCE(SUM(amount),0) FROM transactions WHERE type='income'")->fetchColumn();
