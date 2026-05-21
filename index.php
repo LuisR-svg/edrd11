@@ -61,7 +61,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- ── NAVIGATION ──────────────────────────────────────── -->
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
-
     <div class="navbar-brand" onclick="window.location='/'">
       <span class="symbol" aria-hidden="true">
         <i class="fas fa-star-of-david"></i>

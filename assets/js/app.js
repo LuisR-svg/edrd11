@@ -468,30 +468,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobile-menu");
 
-  if (hamburger && mobileMenu) {
-    // Toggle menu
-    hamburger.addEventListener("click", (e) => {
-      e.stopPropagation();
-      mobileMenu.classList.toggle("open");
-    });
+  hamburger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("open");
+  });
 
-    // Prevent clicks inside menu from closing it
-    mobileMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
+  // Close when clicking outside
+  document.addEventListener("click", (e) => {
+    const clickedInsideMenu = mobileMenu.contains(e.target);
+    const clickedHamburger = hamburger.contains(e.target);
 
-    // Close menu when clicking a nav item
-    mobileMenu.querySelectorAll("a, button").forEach((item) => {
-      item.addEventListener("click", () => {
-        mobileMenu.classList.remove("open");
-      });
-    });
+    if (!clickedInsideMenu && !clickedHamburger) {
+      mobileMenu.classList.remove("open");
+    }
+  });
 
-    // Close menu when clicking outside
-    document.addEventListener("click", () => {
+  // Close when clicking a link/button
+  mobileMenu.querySelectorAll("a, button").forEach((item) => {
+    item.addEventListener("click", () => {
       mobileMenu.classList.remove("open");
     });
-  }
+  });
   // ----------------------------------------------------------------------------------------
 
   // Auto-dismiss alerts
