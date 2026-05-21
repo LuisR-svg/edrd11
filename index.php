@@ -317,6 +317,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-admin-login'));</script>
 <?php endif; ?>
 
-<script src="../assets/js/app.js"></script>
+<script src="/assets/js/app.js"></script>
 </body>
 </html>
