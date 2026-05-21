@@ -123,7 +123,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="navbar-inner">
-    <a href="/" class="navbar-brand" style="text-decoration:none">
+    <a href="/" class="navbar-brand" style="text-decoration: none">
       <span class="symbol">
         <i class="fas fa-star-of-david"></i>
       </span>
@@ -139,14 +139,10 @@ $myAdminId = (int)$_SESSION['admin_id'];
         <?= $adminName ?>
       </span>
       <a href="/" class="nav-link">Sitio Público</a>
-      <a href="/api/auth.php?logout=1" class="nav-link">
-        Cerrar Sesión
-      </a>
+      <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
     </div>
     <!-- Hamburger -->
-    <button class="hamburger" id="hamburger" aria-label="Menú">
-      ☰
-    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
   </div>
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobile-menu">
@@ -155,11 +151,10 @@ $myAdminId = (int)$_SESSION['admin_id'];
       <?= $adminName ?>
     </span>
     <a href="/" class="nav-link">Sitio Público</a>
-    <a href="/api/auth.php?logout=1" class="nav-link">
-      Cerrar Sesión
-    </a>
+    <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
   </div>
 </nav>
+
 
 <div class="admin-wrap">
 

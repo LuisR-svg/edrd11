@@ -78,27 +78,38 @@ $currentMonth = (int) date('n');
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="navbar-inner">
-    <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
+    <a href="/" class="navbar-brand" style="text-decoration: none">
+      <span class="symbol" aria-hidden="true">
+        <i class="fas fa-star-of-david"></i>
+      </span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Portal de Miembros</div>
       </div>
     </a>
+    <!-- Desktop Links -->
     <div class="navbar-links">
-      <span style="color:var(--gold);font-size:13px;margin-right:8px">
+      <span class="member-user">
         Bienvenido, <?= e(explode(' ', $member['name'])[0]) ?>
       </span>
-      <a href="/api/auth.php?logout=1" class="nav-link">Cerrar Sesión</a>
+      <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
     </div>
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
+  </div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <span class="member-user mobile-user">
+      Bienvenido, <?= e(explode(' ', $member['name'])[0]) ?>
+    </span>
+    <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
   </div>
 </nav>
 
 <!-- MAIN CONTENT -->
 <div style="max-width:1100px;margin:0 auto;padding:2rem">
-
   <!-- Page Header -->
-  <div class="page-header animate-fadeUp">
+  <div class="page-header animate-fadeUp">s
     <div style="display:flex;align-items:center;gap:16px">
       <div class="avatar"><?= e(strtoupper($initials)) ?></div>
       <div>
