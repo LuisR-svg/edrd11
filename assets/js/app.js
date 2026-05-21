@@ -469,23 +469,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
     const mobileMenu = document.getElementById("mobile-menu");
 
-    if (!hamburger || !mobileMenu) return;
+    if (!hamburger || !mobileMenu) {
+      console.error("Menu script failed: Elements not found.");
+      return;
+    }
 
-    // TOGGLE MENU
+    // 1. TOGGLE MENU
     hamburger.addEventListener("click", (e) => {
       e.stopPropagation();
-
       mobileMenu.classList.toggle("open");
+      console.log(
+        "Hamburger clicked. Menu open state:",
+        mobileMenu.classList.contains("open"),
+      );
     });
 
-    // CLOSE WHEN CLICKING MENU ITEM
+    // 2. CLOSE WHEN CLICKING MENU ITEM
     mobileMenu.querySelectorAll("a, button").forEach((item) => {
-      item.addEventListener("click", () => {
+      item.addEventListener("click", (e) => {
         mobileMenu.classList.remove("open");
+        console.log("Menu item clicked. Menu closed.");
       });
     });
 
-    // CLOSE WHEN CLICKING OUTSIDE
+    // 3. CLOSE WHEN CLICKING OUTSIDE
     document.addEventListener("click", (e) => {
       if (
         mobileMenu.classList.contains("open") &&
@@ -493,6 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
         !hamburger.contains(e.target)
       ) {
         mobileMenu.classList.remove("open");
+        console.log("Clicked outside. Menu closed.");
       }
     });
   });
