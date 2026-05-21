@@ -2,9 +2,7 @@
 /**
  * api/savings.php — Savings / Reserve Fund CRUD
  * ============================================================
- * Handles deposits and withdrawals from the lodge savings fund.
- * All endpoints require admin authentication.
- */
+  */
 
 require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/db.php';

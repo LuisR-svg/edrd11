@@ -269,7 +269,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- Admin Login Modal -->
 <div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
   <div class="modal">
-    <span class="login-symbol" aria-hidden="true">⬡</span>
+    <span class="login-symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
     <h2 class="modal-title">Acceso Administrativo</h2>
     <p class="login-sub">Solo personal autorizado</p>
     <?php if (!empty($_SESSION['login_error_admin'])): ?>

@@ -2,14 +2,6 @@
 /**
  * admin/dashboard.php — Full Admin Control Panel
  * ============================================================
- * FIXES APPLIED:
- * 1. Admin Users tab added (add/edit/delete admins)
- * 2. Dashboard stats: savings + pending dues + monthly chart fixed
- * 3. saveDuesRate now POSTs correctly and dues_settings.php is called right
- * 4. Month cells have data-member-id/data-year/data-month for JS toggle
- * 5. Savings tab shows data correctly
- * 6. Reports tab shows savings + pending dues
- * 7. Hamburger menu fixed in app.js (separate file)
  * ============================================================
  */
 
@@ -159,14 +151,14 @@ $myAdminId = (int)$_SESSION['admin_id'];
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol">⬡</span>
+      <span class="symbol"><i class="fa-solid fa-star-of-david"></i></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Panel Administrativo</div>
       </div>
     </a>
     <div class="navbar-links">
-      <span style="color:var(--gold);font-size:13px;margin-right:8px">⬡ <?= $adminName ?></span>
+      <span style="color:var(--gold);font-size:13px;margin-right:8px"><i class="fa-solid fa-star-of-david"></i> <?= $adminName ?></span>
       <a href="/" class="nav-link">Sitio Público</a>
       <a href="/api/auth.php?logout=1" class="nav-link">Cerrar Sesión</a>
       <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
@@ -185,7 +177,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
   <div class="sidebar-lbl">Panel</div>
   <?php
   $tabs = [
-    'dashboard' => ['⬡', 'Resumen General'],
+    'dashboard' => ['<i class="fa-solid fa-star-of-david"></i>', 'Resumen General'],
     'members'   => ['👤','Miembros'],
     'finances'  => ['💰','Finanzas'],
     'dues'      => ['📋','Cuotas'],
@@ -989,7 +981,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
 </div>
 
 <footer style="margin-top:0">
-  <span class="footer-symbol">⬡</span>
+  <span class="footer-symbol"><i class="fa-solid fa-star-of-david"></i></span>
   <div class="footer-name">Estrella Del Rey David Numero 11</div>
   <p class="footer-copy">© <?=date('Y')?> · Panel Administrativo · Confidencial</p>
 </footer>
