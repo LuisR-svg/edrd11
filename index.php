@@ -2,11 +2,7 @@
 /**
  * index.php — Public Homepage
  * ============================================================
- * FIX: The previous version redirected admins to /admin/dashboard.php
- * even if that file didn't exist, causing an infinite redirect loop.
- * Now checks the file exists before redirecting, and shows a safe
- * fallback if not. In production with all files uploaded, this works
- * exactly as before.
+ 
  * ============================================================
  */
 
