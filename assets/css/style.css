@@ -312,12 +312,10 @@ img {
   padding: 16px;
   gap: 12px;
   background: #111;
-
   position: absolute;
   top: 70px;
   right: 0;
   width: 100%;
-
   z-index: 999;
 }
 
