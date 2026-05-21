@@ -113,7 +113,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
   <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-  <link rel="stylesheet" href="/assets/css/style.css?v=1.8">
+  <link rel="stylesheet" href="/assets/css/style.css?v=1.9">
   <style>
    
   </style>
@@ -122,59 +122,43 @@ $myAdminId = (int)$_SESSION['admin_id'];
 
 <!-- NAVBAR -->
 <nav class="navbar">
-
   <div class="navbar-inner">
-
     <a href="/" class="navbar-brand" style="text-decoration:none">
       <span class="symbol">
         <i class="fas fa-star-of-david"></i>
       </span>
-
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Panel Administrativo</div>
       </div>
     </a>
-
     <!-- Desktop Links -->
     <div class="navbar-links">
-
       <span class="admin-user">
         <i class="fas fa-star-of-david"></i>
         <?= $adminName ?>
       </span>
-
       <a href="/" class="nav-link">Sitio Público</a>
-
       <a href="/api/auth.php?logout=1" class="nav-link">
         Cerrar Sesión
       </a>
-
     </div>
-
     <!-- Hamburger -->
     <button class="hamburger" id="hamburger" aria-label="Menú">
       ☰
     </button>
-
   </div>
-
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobile-menu">
-
     <span class="admin-user mobile-user">
       <i class="fas fa-star-of-david"></i>
       <?= $adminName ?>
     </span>
-
     <a href="/" class="nav-link">Sitio Público</a>
-
     <a href="/api/auth.php?logout=1" class="nav-link">
       Cerrar Sesión
     </a>
-
   </div>
-
 </nav>
 
 <div class="admin-wrap">
