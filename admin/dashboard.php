@@ -573,7 +573,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
         <span style="color:var(--success)">✓ <?=$paidCnt?> pagados</span>
         <?php if($owedCnt>0): ?>
         <span style="color:var(--danger)">⚠ <?=$owedCnt?> pendientes
-          <?php if($monthlyRate>0): ?>— $<?=number_format($owedCnt*$monthlyRate,2)<?php endif; ?></span>
+          <?php if($monthlyRate>0): ?>— $<?=number_format($owedCnt * $monthlyRate,2)?><?php endif; ?></span>
         <?php endif; ?>
       </div>
     </div>
