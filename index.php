@@ -233,61 +233,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David #11 · Todos los derechos reservados · Fundada 1952</p>
 </footer>
 
-<!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
-
-<!-- Member Login Modal -->
-<div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal">
-    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-    <h2 class="modal-title">Acceso de Miembros</h2>
-    <p class="login-sub">Estrella Del Rey David No. 11</p>
-    <?php if (!empty($_SESSION['login_error_member'])): ?>
-      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_member']) ?></div>
-      <?php unset($_SESSION['login_error_member']); ?>
-    <?php endif; ?>
-    <form method="POST" action="/api/auth.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="type" value="member">
-      <div class="form-group">
-        <label class="form-label">Correo Electrónico</label>
-        <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label class="form-label">PIN de Acceso</label>
-        <input type="password" name="pin" class="form-control" placeholder="••••" maxlength="8" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Entrar a la Logia</button>
-    </form>
-    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-member-login')">Cancelar</button>
-  </div>
-</div>
-
-<!-- Admin Login Modal -->
-<div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal">
-    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-    <h2 class="modal-title">Acceso Administrativo</h2>
-    <p class="login-sub">Solo personal autorizado</p>
-    <?php if (!empty($_SESSION['login_error_admin'])): ?>
-      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_admin']) ?></div>
-      <?php unset($_SESSION['login_error_admin']); ?>
-    <?php endif; ?>
-    <form method="POST" action="/api/auth.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="type" value="admin">
-      <div class="form-group">
-        <label class="form-label">Usuario</label>
-        <input type="text" name="username" class="form-control" placeholder="admin" required autocomplete="username">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Ingresar</button>
-    </form>
-    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-admin-login')">Cancelar</button>
-  </div>
-</div>
 
 <?php if ($showLogin === 'member'): ?>
 <script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-member-login'));</script>

@@ -147,6 +147,7 @@ function _navActive(string $item, string $active): string {
   </div>
 </nav>
 <?php endif; ?>
+<!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
 
 <?php /* ══════════════════════════════════════════════
          LOGIN MODALS — only rendered on public pages.
