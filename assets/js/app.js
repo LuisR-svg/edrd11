@@ -465,45 +465,45 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   // ----------------------------------------------------------------------------------------
   // Hamburger menu (mobile)
-  document.addEventListener("DOMContentLoaded", () => {
-    const hamburger = document.getElementById("hamburger");
-    const mobileMenu = document.getElementById("mobile-menu");
 
-    if (!hamburger || !mobileMenu) {
-      console.error("Menu script failed: Elements not found.");
-      return;
-    }
+  const hamburger = document.getElementById("hamburger");
+  const mobileMenu = document.getElementById("mobile-menu");
 
-    // 1. TOGGLE MENU
-    hamburger.addEventListener("click", (e) => {
-      e.stopPropagation();
-      mobileMenu.classList.toggle("open");
-      console.log(
-        "Hamburger clicked. Menu open state:",
-        mobileMenu.classList.contains("open"),
-      );
-    });
+  if (!hamburger || !mobileMenu) {
+    console.error("Menu script failed: Elements not found.");
+    return;
+  }
 
-    // 2. CLOSE WHEN CLICKING MENU ITEM
-    mobileMenu.querySelectorAll("a, button").forEach((item) => {
-      item.addEventListener("click", (e) => {
-        mobileMenu.classList.remove("open");
-        console.log("Menu item clicked. Menu closed.");
-      });
-    });
+  // 1. TOGGLE MENU
+  hamburger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("open");
+    console.log(
+      "Hamburger clicked. Menu open state:",
+      mobileMenu.classList.contains("open"),
+    );
+  });
 
-    // 3. CLOSE WHEN CLICKING OUTSIDE
-    document.addEventListener("click", (e) => {
-      if (
-        mobileMenu.classList.contains("open") &&
-        !mobileMenu.contains(e.target) &&
-        !hamburger.contains(e.target)
-      ) {
-        mobileMenu.classList.remove("open");
-        console.log("Clicked outside. Menu closed.");
-      }
+  // 2. CLOSE WHEN CLICKING MENU ITEM
+  mobileMenu.querySelectorAll("a, button").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      mobileMenu.classList.remove("open");
+      console.log("Menu item clicked. Menu closed.");
     });
   });
+
+  // 3. CLOSE WHEN CLICKING OUTSIDE
+  document.addEventListener("click", (e) => {
+    if (
+      mobileMenu.classList.contains("open") &&
+      !mobileMenu.contains(e.target) &&
+      !hamburger.contains(e.target)
+    ) {
+      mobileMenu.classList.remove("open");
+      console.log("Clicked outside. Menu closed.");
+    }
+  });
+
   // ----------------------------------------------------------------------------------------
 
   // Auto-dismiss alerts
