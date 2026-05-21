@@ -1,8 +1,7 @@
 <?php
 /**
  * includes/security.php — Security Helpers
- * FIX: require_admin() now redirects to /?login=admin (modal on index.php)
- *      instead of /admin/login.php which doesn't exist and caused redirect loop.
+ * 
  */
 
 require_once __DIR__ . '/config.php';
