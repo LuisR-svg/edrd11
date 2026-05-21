@@ -61,7 +61,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
     <div class="navbar-brand" onclick="window.location='/'">
-      <span class="symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
+      <span class="symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David #11</div>
         <!-- <div class="brand-sub">— Est. 1952</div> -->
@@ -94,7 +94,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
     </p>
     <div class="hero-actions animate-fadeUp delay-4">
       <button class="btn btn-gold" onclick="openModal('modal-member-login')">
-        <span><i class="fa-solid fa-star-of-david"></i></span> Acceso de Miembros
+        <span><i class="fas fa-star-of-david"></i></span> Acceso de Miembros
       </button>
       <a href="#about" class="btn btn-outline">Conoce la Logia</a>
     </div>
@@ -265,7 +265,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- Admin Login Modal -->
 <div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
   <div class="modal">
-    <span class="login-symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
+    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
     <h2 class="modal-title">Acceso Administrativo</h2>
     <p class="login-sub">Solo personal autorizado</p>
     <?php if (!empty($_SESSION['login_error_admin'])): ?>

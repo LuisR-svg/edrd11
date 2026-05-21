@@ -78,7 +78,7 @@ $currentMonth = (int) date('n');
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
+      <span class="symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Portal de Miembros</div>
@@ -302,7 +302,7 @@ $currentMonth = (int) date('n');
 </div>
 
 <footer>
-  <span class="footer-symbol" aria-hidden="true"><i class="fa-solid fa-star-of-david"></i></span>
+  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
   <div class="footer-name">Estrella Del Rey David Numero 11</div>
   <p class="footer-copy">© <?= date('Y') ?> · Todos los derechos reservados</p>
 </footer>
