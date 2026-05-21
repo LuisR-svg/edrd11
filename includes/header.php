@@ -155,8 +155,8 @@ function _navActive(string $item, string $active): string {
          ══════════════════════════════════════════════ */ ?>
 <?php if ($pageContext === 'public'): ?>
 
-<!-- Member Login Modal -->
-<div id="modal-member-login" class="modal-overlay" style="display:none"
+Member Login Modal
+<!-- <div id="modal-member-login" class="modal-overlay" style="display:none"
      role="dialog" aria-modal="true" aria-labelledby="member-login-title">
   <div class="modal">
     <span class="login-symbol" aria-hidden="true">⬡</span>
@@ -186,10 +186,10 @@ function _navActive(string $item, string $active): string {
     <button class="btn btn-outline btn-full" style="margin-top:.75rem"
             onclick="closeModal('modal-member-login')">Cancelar</button>
   </div>
-</div>
+</div> -->
 
 <!-- Admin Login Modal -->
-<div id="modal-admin-login" class="modal-overlay" style="display:none"
+<!-- <div id="modal-admin-login" class="modal-overlay" style="display:none"
      role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
   <div class="modal">
     <span class="login-symbol" aria-hidden="true">⬡</span>
@@ -219,7 +219,7 @@ function _navActive(string $item, string $active): string {
     <button class="btn btn-outline btn-full" style="margin-top:.75rem"
             onclick="closeModal('modal-admin-login')">Cancelar</button>
   </div>
-</div>
+</div> -->
 
 <?php /* Auto-open a modal if URL has ?login=member or ?login=admin */ ?>
 <?php
