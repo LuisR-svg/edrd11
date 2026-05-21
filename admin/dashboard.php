@@ -976,7 +976,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
   <p class="footer-copy">© <?=date('Y')?> · Panel Administrativo · Confidencial</p>
 </footer>
 
-<script src="/assets/js/app.js"></script>
+<script src="/assets/js/app.js?v=1.12"></script>
 <script>
 // ── Admin-page helpers (inline — depend on app.js being loaded first) ──
 

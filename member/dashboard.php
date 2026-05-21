@@ -319,6 +319,6 @@ $currentMonth = (int) date('n');
   <p class="footer-copy">© <?= date('Y') ?> · Todos los derechos reservados</p>
 </footer>
 
-<script src="/assets/js/app.js"></script>
+<script src="/assets/js/app.js?v=1.12"></script>
 </body>
 </html>
