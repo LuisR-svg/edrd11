@@ -122,21 +122,59 @@ $myAdminId = (int)$_SESSION['admin_id'];
 
 <!-- NAVBAR -->
 <nav class="navbar">
+
   <div class="navbar-inner">
+
     <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol"><i class="fas fa-star-of-david"></i></span>
+      <span class="symbol">
+        <i class="fas fa-star-of-david"></i>
+      </span>
+
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
         <div class="brand-sub">Panel Administrativo</div>
       </div>
     </a>
+
+    <!-- Desktop Links -->
     <div class="navbar-links">
-      <span style="color:var(--gold);font-size:13px;margin-right:8px"><i class="fas fa-star-of-david"></i> <?= $adminName ?></span>
+
+      <span class="admin-user">
+        <i class="fas fa-star-of-david"></i>
+        <?= $adminName ?>
+      </span>
+
       <a href="/" class="nav-link">Sitio Público</a>
-      <a href="/api/auth.php?logout=1" class="nav-link">Cerrar Sesión</a>
-      <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
+
+      <a href="/api/auth.php?logout=1" class="nav-link">
+        Cerrar Sesión
+      </a>
+
     </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Menú">
+      ☰
+    </button>
+
   </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+
+    <span class="admin-user mobile-user">
+      <i class="fas fa-star-of-david"></i>
+      <?= $adminName ?>
+    </span>
+
+    <a href="/" class="nav-link">Sitio Público</a>
+
+    <a href="/api/auth.php?logout=1" class="nav-link">
+      Cerrar Sesión
+    </a>
+
+  </div>
+
 </nav>
 
 <div class="admin-wrap">
