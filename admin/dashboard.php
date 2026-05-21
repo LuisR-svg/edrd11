@@ -55,7 +55,7 @@ $members = $pdo->query("SELECT * FROM members ORDER BY name")->fetchAll();
 $txSql    = "SELECT t.*, m.name as member_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id WHERE YEAR(t.date)=?";
 $txParams = [$year];
 if ($filterMonth > 0) { $txSql .= " AND MONTH(t.date)=?"; $txParams[] = $filterMonth; }
-$txSql .= " ORDER BY t.date DESC";
+$txSql .= " ORDER BY t.date DESC, t.id DESC";
 $txStmt = $pdo->prepare($txSql); $txStmt->execute($txParams);
 $transactions = $txStmt->fetchAll();
 
