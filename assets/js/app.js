@@ -471,30 +471,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!hamburger || !mobileMenu) return;
 
-    // Toggle menu
+    // TOGGLE MENU
     hamburger.addEventListener("click", (e) => {
       e.stopPropagation();
 
       mobileMenu.classList.toggle("open");
     });
 
-    // Prevent menu clicks
-    mobileMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-
-    // Close on outside click
-    document.addEventListener("click", (e) => {
-      if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
-        mobileMenu.classList.remove("open");
-      }
-    });
-
-    // Close on menu item click
+    // CLOSE WHEN CLICKING MENU ITEM
     mobileMenu.querySelectorAll("a, button").forEach((item) => {
       item.addEventListener("click", () => {
         mobileMenu.classList.remove("open");
       });
+    });
+
+    // CLOSE WHEN CLICKING OUTSIDE
+    document.addEventListener("click", (e) => {
+      if (
+        mobileMenu.classList.contains("open") &&
+        !mobileMenu.contains(e.target) &&
+        !hamburger.contains(e.target)
+      ) {
+        mobileMenu.classList.remove("open");
+      }
     });
   });
   // ----------------------------------------------------------------------------------------
