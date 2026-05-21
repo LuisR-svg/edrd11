@@ -463,17 +463,36 @@ document.addEventListener("DOMContentLoaded", () => {
     el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
     observer.observe(el);
   });
-
-  // Hamburger menu (mobile)
+  // ----------------------------------------------------------------------------------------
   // Hamburger menu (mobile)
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobile-menu");
 
   if (hamburger && mobileMenu) {
-    hamburger.addEventListener("click", () => {
+    // Toggle menu
+    hamburger.addEventListener("click", (e) => {
+      e.stopPropagation();
       mobileMenu.classList.toggle("open");
     });
+
+    // Prevent clicks inside menu from closing it
+    mobileMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    // Close menu when clicking a nav item
+    mobileMenu.querySelectorAll("a, button").forEach((item) => {
+      item.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+    });
   }
+  // ----------------------------------------------------------------------------------------
 
   // Auto-dismiss alerts
   document.querySelectorAll(".auto-dismiss").forEach((el) => {

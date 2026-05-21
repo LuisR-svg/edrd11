@@ -294,7 +294,7 @@ img {
   gap: 16px;
   align-items: center;
 }
-
+/* ------------------------------------------------------------------------------------------------ */
 /* Hamburger */
 .hamburger {
   display: none;
@@ -312,6 +312,10 @@ img {
   padding: 16px;
   gap: 12px;
   background: #111;
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 100%;
 }
 
 .mobile-menu.open {
@@ -339,6 +343,8 @@ img {
     text-align: left;
   }
 }
+/* ------------------------------------------------------------------------------------------------ */
+
 /* ── HERO SECTION ── */
 .hero {
   position: relative;
