@@ -48,7 +48,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   <meta name="description" content="Estrella Del Rey David #11 — Fraternidad, Caridad y Verdad.">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Estrella Del Rey David #11 — Logia Masónica</title>
+  <title>Estrella Del Rey David #11</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
