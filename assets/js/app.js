@@ -464,48 +464,43 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(el);
   });
   // ----------------------------------------------------------------------------------------
-  // Hamburger menu (mobile)
+  // Hamburger menu (mobile) - Refactored
+  // ----------------------------------------------------------------------------------------
+  function initMobileMenu() {
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobile-menu");
 
-  const hamburger = document.getElementById("hamburger");
-  const mobileMenu = document.getElementById("mobile-menu");
+    if (!hamburger || !mobileMenu) return; // Returns out of this function safely
 
-  if (!hamburger || !mobileMenu) {
-    console.error("Menu script failed: Elements not found.");
-    return;
+    // 1. TOGGLE MENU
+    hamburger.addEventListener("click", (e) => {
+      e.stopPropagation(); // Stop click from hitting the document
+      mobileMenu.classList.toggle("open");
+    });
+
+    // 2. UNIFIED CLOSE HANDLER
+    document.addEventListener("click", (e) => {
+      // If the menu is already closed, do nothing
+      if (!mobileMenu.classList.contains("open")) return;
+
+      // If they clicked the hamburger, ignore it (handled above)
+      if (hamburger.contains(e.target)) return;
+
+      const isClickInsideMenu = mobileMenu.contains(e.target);
+
+      // Check if they clicked a link or button (or an icon/text inside them)
+      const isClickOnSelection = e.target.closest("a, button");
+
+      // Close the menu if they clicked completely OUTSIDE,
+      // OR if they clicked on a valid SELECTION inside the menu
+      if (!isClickInsideMenu || isClickOnSelection) {
+        mobileMenu.classList.remove("open");
+      }
+    });
   }
 
-  // 1. TOGGLE MENU
-  hamburger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    mobileMenu.classList.toggle("open");
-    console.log(
-      "Hamburger clicked. Menu open state:",
-      mobileMenu.classList.contains("open"),
-    );
-  });
-
-  // 2. CLOSE WHEN CLICKING MENU ITEM
-  mobileMenu.querySelectorAll("a, button").forEach((item) => {
-    item.addEventListener("click", (e) => {
-      mobileMenu.classList.remove("open");
-      console.log("Menu item clicked. Menu closed.");
-    });
-  });
-
-  // 3. CLOSE WHEN CLICKING OUTSIDE
-  document.addEventListener("click", (e) => {
-    if (
-      mobileMenu.classList.contains("open") &&
-      !mobileMenu.contains(e.target) &&
-      !hamburger.contains(e.target)
-    ) {
-      mobileMenu.classList.remove("open");
-      console.log("Clicked outside. Menu closed.");
-    }
-  });
-
+  initMobileMenu(); // Run the safe function
   // ----------------------------------------------------------------------------------------
-
   // Auto-dismiss alerts
   document.querySelectorAll(".auto-dismiss").forEach((el) => {
     setTimeout(() => {
