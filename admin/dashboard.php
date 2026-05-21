@@ -110,7 +110,7 @@ $myAdminId = (int)$_SESSION['admin_id'];
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="<?= csrf_token() ?>">
   <title>Admin — <?= APP_NAME ?></title>
-  <link rel="icon" type="image/x-icon" href="/assets/logo-icn.ico">
+  <link rel="icon" type="image/x-icon" href="../assets/logo-icn.ico">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
   <link rel="stylesheet" href="/assets/css/style.css?v=1.8">
