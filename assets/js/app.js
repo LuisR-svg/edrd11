@@ -465,28 +465,35 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   // ----------------------------------------------------------------------------------------
   // Hamburger menu (mobile)
-  const hamburger = document.getElementById("hamburger");
-  const mobileMenu = document.getElementById("mobile-menu");
+  document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobile-menu");
 
-  hamburger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    mobileMenu.classList.toggle("open");
-  });
+    if (!hamburger || !mobileMenu) return;
 
-  // Close when clicking outside
-  document.addEventListener("click", (e) => {
-    const clickedInsideMenu = mobileMenu.contains(e.target);
-    const clickedHamburger = hamburger.contains(e.target);
+    // Toggle menu
+    hamburger.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    if (!clickedInsideMenu && !clickedHamburger) {
+      mobileMenu.classList.toggle("open");
+    });
+
+    // Prevent clicks INSIDE menu from closing it
+    mobileMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    // Close menu when clicking OUTSIDE
+    window.addEventListener("click", () => {
       mobileMenu.classList.remove("open");
-    }
-  });
+    });
 
-  // Close when clicking a link/button
-  mobileMenu.querySelectorAll("a, button").forEach((item) => {
-    item.addEventListener("click", () => {
-      mobileMenu.classList.remove("open");
+    // Close when clicking links/buttons
+    mobileMenu.querySelectorAll("a, button").forEach((item) => {
+      item.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+      });
     });
   });
   // ----------------------------------------------------------------------------------------
