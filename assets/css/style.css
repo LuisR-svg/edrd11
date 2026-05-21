@@ -319,7 +319,7 @@ img {
 }
 
 .mobile-menu.open {
-  display: flex;
+  display: flex !important;
 }
 
 /* Mobile Styles */

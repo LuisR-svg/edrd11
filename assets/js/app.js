@@ -471,25 +471,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!hamburger || !mobileMenu) return;
 
-    // Toggle menu
+    // Open / Close hamburger
     hamburger.addEventListener("click", (e) => {
-      e.preventDefault();
       e.stopPropagation();
 
       mobileMenu.classList.toggle("open");
     });
 
-    // Prevent clicks INSIDE menu from closing it
+    // Prevent menu clicks from closing
     mobileMenu.addEventListener("click", (e) => {
       e.stopPropagation();
     });
 
-    // Close menu when clicking OUTSIDE
-    window.addEventListener("click", () => {
+    // Close when clicking ANYWHERE ELSE
+    document.body.addEventListener("click", () => {
       mobileMenu.classList.remove("open");
     });
 
-    // Close when clicking links/buttons
+    // Close when clicking menu items
     mobileMenu.querySelectorAll("a, button").forEach((item) => {
       item.addEventListener("click", () => {
         mobileMenu.classList.remove("open");
