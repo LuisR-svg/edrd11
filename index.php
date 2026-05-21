@@ -226,7 +226,13 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 </section>
 
 <!-- ── FOOTER ────────────────────────────────────────────── -->
-<?php include __DIR__ . '/includes/footer.php'; ?>
+<footer>
+  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
+  <div class="footer-name">Estrella Del Rey David #11</div>
+  <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
+  <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David #11 · Todos los derechos reservados · Fundada 1952</p>
+</footer>
+
 <!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
 
 <!-- Member Login Modal -->
@@ -289,5 +295,6 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-admin-login'));</script>
 <?php endif; ?>
 
+<script src="/assets/js/app.js"></script>
 </body>
 </html>
