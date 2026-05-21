@@ -61,22 +61,54 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 <!-- ── NAVIGATION ──────────────────────────────────────── -->
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
+
     <div class="navbar-brand" onclick="window.location='/'">
-      <span class="symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
+      <span class="symbol" aria-hidden="true">
+        <i class="fas fa-star-of-david"></i>
+      </span>
+
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David #11</div>
-        <!-- <div class="brand-sub">— Est. 1952</div> -->
       </div>
     </div>
+
+    <!-- Desktop Menu -->
     <div class="navbar-links">
-      <a href="/#about"   class="nav-link">Acerca de</a>
+      <a href="/#about" class="nav-link">Acerca de</a>
       <a href="/#history" class="nav-link">Historia</a>
-      <a href="/#news"    class="nav-link">Comunicados</a>
+      <a href="/#news" class="nav-link">Comunicados</a>
       <a href="/#contact" class="nav-link">Contacto</a>
-      <button class="nav-link" onclick="openModal('modal-member-login')">Acceso Miembros</button>
-      <button class="nav-link gold" onclick="openModal('modal-admin-login')">Admin</button>
-      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+
+      <button class="nav-link" onclick="openModal('modal-member-login')">
+        Acceso Miembros
+      </button>
+
+      <button class="nav-link gold" onclick="openModal('modal-admin-login')">
+        Admin
+      </button>
     </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      ☰
+    </button>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/#about" class="nav-link">Acerca de</a>
+    <a href="/#history" class="nav-link">Historia</a>
+    <a href="/#news" class="nav-link">Comunicados</a>
+    <a href="/#contact" class="nav-link">Contacto</a>
+
+    <button class="nav-link" onclick="openModal('modal-member-login')">
+      Acceso Miembros
+    </button>
+
+    <button class="nav-link gold" onclick="openModal('modal-admin-login')">
+      Admin
+    </button>
   </div>
 </nav>
 

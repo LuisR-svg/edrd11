@@ -465,8 +465,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Hamburger menu (mobile)
+  // Hamburger menu (mobile)
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobile-menu");
+
   if (hamburger && mobileMenu) {
     hamburger.addEventListener("click", () => {
       mobileMenu.classList.toggle("open");
