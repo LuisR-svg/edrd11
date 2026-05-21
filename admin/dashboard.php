@@ -103,41 +103,11 @@ $MONTHS_F = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Admin — <?= APP_NAME ?></title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-  <link rel="stylesheet" href="/assets/css/style.css?v=1.8">
-  <style>
-   
-  </style>
-</head>
-<body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="navbar-inner">
-    <a href="/" class="navbar-brand" style="text-decoration:none">
-      <span class="symbol"><i class="fas fa-star-of-david"></i></span>
-      <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David</div>
-        <div class="brand-sub">Panel Administrativo</div>
-      </div>
-    </a>
-    <div class="navbar-links">
-      <span style="color:var(--gold);font-size:13px;margin-right:8px"><i class="fas fa-star-of-david"></i> <?= $adminName ?></span>
-      <a href="/" class="nav-link">Sitio Público</a>
-      <a href="/api/auth.php?logout=1" class="nav-link">Cerrar Sesión</a>
-      <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
-    </div>
-  </div>
-</nav>
-
+$pageTitle   = 'My Page Title';
+$pageContext = 'public';    // 'public' | 'member' | 'admin'
+$activeNav   = 'about';    // highlights that link in the public navbar
+require_once __DIR__ . '/includes/header.php';
 <div class="admin-wrap">
 
 <!-- SIDEBAR -->
