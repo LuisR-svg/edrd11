@@ -104,10 +104,10 @@ $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
 
 
-$pageTitle   = 'My Page Title';
-$pageContext = 'public';    // 'public' | 'member' | 'admin'
-$activeNav   = 'about';    // highlights that link in the public navbar
-require_once __DIR__ . '/includes/header.php';
+$pageTitle   = 'Panel Administrativo';
+$pageContext = 'admin';    // 'public' | 'member' | 'admin'
+$activeNav   = 'Panel Administrativo · Confidencial';    // highlights that link in the public navbar
+require_once __DIR__ . '/../includes/header.php';
 ?>
 <div class="admin-wrap">
 
@@ -923,14 +923,7 @@ require_once __DIR__ . '/includes/header.php';
   </div>
 </div>
 
-<footer style="margin-top:0">
-  <span class="footer-symbol"><i class="fas fa-star-of-david"></i></span>
-  <div class="footer-name">Estrella Del Rey David Numero 11</div>
-  <p class="footer-copy">© <?=date('Y')?> · Panel Administrativo · Confidencial</p>
-</footer>
-
-<script src="/assets/js/app.js"></script>
-<script>
+<?require_once __DIR__ . '/../includes/footer.php'; 
 // ── Admin-page helpers (inline — depend on app.js being loaded first) ──
 
 const CSRF = () => document.querySelector('meta[name="csrf-token"]').content;
