@@ -28,6 +28,11 @@ $mem = $pdo->prepare("SELECT id FROM members WHERE id=?");
 $mem->execute([$member_id]);
 if (!$mem->fetch()) json_error('Member not found');
 
+// Get the correct rate for this year (defaults to 15.00 if missing)
+$rateStmt = $pdo->prepare("SELECT amount FROM dues_settings WHERE year=?");
+$rateStmt->execute([$year]);
+$monthlyRate = (float)($rateStmt->fetchColumn() ?: 15.00);
+
 // Get current state
 $stmt = $pdo->prepare("SELECT * FROM dues WHERE member_id=? AND year=? AND month=?");
 $stmt->execute([$member_id, $year, $month]);
@@ -37,18 +42,20 @@ $existing = $stmt->fetch();
 $newPaid = ($paid !== null) ? (bool)$paid : ($existing ? !$existing['paid'] : true);
 
 if ($existing) {
+    // UPDATED: Now also updates the amount so old "0.00" records get fixed
     $pdo->prepare(
-        "UPDATE dues SET paid=?, paid_date=? WHERE member_id=? AND year=? AND month=?"
-    )->execute([$newPaid ? 1 : 0, $newPaid ? date('Y-m-d') : null, $member_id, $year, $month]);
+        "UPDATE dues SET paid=?, paid_date=?, amount=? WHERE member_id=? AND year=? AND month=?"
+    )->execute([$newPaid ? 1 : 0, $newPaid ? date('Y-m-d') : null, $monthlyRate, $member_id, $year, $month]);
 } else {
+    // UPDATED: Inserts $monthlyRate instead of a hardcoded 0
     $pdo->prepare(
         "INSERT INTO dues (member_id, year, month, amount, paid, paid_date)
-         VALUES (?, ?, ?, 0, ?, ?)"
-    )->execute([$member_id, $year, $month, $newPaid ? 1 : 0, $newPaid ? date('Y-m-d') : null]);
+         VALUES (?, ?, ?, ?, ?, ?)"
+    )->execute([$member_id, $year, $month, $monthlyRate, $newPaid ? 1 : 0, $newPaid ? date('Y-m-d') : null]);
 }
 
 audit_log('dues_adjustment', 'dues', 0, $existing ?: [], [
-    'member_id' => $member_id, 'year' => $year, 'month' => $month, 'paid' => $newPaid
+    'member_id' => $member_id, 'year' => $year, 'month' => $month, 'paid' => $newPaid, 'amount' => $monthlyRate
 ]);
 
 json_ok(['paid' => $newPaid, 'message' => "Mes $month marcado como " . ($newPaid ? 'pagado' : 'pendiente')]);
