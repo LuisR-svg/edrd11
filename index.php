@@ -226,8 +226,8 @@ $showLogin = get_param('login'); // 'member' or 'admin'
 </section>
 
 <!-- ── FOOTER ────────────────────────────────────────────── -->
-<?require_once __DIR__ . '/../includes/footer.php'; 
-<?require_once __DIR__ . '/../includes/modals.php'; 
+<?php require_once __DIR__ . '/../includes/footer.php'; 
+require_once __DIR__ . '/../includes/modals.php';  ?>
 
 </body>
 </html>
