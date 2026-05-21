@@ -102,12 +102,13 @@ $MONTHS_F = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 
 $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
-?>
+
 
 $pageTitle   = 'My Page Title';
 $pageContext = 'public';    // 'public' | 'member' | 'admin'
 $activeNav   = 'about';    // highlights that link in the public navbar
 require_once __DIR__ . '/includes/header.php';
+?>
 <div class="admin-wrap">
 
 <!-- SIDEBAR -->
