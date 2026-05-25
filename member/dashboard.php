@@ -60,7 +60,7 @@ $initials = implode('', array_map(fn($w) => $w[0], array_slice(explode(' ', $mem
 $months   = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 $monthsAbbr = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 $currentMonth = (int) date('n');
-?>
+
 
 // ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Portal de Miembros';
