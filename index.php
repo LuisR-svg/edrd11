@@ -41,7 +41,7 @@ try {
 $showLogin = get_param('login'); // 'member' or 'admin'
 
 
-// ── Header config ──────────────────────────────────────────
+//  ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Inicio';
 $pageContext = 'public';
 $activeNav   = '';

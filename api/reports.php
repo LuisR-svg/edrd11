@@ -164,7 +164,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <title>Lodge Report — <?= e($periodLabel) ?></title>
 <link rel="stylesheet" href="/assets/css/reports.css?v=1.1">
 </head>
-<body>
+<body class="reports">
 <div class="no-print" style="padding:12px;background:#1a3a6b;color:#fff;text-align:center">
   <strong>Click File → Print (or Ctrl+P) to save as PDF</strong>
   <button onclick="window.print()" style="margin-left:16px;padding:6px 16px;background:#c9a84c;color:#0d1f3c;border:none;border-radius:4px;cursor:pointer;font-weight:bold">🖨 Print / Save PDF</button>
@@ -172,7 +172,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 
 <div style="padding:24px 32px">
   <div class="header">
-    <div class="symbol">⬡</div>
+    <div class="symbol"><i class="fas fa-star-of-david"></i></div>
     <h1>Estrella Del Rey David No. 11 Numero 11</h1>
     <h2>Financial Report — <?= e($periodLabel) ?></h2>
     <div class="meta">Generated: <?= date('F j, Y \a\t g:i A') ?> · CONFIDENTIAL</div>

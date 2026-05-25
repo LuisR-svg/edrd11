@@ -102,13 +102,14 @@ $MONTHS_F = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 
 $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
-?>
+
 
 // ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Panel Administrativo';
 $pageContext = 'admin';
 // Capture inline admin scripts to inject AFTER app.js via footer $extraScripts
 ob_start();
+?>
 <script>
 // ── Admin-page helpers (inline — depend on app.js being loaded first) ──
 
