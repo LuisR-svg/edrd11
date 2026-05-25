@@ -71,7 +71,7 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- MAIN CONTENT -->
 <div style="max-width:1100px;margin:0 auto;padding:2rem">
   <!-- Page Header -->
-  <div class="page-header animate-fadeUp">s
+  <div class="page-header animate-fadeUp">
     <div style="display:flex;align-items:center;gap:16px">
       <div class="avatar"><?= e(strtoupper($initials)) ?></div>
       <div>
