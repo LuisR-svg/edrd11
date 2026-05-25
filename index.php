@@ -39,7 +39,7 @@ try {
 }
 
 $showLogin = get_param('login'); // 'member' or 'admin'
-?>
+
 
 // ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Inicio';
