@@ -163,6 +163,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <meta charset="UTF-8">
 <title>Lodge Report — <?= e($periodLabel) ?></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
 <link rel="stylesheet" href="/assets/css/style.css?v=1.13">
 </head>
 <body class="reports">
@@ -174,7 +175,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <div style="padding:24px 32px">
   <div class="header">
     <div class="symbol"><i class="fas fa-star-of-david"></i></div>
-    <h1>Estrella Del Rey David No. 11 Numero 11</h1>
+    <h1>Estrella Del Rey David No. 11</h1>
     <h2>Financial Report — <?= e($periodLabel) ?></h2>
     <div class="meta">Generated: <?= date('F j, Y \a\t g:i A') ?> · CONFIDENTIAL</div>
   </div>
