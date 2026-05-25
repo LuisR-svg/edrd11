@@ -56,7 +56,7 @@ function _navActive(string $item, string $active): string {
   <?php if ($extraHead) echo $extraHead; ?>
 </head>
 
-<body>
+<body class="main-layout">
 
 <?php /* ══════ NAVBAR — switches by context ══════ */ ?>
 
