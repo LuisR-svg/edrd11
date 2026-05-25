@@ -1,56 +1,56 @@
-/* ============================================================
+.main-layout {
+  /* ============================================================
    assets/css/style.css — Estrella Del Rey David Numero 11
    Royal Blue Modern Design
    ============================================================ */
 
-/* ── CUSTOM PROPERTIES ── */
-:root {
-  --star-color: #0035b9;
-  --royal-950: #060e1c;
-  --royal-900: #0a1628;
-  --royal-800: #0d1f3c;
-  --royal-700: #102850;
-  --royal-600: #1a3a6b;
-  --royal-500: #1e4080;
-  --royal-400: #2952a3;
-  --royal-300: #4a72c4;
-  --royal-200: #7aa0d4;
-  --royal-100: #b8cfe8;
-  --royal-50: #e8f0f8;
+  /* ── CUSTOM PROPERTIES ── */
+  :root {
+    --star-color: #0035b9;
+    --royal-950: #060e1c;
+    --royal-900: #0a1628;
+    --royal-800: #0d1f3c;
+    --royal-700: #102850;
+    --royal-600: #1a3a6b;
+    --royal-500: #1e4080;
+    --royal-400: #2952a3;
+    --royal-300: #4a72c4;
+    --royal-200: #7aa0d4;
+    --royal-100: #b8cfe8;
+    --royal-50: #e8f0f8;
 
-  --gold: #c9a84c;
-  --gold-light: #e8d5a0;
-  --gold-dark: #8a6f30;
-  --gold-bg: rgba(201, 168, 76, 0.12);
+    --gold: #c9a84c;
+    --gold-light: #e8d5a0;
+    --gold-dark: #8a6f30;
+    --gold-bg: rgba(201, 168, 76, 0.12);
 
-  --accent: #4fc3f7;
-  --success: #4caf7d;
-  --danger: #e57373;
-  --warning: #f9a825;
+    --accent: #4fc3f7;
+    --success: #4caf7d;
+    --danger: #e57373;
+    --warning: #f9a825;
 
-  --text-primary: #f0f4f8;
-  --text-secondary: #b8cfe8;
-  --text-muted: #7aa0d4;
+    --text-primary: #f0f4f8;
+    --text-secondary: #b8cfe8;
+    --text-muted: #7aa0d4;
 
-  --border: rgba(74, 114, 196, 0.3);
-  --border-gold: rgba(201, 168, 76, 0.3);
+    --border: rgba(74, 114, 196, 0.3);
+    --border-gold: rgba(201, 168, 76, 0.3);
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
 
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", "Segoe UI", sans-serif;
+    --font-serif: "Playfair Display", Georgia, serif;
+    --font-sans: "Inter", "Segoe UI", sans-serif;
 
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.main-layout {
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
   *,
   *::before,
   *::after {
