@@ -162,7 +162,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <head>
 <meta charset="UTF-8">
 <title>Lodge Report — <?= e($periodLabel) ?></title>
-<link rel="stylesheet" href="/assets/css/report.css?v=1.1">
+<link rel="stylesheet" href="/assets/css/reports.css?v=1.1">
 </head>
 <body>
 <div class="no-print" style="padding:12px;background:#1a3a6b;color:#fff;text-align:center">
