@@ -40,65 +40,13 @@ try {
 
 $showLogin = get_param('login'); // 'member' or 'admin'
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Estrella Del Rey David #11 — Fraternidad, Caridad y Verdad.">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Estrella Del Rey David #11</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-  <link rel="stylesheet" href="/assets/css/style.css?v=1.12">
-</head>
-<body>
 
-<!-- ── NAVIGATION ──────────────────────────────────────── -->
-<nav class="navbar" role="navigation" aria-label="Main navigation">
-  <div class="navbar-inner">
-    <div class="navbar-brand" onclick="window.location = '/'">
-      <span class="symbol" aria-hidden="true">
-        <i class="fas fa-star-of-david"></i>
-      </span>
-      <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David #11</div>
-      </div>
-    </div>
-    <!-- Desktop Menu -->
-    <div class="navbar-links">
-      <a href="/#about" class="nav-link">Acerca de</a>
-      <a href="/#history" class="nav-link">Historia</a>
-      <a href="/#news" class="nav-link">Comunicados</a>
-      <a href="/#contact" class="nav-link">Contacto</a>
-      <button class="nav-link" onclick="openModal('modal-member-login')">
-        Acceso Miembros
-      </button>
-      <button class="nav-link gold" onclick="openModal('modal-admin-login')">
-        Admin
-      </button>
-    </div>
-    <!-- Hamburger -->
-    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
-  </div>
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="/#about" class="nav-link">Acerca de</a>
-    <a href="/#history" class="nav-link">Historia</a>
-    <a href="/#news" class="nav-link">Comunicados</a>
-    <a href="/#contact" class="nav-link">Contacto</a>
-    <button class="nav-link" onclick="openModal('modal-member-login')">
-      Acceso Miembros
-    </button>
-    <button class="nav-link gold" onclick="openModal('modal-admin-login')">
-      Admin
-    </button>
-  </div>
-</nav>
+// ── Header config ──────────────────────────────────────────
+$pageTitle   = 'Inicio';
+$pageContext = 'public';
+$activeNav   = '';
+require_once __DIR__ . '/includes/header.php';
+?>
 
 
 <!-- ── HERO ──────────────────────────────────────────────── -->
@@ -247,76 +195,7 @@ $showLogin = get_param('login'); // 'member' or 'admin'
   </div>
 </section>
 
-<!-- ── FOOTER ────────────────────────────────────────────── -->
-<footer>
-  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-  <div class="footer-name">Estrella Del Rey David #11</div>
-  <p style="color:var(--text-muted);font-size:13px;margin-top:.5rem">Fraternidad · Caridad · Verdad</p>
-  <p class="footer-copy">© <?= date('Y') ?> Estrella Del Rey David #11 · Todos los derechos reservados · Fundada 1952</p>
-</footer>
 
-<!-- ══ LOGIN MODALS ══════════════════════════════════════ -->
-
-<!-- Member Login Modal -->
-<div id="modal-member-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal">
-    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-    <h2 class="modal-title">Acceso de Miembros</h2>
-    <p class="login-sub">Estrella Del Rey David No. 11</p>
-    <?php if (!empty($_SESSION['login_error_member'])): ?>
-      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_member']) ?></div>
-      <?php unset($_SESSION['login_error_member']); ?>
-    <?php endif; ?>
-    <form method="POST" action="/api/auth.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="type" value="member">
-      <div class="form-group">
-        <label class="form-label">Correo Electrónico</label>
-        <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label class="form-label">PIN de Acceso</label>
-        <input type="password" name="pin" class="form-control" placeholder="••••" maxlength="8" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Entrar a la Logia</button>
-    </form>
-    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-member-login')">Cancelar</button>
-  </div>
-</div>
-
-<!-- Admin Login Modal -->
-<div id="modal-admin-login" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal">
-    <span class="login-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-    <h2 class="modal-title">Acceso Administrativo</h2>
-    <p class="login-sub">Solo personal autorizado</p>
-    <?php if (!empty($_SESSION['login_error_admin'])): ?>
-      <div class="form-error auto-dismiss"><?= e($_SESSION['login_error_admin']) ?></div>
-      <?php unset($_SESSION['login_error_admin']); ?>
-    <?php endif; ?>
-    <form method="POST" action="/api/auth.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="type" value="admin">
-      <div class="form-group">
-        <label class="form-label">Usuario</label>
-        <input type="text" name="username" class="form-control" placeholder="admin" required autocomplete="username">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="btn btn-gold btn-full" style="margin-top:1rem">Ingresar</button>
-    </form>
-    <button class="btn btn-outline btn-full" style="margin-top:.75rem" onclick="closeModal('modal-admin-login')">Cancelar</button>
-  </div>
-</div>
-
-<?php if ($showLogin === 'member'): ?>
-<script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-member-login'));</script>
-<?php elseif ($showLogin === 'admin'): ?>
-<script>document.addEventListener('DOMContentLoaded',()=>openModal('modal-admin-login'));</script>
-<?php endif; ?>
-
-<script src="/assets/js/app.js?v=1.12"></script>
-</body>
-</html>
+<?php
+// ── Footer ────────────────────────────────────────────────
+require_once __DIR__ . '/includes/footer.php';

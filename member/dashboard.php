@@ -61,50 +61,12 @@ $months   = ['','January','February','March','April','May','June','July','August
 $monthsAbbr = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 $currentMonth = (int) date('n');
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Member | <?= APP_NAME ?></title>
-   <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-<link rel="stylesheet" href="/assets/css/style.css?v=1.9">
-</head>
-<body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="navbar-inner">
-    <a href="/" class="navbar-brand" style="text-decoration: none">
-      <span class="symbol" aria-hidden="true">
-        <i class="fas fa-star-of-david"></i>
-      </span>
-      <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David</div>
-        <div class="brand-sub">Portal de Miembros</div>
-      </div>
-    </a>
-    <!-- Desktop Links -->
-    <div class="navbar-links">
-      <span class="member-user">
-        Bienvenido, <?= e(explode(' ', $member['name'])[0]) ?>
-      </span>
-      <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
-    </div>
-    <!-- Hamburger -->
-    <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
-  </div>
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <span class="member-user mobile-user">
-      Bienvenido, <?= e(explode(' ', $member['name'])[0]) ?>
-    </span>
-    <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
-  </div>
-</nav>
+// ── Header config ──────────────────────────────────────────
+$pageTitle   = 'Portal de Miembros';
+$pageContext = 'member';
+require_once __DIR__ . '/../includes/header.php';
+?>
 
 <!-- MAIN CONTENT -->
 <div style="max-width:1100px;margin:0 auto;padding:2rem">
@@ -313,12 +275,5 @@ $currentMonth = (int) date('n');
   </div><!-- /tabs -->
 </div>
 
-<footer>
-  <span class="footer-symbol" aria-hidden="true"><i class="fas fa-star-of-david"></i></span>
-  <div class="footer-name">Estrella Del Rey David Numero 11</div>
-  <p class="footer-copy">© <?= date('Y') ?> · Todos los derechos reservados</p>
-</footer>
-
-<script src="/assets/js/app.js?v=1.12"></script>
-</body>
-</html>
+<?php
+require_once __DIR__ . '/../includes/footer.php';

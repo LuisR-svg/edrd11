@@ -103,59 +103,265 @@ $MONTHS_F = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="<?= csrf_token() ?>">
-  <title>Admin | <?= APP_NAME ?></title>
-  <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
-  <link rel="stylesheet" href="/assets/css/style.css?v=1.9">
-  <style>
-   
-  </style>
-</head>
-<body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="navbar-inner">
-    <a href="/" class="navbar-brand" style="text-decoration: none">
-      <span class="symbol">
-        <i class="fas fa-star-of-david"></i>
-      </span>
-      <div class="brand-text">
-        <div class="brand-name">Estrella Del Rey David</div>
-        <div class="brand-sub">Panel Administrativo</div>
-      </div>
-    </a>
-    <!-- Desktop Links -->
-    <div class="navbar-links">
-      <span class="admin-user">
-        <i class="fas fa-star-of-david"></i>
-        <?= $adminName ?>
-      </span>
-      <a href="/" class="nav-link">Sitio Público</a>
-      <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
-    </div>
-    <!-- Hamburger -->
-    <button class="hamburger" id="hamburger" aria-label="Menú">☰</button>
-  </div>
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <span class="admin-user mobile-user">
-      <i class="fas fa-star-of-david"></i>
-      <?= $adminName ?>
-    </span>
-    <a href="/" class="nav-link">Sitio Público</a>
-    <a href="/api/auth.php?logout=1" class="nav-link"> Cerrar Sesión </a>
-  </div>
-</nav>
+// ── Header config ──────────────────────────────────────────
+$pageTitle   = 'Panel Administrativo';
+$pageContext = 'admin';
+// Capture inline admin scripts to inject AFTER app.js via footer $extraScripts
+ob_start();
+<script>
+// ── Admin-page helpers (inline — depend on app.js being loaded first) ──
 
+const CSRF = () => document.querySelector('meta[name="csrf-token"]').content;
 
+async function adminPost(endpoint, data) {
+  const r = await fetch('/api/' + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': CSRF(),
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify(data)
+  });
+  const text = await r.text();
+  let json;
+  try { json = JSON.parse(text); }
+  catch(e) {
+    // Server returned HTML (likely a PHP error or missing file)
+    console.error('Non-JSON response:', text.slice(0,300));
+    throw new Error('Server error — check PHP logs');
+  }
+  if (!json.success) throw new Error(json.error || 'Request failed');
+  return json;
+}
+
+function showSection(id) { document.getElementById(id).style.display='block'; }
+function hideSection(id) { document.getElementById(id).style.display='none'; }
+
+// ── DUES RATE ────────────────────────────────────────────
+async function saveDuesRate() {
+  const amount = parseFloat(document.getElementById('dues-rate-input').value);
+  const year   = parseInt(document.getElementById('dues-rate-year').value);
+  if (!amount || amount <= 0) { toast('Ingrese un monto válido', 'error'); return; }
+  try {
+    await adminPost('dues_settings.php', { amount, year });
+    toast('Tarifa actualizada a $' + amount.toFixed(2) + '/mes');
+  } catch(err) { toast(err.message, 'error'); }
+}
+
+// ── DUES MONTH TOGGLE ─────────────────────────────────────
+// Called when clicking a month cell in the Dues tab
+document.querySelectorAll('.month-cell[data-member-id]').forEach(cell => {
+  cell.addEventListener('click', function() {
+    const memberId = parseInt(this.dataset.memberId);
+    const year     = parseInt(this.dataset.year);
+    const month    = parseInt(this.dataset.month);
+    const isPaid   = this.classList.contains('paid');
+    const mName    = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][month];
+    if (!confirm(`¿Cambiar ${mName} ${year} a "${isPaid ? 'pendiente' : 'pagado'}"?`)) return;
+    adminPost('dues_adjustment.php', { member_id: memberId, year, month, paid: !isPaid })
+      .then(() => { toast('Cuota actualizada'); setTimeout(() => location.reload(), 800); })
+      .catch(err => toast(err.message, 'error'));
+  });
+});
+
+// ── DUES MONTH CHECKBOXES (transaction form) ──────────────
+function selectAllDuesMonths() {
+  document.querySelectorAll('.dues-month-check').forEach(c => c.checked = true);
+  updateDuesMonthTotal();
+}
+function clearDuesMonths() {
+  document.querySelectorAll('.dues-month-check').forEach(c => c.checked = false);
+  updateDuesMonthTotal();
+}
+function updateDuesMonthTotal() {
+  const rate    = parseFloat(document.getElementById('tx-amount')?.value || 0);
+  const checked = document.querySelectorAll('.dues-month-check:checked').length;
+  const el = document.getElementById('dues-month-total');
+  if (el) el.textContent = checked ? `Total: $${(rate*checked).toFixed(2)} (${checked} mes${checked!==1?'es':''})` : '';
+}
+document.getElementById('tx-amount')?.addEventListener('input', updateDuesMonthTotal);
+document.getElementById('tx-category')?.addEventListener('change', function() {
+  document.getElementById('dues-month-row').style.display = this.value === 'Dues' ? '' : 'none';
+  document.getElementById('tx-member-row').style.display  = this.value === 'Dues' ? '' : 'none';
+});
+document.querySelectorAll('.dues-month-check').forEach(c => c.addEventListener('change', updateDuesMonthTotal));
+
+// ── ADD TRANSACTION ───────────────────────────────────────
+document.getElementById('form-add-tx')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const fd = new FormData(this);
+  const months = [...document.querySelectorAll('.dues-month-check:checked')].map(c => +c.value);
+  try {
+    await adminPost('transactions.php', {
+      type: fd.get('type'), amount: fd.get('amount'), date: fd.get('date'),
+      description: fd.get('description'), category: fd.get('category'),
+      member_id: fd.get('member_id') || null, reference: fd.get('reference') || null,
+      dues_months: months, dues_year: fd.get('dues_year') || new Date().getFullYear()
+    });
+    toast('Transacción guardada');
+    setTimeout(() => location.reload(), 900);
+  } catch(err) { toast(err.message, 'error'); }
+});
+
+// ── INLINE EDIT TRANSACTION ───────────────────────────────
+function enableEditRow(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (!row) return;
+  row.querySelectorAll('[data-edit]').forEach(cell => {
+    const val = cell.dataset.val, type = cell.dataset.edit;
+    if (type==='number') cell.innerHTML=`<input type="number" class="edit-input" style="width:90px;background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}" step="0.01">`;
+    else if(type==='date') cell.innerHTML=`<input type="date"  class="edit-input" style="background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}">`;
+    else cell.innerHTML=`<input type="text" class="edit-input" style="width:140px;background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}">`;
+  });
+  row.querySelector('.edit-btn').style.display   = 'none';
+  row.querySelector('.save-btn').style.display   = 'inline-flex';
+  row.querySelector('.cancel-btn').style.display = 'inline-flex';
+}
+async function saveEditRow(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (!row) return;
+  const data = { id };
+  row.querySelectorAll('[data-edit]').forEach(cell => {
+    const inp = cell.querySelector('input');
+    if (inp) data[cell.dataset.field] = inp.value;
+  });
+  try { await adminPost('transactions.php?action=update', data); toast('Actualizado'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+}
+async function deleteTx(id) {
+  if (!confirm('¿Eliminar transacción?')) return;
+  try { await adminPost('transactions.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-id="${id}"]`)?.remove(); }
+  catch(err) { toast(err.message, 'error'); }
+}
+
+// ── MEMBERS ───────────────────────────────────────────────
+document.getElementById('form-add-member')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  try { await adminPost('members.php', data); toast('Miembro agregado'); setTimeout(() => location.reload(), 900); }
+  catch(err) { toast(err.message, 'error'); }
+});
+async function toggleMember(id) {
+  if (!confirm('¿Cambiar estado del miembro?')) return;
+  try { await adminPost('members.php?action=toggle', {id}); toast('Estado actualizado'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+}
+function editMember(id, data) {
+  document.getElementById('edit-m-id').value      = id;
+  document.getElementById('edit-m-name').value    = data.name    || '';
+  document.getElementById('edit-m-email').value   = data.email   || '';
+  document.getElementById('edit-m-role').value    = data.role    || '';
+  document.getElementById('edit-m-degree').value  = data.degree  || 1;
+  document.getElementById('edit-m-phone').value   = data.phone   || '';
+  document.getElementById('edit-m-address').value = data.address || '';
+  document.getElementById('edit-m-notes').value   = data.notes   || '';
+  openModal('modal-edit-member');
+}
+document.getElementById('form-edit-member')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  try { await adminPost('members.php?action=update', data); toast('Miembro actualizado'); closeModal('modal-edit-member'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+});
+
+// ── DONATIONS ─────────────────────────────────────────────
+function toggleDonorType(type) {
+  document.getElementById('don-member-row').style.display = type==='member' ? '' : 'none';
+  document.getElementById('don-name-row').style.display   = type==='external' ? '' : 'none';
+  document.getElementById('don-email-row').style.display  = type==='external' ? '' : 'none';
+}
+document.getElementById('form-add-don')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const fd = new FormData(this);
+  const data = Object.fromEntries(fd.entries());
+  data.anonymous = fd.get('anonymous') ? 1 : 0;
+  if (data.donor_type === 'external') data.member_id = '';
+  try { await adminPost('donations.php', data); toast('Donación registrada'); setTimeout(() => location.reload(), 900); }
+  catch(err) { toast(err.message, 'error'); }
+});
+async function deleteDonation(id) {
+  if (!confirm('¿Eliminar donación?')) return;
+  try { await adminPost('donations.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-don-id="${id}"]`)?.remove(); }
+  catch(err) { toast(err.message, 'error'); }
+}
+
+// ── SAVINGS ───────────────────────────────────────────────
+document.getElementById('form-add-saving')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  try { await adminPost('savings.php', data); toast('Ahorro registrado'); setTimeout(() => location.reload(), 900); }
+  catch(err) { toast(err.message, 'error'); }
+});
+async function deleteSaving(id) {
+  if (!confirm('¿Eliminar este registro de ahorro?')) return;
+  try { await adminPost('savings.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-sav-id="${id}"]`)?.remove(); }
+  catch(err) { toast(err.message, 'error'); }
+}
+
+// ── NEWS ──────────────────────────────────────────────────
+document.getElementById('form-add-news')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  try { await adminPost('news.php', data); toast('Publicado'); setTimeout(() => location.reload(), 900); }
+  catch(err) { toast(err.message, 'error'); }
+});
+async function deleteNews(id) {
+  if (!confirm('¿Eliminar comunicado?')) return;
+  try { await adminPost('news.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`[data-news-id="${id}"]`)?.remove(); }
+  catch(err) { toast(err.message, 'error'); }
+}
+async function toggleNews(id) {
+  try { await adminPost('news.php?action=toggle', {id}); toast('Estado cambiado'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+}
+
+// ── ADMIN USERS ───────────────────────────────────────────
+document.getElementById('form-add-admin')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  try { await adminPost('admin_users.php', data); toast('Admin creado'); this.reset(); hideSection('add-admin-form'); setTimeout(() => location.reload(), 900); }
+  catch(err) { toast(err.message, 'error'); }
+});
+function openEditAdminModal(id, name, email) {
+  document.getElementById('edit-a-id').value    = id;
+  document.getElementById('edit-a-name').value  = name;
+  document.getElementById('edit-a-email').value = email;
+  openModal('modal-edit-admin');
+}
+document.getElementById('form-edit-admin')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  if (!data.password) delete data.password; // don't send empty password
+  try { await adminPost('admin_users.php?action=update', data); toast('Admin actualizado'); closeModal('modal-edit-admin'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+});
+async function toggleAdmin(id) {
+  if (!confirm('¿Cambiar estado de este admin?')) return;
+  try { await adminPost('admin_users.php?action=toggle', {id}); toast('Estado actualizado'); setTimeout(() => location.reload(), 800); }
+  catch(err) { toast(err.message, 'error'); }
+}
+async function deleteAdmin(id) {
+  if (!confirm('¿Eliminar esta cuenta admin? Esta acción no se puede deshacer.')) return;
+  try { await adminPost('admin_users.php?action=delete', {id}); toast('Admin eliminado'); document.querySelector(`tr[data-au-id="${id}"]`)?.remove(); }
+  catch(err) { toast(err.message, 'error'); }
+}
+
+// ── REPORTS ───────────────────────────────────────────────
+function doExport(type, format) {
+  const year  = document.getElementById('rpt-year').value;
+  const month = document.getElementById('rpt-month').value;
+  const url   = `/api/reports.php?type=${type}&format=${format}&year=${year}&month=${month}`;
+  if (format==='csv') { const a=document.createElement('a');a.href=url;a.download='';document.body.appendChild(a);a.click();a.remove(); }
+  else window.open(url, '_blank');
+}
+</script>
+</script>
+<?php
+$extraScripts = ob_get_clean();
+require_once __DIR__ . '/../includes/header.php';
+?>
 <div class="admin-wrap">
 
 <!-- SIDEBAR -->
@@ -970,260 +1176,6 @@ $myAdminId = (int)$_SESSION['admin_id'];
   </div>
 </div>
 
-<footer style="margin-top:0">
-  <span class="footer-symbol"><i class="fas fa-star-of-david"></i></span>
-  <div class="footer-name">Estrella Del Rey David Numero 11</div>
-  <p class="footer-copy">© <?=date('Y')?> · Panel Administrativo · Confidencial</p>
-</footer>
 
-<script src="/assets/js/app.js?v=1.12"></script>
-<script>
-// ── Admin-page helpers (inline — depend on app.js being loaded first) ──
-
-const CSRF = () => document.querySelector('meta[name="csrf-token"]').content;
-
-async function adminPost(endpoint, data) {
-  const r = await fetch('/api/' + endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': CSRF(),
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    body: JSON.stringify(data)
-  });
-  const text = await r.text();
-  let json;
-  try { json = JSON.parse(text); }
-  catch(e) {
-    // Server returned HTML (likely a PHP error or missing file)
-    console.error('Non-JSON response:', text.slice(0,300));
-    throw new Error('Server error — check PHP logs');
-  }
-  if (!json.success) throw new Error(json.error || 'Request failed');
-  return json;
-}
-
-function showSection(id) { document.getElementById(id).style.display='block'; }
-function hideSection(id) { document.getElementById(id).style.display='none'; }
-
-// ── DUES RATE ────────────────────────────────────────────
-async function saveDuesRate() {
-  const amount = parseFloat(document.getElementById('dues-rate-input').value);
-  const year   = parseInt(document.getElementById('dues-rate-year').value);
-  if (!amount || amount <= 0) { toast('Ingrese un monto válido', 'error'); return; }
-  try {
-    await adminPost('dues_settings.php', { amount, year });
-    toast('Tarifa actualizada a $' + amount.toFixed(2) + '/mes');
-  } catch(err) { toast(err.message, 'error'); }
-}
-
-// ── DUES MONTH TOGGLE ─────────────────────────────────────
-// Called when clicking a month cell in the Dues tab
-document.querySelectorAll('.month-cell[data-member-id]').forEach(cell => {
-  cell.addEventListener('click', function() {
-    const memberId = parseInt(this.dataset.memberId);
-    const year     = parseInt(this.dataset.year);
-    const month    = parseInt(this.dataset.month);
-    const isPaid   = this.classList.contains('paid');
-    const mName    = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][month];
-    if (!confirm(`¿Cambiar ${mName} ${year} a "${isPaid ? 'pendiente' : 'pagado'}"?`)) return;
-    adminPost('dues_adjustment.php', { member_id: memberId, year, month, paid: !isPaid })
-      .then(() => { toast('Cuota actualizada'); setTimeout(() => location.reload(), 800); })
-      .catch(err => toast(err.message, 'error'));
-  });
-});
-
-// ── DUES MONTH CHECKBOXES (transaction form) ──────────────
-function selectAllDuesMonths() {
-  document.querySelectorAll('.dues-month-check').forEach(c => c.checked = true);
-  updateDuesMonthTotal();
-}
-function clearDuesMonths() {
-  document.querySelectorAll('.dues-month-check').forEach(c => c.checked = false);
-  updateDuesMonthTotal();
-}
-function updateDuesMonthTotal() {
-  const rate    = parseFloat(document.getElementById('tx-amount')?.value || 0);
-  const checked = document.querySelectorAll('.dues-month-check:checked').length;
-  const el = document.getElementById('dues-month-total');
-  if (el) el.textContent = checked ? `Total: $${(rate*checked).toFixed(2)} (${checked} mes${checked!==1?'es':''})` : '';
-}
-document.getElementById('tx-amount')?.addEventListener('input', updateDuesMonthTotal);
-document.getElementById('tx-category')?.addEventListener('change', function() {
-  document.getElementById('dues-month-row').style.display = this.value === 'Dues' ? '' : 'none';
-  document.getElementById('tx-member-row').style.display  = this.value === 'Dues' ? '' : 'none';
-});
-document.querySelectorAll('.dues-month-check').forEach(c => c.addEventListener('change', updateDuesMonthTotal));
-
-// ── ADD TRANSACTION ───────────────────────────────────────
-document.getElementById('form-add-tx')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const fd = new FormData(this);
-  const months = [...document.querySelectorAll('.dues-month-check:checked')].map(c => +c.value);
-  try {
-    await adminPost('transactions.php', {
-      type: fd.get('type'), amount: fd.get('amount'), date: fd.get('date'),
-      description: fd.get('description'), category: fd.get('category'),
-      member_id: fd.get('member_id') || null, reference: fd.get('reference') || null,
-      dues_months: months, dues_year: fd.get('dues_year') || new Date().getFullYear()
-    });
-    toast('Transacción guardada');
-    setTimeout(() => location.reload(), 900);
-  } catch(err) { toast(err.message, 'error'); }
-});
-
-// ── INLINE EDIT TRANSACTION ───────────────────────────────
-function enableEditRow(id) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if (!row) return;
-  row.querySelectorAll('[data-edit]').forEach(cell => {
-    const val = cell.dataset.val, type = cell.dataset.edit;
-    if (type==='number') cell.innerHTML=`<input type="number" class="edit-input" style="width:90px;background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}" step="0.01">`;
-    else if(type==='date') cell.innerHTML=`<input type="date"  class="edit-input" style="background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}">`;
-    else cell.innerHTML=`<input type="text" class="edit-input" style="width:140px;background:rgba(10,22,40,.8);border:1px solid var(--royal-400,#4a72c4);border-radius:5px;padding:4px 8px;color:#e8f0f8" value="${val}">`;
-  });
-  row.querySelector('.edit-btn').style.display   = 'none';
-  row.querySelector('.save-btn').style.display   = 'inline-flex';
-  row.querySelector('.cancel-btn').style.display = 'inline-flex';
-}
-async function saveEditRow(id) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if (!row) return;
-  const data = { id };
-  row.querySelectorAll('[data-edit]').forEach(cell => {
-    const inp = cell.querySelector('input');
-    if (inp) data[cell.dataset.field] = inp.value;
-  });
-  try { await adminPost('transactions.php?action=update', data); toast('Actualizado'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-}
-async function deleteTx(id) {
-  if (!confirm('¿Eliminar transacción?')) return;
-  try { await adminPost('transactions.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-id="${id}"]`)?.remove(); }
-  catch(err) { toast(err.message, 'error'); }
-}
-
-// ── MEMBERS ───────────────────────────────────────────────
-document.getElementById('form-add-member')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  try { await adminPost('members.php', data); toast('Miembro agregado'); setTimeout(() => location.reload(), 900); }
-  catch(err) { toast(err.message, 'error'); }
-});
-async function toggleMember(id) {
-  if (!confirm('¿Cambiar estado del miembro?')) return;
-  try { await adminPost('members.php?action=toggle', {id}); toast('Estado actualizado'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-}
-function editMember(id, data) {
-  document.getElementById('edit-m-id').value      = id;
-  document.getElementById('edit-m-name').value    = data.name    || '';
-  document.getElementById('edit-m-email').value   = data.email   || '';
-  document.getElementById('edit-m-role').value    = data.role    || '';
-  document.getElementById('edit-m-degree').value  = data.degree  || 1;
-  document.getElementById('edit-m-phone').value   = data.phone   || '';
-  document.getElementById('edit-m-address').value = data.address || '';
-  document.getElementById('edit-m-notes').value   = data.notes   || '';
-  openModal('modal-edit-member');
-}
-document.getElementById('form-edit-member')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  try { await adminPost('members.php?action=update', data); toast('Miembro actualizado'); closeModal('modal-edit-member'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-});
-
-// ── DONATIONS ─────────────────────────────────────────────
-function toggleDonorType(type) {
-  document.getElementById('don-member-row').style.display = type==='member' ? '' : 'none';
-  document.getElementById('don-name-row').style.display   = type==='external' ? '' : 'none';
-  document.getElementById('don-email-row').style.display  = type==='external' ? '' : 'none';
-}
-document.getElementById('form-add-don')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const fd = new FormData(this);
-  const data = Object.fromEntries(fd.entries());
-  data.anonymous = fd.get('anonymous') ? 1 : 0;
-  if (data.donor_type === 'external') data.member_id = '';
-  try { await adminPost('donations.php', data); toast('Donación registrada'); setTimeout(() => location.reload(), 900); }
-  catch(err) { toast(err.message, 'error'); }
-});
-async function deleteDonation(id) {
-  if (!confirm('¿Eliminar donación?')) return;
-  try { await adminPost('donations.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-don-id="${id}"]`)?.remove(); }
-  catch(err) { toast(err.message, 'error'); }
-}
-
-// ── SAVINGS ───────────────────────────────────────────────
-document.getElementById('form-add-saving')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  try { await adminPost('savings.php', data); toast('Ahorro registrado'); setTimeout(() => location.reload(), 900); }
-  catch(err) { toast(err.message, 'error'); }
-});
-async function deleteSaving(id) {
-  if (!confirm('¿Eliminar este registro de ahorro?')) return;
-  try { await adminPost('savings.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`tr[data-sav-id="${id}"]`)?.remove(); }
-  catch(err) { toast(err.message, 'error'); }
-}
-
-// ── NEWS ──────────────────────────────────────────────────
-document.getElementById('form-add-news')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  try { await adminPost('news.php', data); toast('Publicado'); setTimeout(() => location.reload(), 900); }
-  catch(err) { toast(err.message, 'error'); }
-});
-async function deleteNews(id) {
-  if (!confirm('¿Eliminar comunicado?')) return;
-  try { await adminPost('news.php?action=delete', {id}); toast('Eliminado'); document.querySelector(`[data-news-id="${id}"]`)?.remove(); }
-  catch(err) { toast(err.message, 'error'); }
-}
-async function toggleNews(id) {
-  try { await adminPost('news.php?action=toggle', {id}); toast('Estado cambiado'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-}
-
-// ── ADMIN USERS ───────────────────────────────────────────
-document.getElementById('form-add-admin')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  try { await adminPost('admin_users.php', data); toast('Admin creado'); this.reset(); hideSection('add-admin-form'); setTimeout(() => location.reload(), 900); }
-  catch(err) { toast(err.message, 'error'); }
-});
-function openEditAdminModal(id, name, email) {
-  document.getElementById('edit-a-id').value    = id;
-  document.getElementById('edit-a-name').value  = name;
-  document.getElementById('edit-a-email').value = email;
-  openModal('modal-edit-admin');
-}
-document.getElementById('form-edit-admin')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  if (!data.password) delete data.password; // don't send empty password
-  try { await adminPost('admin_users.php?action=update', data); toast('Admin actualizado'); closeModal('modal-edit-admin'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-});
-async function toggleAdmin(id) {
-  if (!confirm('¿Cambiar estado de este admin?')) return;
-  try { await adminPost('admin_users.php?action=toggle', {id}); toast('Estado actualizado'); setTimeout(() => location.reload(), 800); }
-  catch(err) { toast(err.message, 'error'); }
-}
-async function deleteAdmin(id) {
-  if (!confirm('¿Eliminar esta cuenta admin? Esta acción no se puede deshacer.')) return;
-  try { await adminPost('admin_users.php?action=delete', {id}); toast('Admin eliminado'); document.querySelector(`tr[data-au-id="${id}"]`)?.remove(); }
-  catch(err) { toast(err.message, 'error'); }
-}
-
-// ── REPORTS ───────────────────────────────────────────────
-function doExport(type, format) {
-  const year  = document.getElementById('rpt-year').value;
-  const month = document.getElementById('rpt-month').value;
-  const url   = `/api/reports.php?type=${type}&format=${format}&year=${year}&month=${month}`;
-  if (format==='csv') { const a=document.createElement('a');a.href=url;a.download='';document.body.appendChild(a);a.click();a.remove(); }
-  else window.open(url, '_blank');
-}
-</script>
-</body>
-</html>
+<?php
+require_once __DIR__ . '/../includes/footer.php';
