@@ -73,7 +73,7 @@ if ($format === 'csv') {
         $dons = getDonations($pdo, $year, $month);
         $title = $month ? "{$months[$month]} $year Financial Report" : "$year Annual Financial Report";
         
-        fputcsv($out, ["Estrella Del Rey David Numero 11 — $title"]);
+        fputcsv($out, ["Estrella Del Rey David No. 11 Numero 11 — $title"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Date','Type','Description','Category','Member','Reference','Amount']);
@@ -114,7 +114,7 @@ if ($format === 'csv') {
 
     if ($type === 'dues') {
         $dues = getDues($pdo, $year);
-        fputcsv($out, ["Estrella Del Rey David — Dues Report $year"]);
+        fputcsv($out, ["Estrella Del Rey David No. 11 — Dues Report $year"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Member','Email','Role','Month','Amount','Status','Paid Date']);
@@ -125,7 +125,7 @@ if ($format === 'csv') {
 
     if ($type === 'donations') {
         $dons = getDonations($pdo, $year, $month);
-        fputcsv($out, ["Estrella Del Rey David — Donations Report $year"]);
+        fputcsv($out, ["Estrella Del Rey David No. 11 — Donations Report $year"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Date','Donor','Email','Amount','Category','Note','Anonymous']);
@@ -162,39 +162,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <head>
 <meta charset="UTF-8">
 <title>Lodge Report — <?= e($periodLabel) ?></title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, serif; color: #0d1f3c; background: #fff; font-size: 13px; }
-  .header { text-align: center; border-bottom: 3px solid #c9a84c; padding-bottom: 16px; margin-bottom: 24px; }
-  .header h1 { font-size: 22px; color: #1a3a6b; }
-  .header h2 { font-size: 16px; color: #2952a3; margin-top: 4px; }
-  .header .meta { font-size: 11px; color: #666; margin-top: 6px; }
-  .symbol { font-size: 36px; color: #c9a84c; }
-  .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-  .summary-box { border: 1px solid #b8cfe8; border-radius: 8px; padding: 12px; text-align: center; }
-  .summary-box .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #2952a3; margin-bottom: 4px; }
-  .summary-box .val { font-size: 18px; font-weight: bold; }
-  .income-val  { color: #1a7a4a; }
-  .expense-val { color: #9b2335; }
-  .balance-val { color: #1a3a6b; }
-  .dues-val    { color: #e65100; }
-  h3 { color: #1a3a6b; border-bottom: 2px solid #c9a84c; padding-bottom: 6px; margin: 24px 0 12px; font-size: 14px; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
-  th { background: #1a3a6b; color: #fff; padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
-  td { padding: 7px 10px; border-bottom: 1px solid #e8f0f8; }
-  tr:nth-child(even) td { background: #f5f8fc; }
-  .income-td  { color: #1a7a4a; font-weight: bold; }
-  .expense-td { color: #9b2335; font-weight: bold; }
-  .total-row td { font-weight: bold; background: #e8f0f8 !important; border-top: 2px solid #1a3a6b; }
-  .paid    { color: #1a7a4a; font-weight: bold; }
-  .unpaid  { color: #9b2335; font-weight: bold; }
-  .footer { text-align: center; margin-top: 32px; padding-top: 12px; border-top: 1px solid #b8cfe8; font-size: 11px; color: #999; }
-  @media print {
-    body { font-size: 11px; }
-    .no-print { display: none; }
-    @page { margin: 1cm; }
-  }
-</style>
+<link rel="stylesheet" href="/assets/css/report.css?v=1.1">
 </head>
 <body>
 <div class="no-print" style="padding:12px;background:#1a3a6b;color:#fff;text-align:center">
@@ -205,7 +173,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 <div style="padding:24px 32px">
   <div class="header">
     <div class="symbol">⬡</div>
-    <h1>Estrella Del Rey David Numero 11</h1>
+    <h1>Estrella Del Rey David No. 11 Numero 11</h1>
     <h2>Financial Report — <?= e($periodLabel) ?></h2>
     <div class="meta">Generated: <?= date('F j, Y \a\t g:i A') ?> · CONFIDENTIAL</div>
   </div>
@@ -326,7 +294,7 @@ $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
   </table>
 
   <div class="footer">
-    Estrella Del Rey David Numero 11 · Confidential Financial Report · <?= date('Y') ?>
+    Estrella Del Rey David No. 11 Numero 11 · Confidential Financial Report · <?= date('Y') ?>
   </div>
 </div>
 <script>
