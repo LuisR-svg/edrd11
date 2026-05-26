@@ -272,7 +272,8 @@ require_once __DIR__ . '/../includes/header.php';
       </div>
     </div>
 
-  </div><!-- /tabs -->
+  </div>
+  <!-- /tabs -->
 </div>
 
 <?php
