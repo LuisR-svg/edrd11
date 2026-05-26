@@ -157,16 +157,14 @@ $balance       = $totalIncome + $totalDons - $totalExpense;
 
 $periodLabel = $month ? "{$months[$month]} $year" : "Annual $year";
 
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Lodge Report — <?= e($periodLabel) ?></title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" type="image/x-icon" href="/assets/img/star-ico.ico">
-<link rel="stylesheet" href="/assets/css/style.css?v=1.13">
-</head>
-<body class="reports">
+
+// ── Header config ──────────────────────────────────────────
+$pageTitle   = '<?= e($periodLabel) ?>';
+$pageContext = 'Admin';
+require_once __DIR__ . '/../includes/header.php';
+?>
+
+
 <div class="no-print" style="padding:12px;background:#1a3a6b;color:#fff;text-align:center">
   <strong>Click File → Print (or Ctrl+P) to save as PDF</strong>
   <button onclick="window.print()" style="margin-left:16px;padding:6px 16px;background:#c9a84c;color:#0d1f3c;border:none;border-radius:4px;cursor:pointer;font-weight:bold">🖨 Print / Save PDF</button>
