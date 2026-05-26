@@ -393,7 +393,7 @@ require_once __DIR__ . '/../includes/header.php';
   <?php endforeach; ?>
   <div style="padding:1rem 1.2rem;margin-top:1rem;border-top:1px solid rgba(74,114,196,.2)">
     <a href="/api/reports.php?type=financial&format=pdf&year=<?=$year?>" target="_blank"
-       class="btn btn-gold btn-sm" style="width:100%;text-align:center;display:block"><i class="fa-solid fa-print"></i></a>
+       class="btn btn-gold btn-sm" style="width:100%;text-align:center;display:block"><i class="fa-solid fa-print"></i> Reporte Rápido</a>
   </div>
 </aside>
 
