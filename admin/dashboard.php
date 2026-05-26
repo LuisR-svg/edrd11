@@ -54,15 +54,31 @@ $transactions = $txStmt->fetchAll();
 $filteredIncome   = array_sum(array_column(array_filter($transactions, fn($t)=>$t['type']==='income'),  'amount'));
 $filteredExpenses = array_sum(array_column(array_filter($transactions, fn($t)=>$t['type']==='expense'), 'amount'));
 
-// ── DUES ──────────────────────────────────────────────────
+// ── DUES (members) ────────────────────────────────────────
 $duesStmt = $pdo->prepare(
-    "SELECT d.*, m.name, m.email, m.role FROM dues d JOIN members m ON d.member_id=m.id WHERE d.year=? ORDER BY m.name, d.month"
+    "SELECT d.*, m.name, m.email, m.role FROM dues d
+     JOIN members m ON d.member_id=m.id
+     WHERE d.year=? AND d.member_id IS NOT NULL
+     ORDER BY m.name, d.month"
 );
 $duesStmt->execute([$year]);
 $allDues = $duesStmt->fetchAll();
-// Build map: member_id → month → row
+// Map: member_id -> month -> dues row
 $duesMap = [];
 foreach ($allDues as $d) $duesMap[$d['member_id']][$d['month']] = $d;
+
+// ── DUES (admin users) ─────────────────────────────────────
+$adminDuesStmt = $pdo->prepare(
+    "SELECT d.*, a.name, a.username, a.email FROM dues d
+     JOIN admin_users a ON d.admin_id=a.id
+     WHERE d.year=? AND d.admin_id IS NOT NULL
+     ORDER BY a.name, d.month"
+);
+$adminDuesStmt->execute([$year]);
+$allAdminDues = $adminDuesStmt->fetchAll();
+// Map: admin_id -> month -> dues row
+$adminDuesMap = [];
+foreach ($allAdminDues as $d) $adminDuesMap[$d['admin_id']][$d['month']] = $d;
 
 // Dues rate for selected year
 try {
@@ -102,14 +118,13 @@ $MONTHS_F = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 
 $adminName = e($_SESSION['admin_name'] ?? 'Administrador');
 $myAdminId = (int)$_SESSION['admin_id'];
-
+?>
 
 // ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Panel Administrativo';
 $pageContext = 'admin';
 // Capture inline admin scripts to inject AFTER app.js via footer $extraScripts
 ob_start();
-?>
 <script>
 // ── Admin-page helpers (inline — depend on app.js being loaded first) ──
 
@@ -151,21 +166,42 @@ async function saveDuesRate() {
   } catch(err) { toast(err.message, 'error'); }
 }
 
-// ── DUES MONTH TOGGLE ─────────────────────────────────────
-// Called when clicking a month cell in the Dues tab
-document.querySelectorAll('.month-cell[data-member-id]').forEach(cell => {
-  cell.addEventListener('click', function() {
-    const memberId = parseInt(this.dataset.memberId);
-    const year     = parseInt(this.dataset.year);
-    const month    = parseInt(this.dataset.month);
-    const isPaid   = this.classList.contains('paid');
-    const mName    = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][month];
-    if (!confirm(`¿Cambiar ${mName} ${year} a "${isPaid ? 'pendiente' : 'pagado'}"?`)) return;
-    adminPost('dues_adjustment.php', { member_id: memberId, year, month, paid: !isPaid })
-      .then(() => { toast('Cuota actualizada'); setTimeout(() => location.reload(), 800); })
-      .catch(err => toast(err.message, 'error'));
+// ── DUES MONTH TOGGLE (members AND admins) ────────────────
+function attachDueCellListeners() {
+  const MONTH_NAMES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+  // Member cells
+  document.querySelectorAll('.month-cell[data-member-id]').forEach(cell => {
+    cell.addEventListener('click', function() {
+      if (this.classList.contains('future')) return; // allow future too — admin may prepay
+      const memberId = parseInt(this.dataset.memberId);
+      const year     = parseInt(this.dataset.year);
+      const month    = parseInt(this.dataset.month);
+      const isPaid   = this.classList.contains('paid');
+      const mName    = MONTH_NAMES[month];
+      if (!confirm(`¿Cambiar ${mName} ${year} a "${isPaid ? 'pendiente' : 'pagado'}"?`)) return;
+      adminPost('dues_adjustment.php', { member_id: memberId, year, month, paid: !isPaid })
+        .then(() => { toast('Cuota actualizada'); setTimeout(() => location.reload(), 800); })
+        .catch(err => toast(err.message, 'error'));
+    });
   });
-});
+
+  // Admin user cells
+  document.querySelectorAll('.month-cell[data-admin-id]').forEach(cell => {
+    cell.addEventListener('click', function() {
+      const adminId = parseInt(this.dataset.adminId);
+      const year    = parseInt(this.dataset.year);
+      const month   = parseInt(this.dataset.month);
+      const isPaid  = this.classList.contains('paid');
+      const mName   = MONTH_NAMES[month];
+      if (!confirm(`¿Cambiar ${mName} ${year} a "${isPaid ? 'pendiente' : 'pagado'}" (Admin)?`)) return;
+      adminPost('dues_adjustment.php', { admin_id: adminId, year, month, paid: !isPaid })
+        .then(() => { toast('Cuota de admin actualizada'); setTimeout(() => location.reload(), 800); })
+        .catch(err => toast(err.message, 'error'));
+    });
+  });
+}
+attachDueCellListeners();
 
 // ── DUES MONTH CHECKBOXES (transaction form) ──────────────
 function selectAllDuesMonths() {
@@ -375,25 +411,25 @@ require_once __DIR__ . '/../includes/header.php';
   <?php
   $tabs = [
     'dashboard' => ['<i class="fas fa-star-of-david"></i>', 'Resumen General'],
-    'members'   => ['<i class="fa-solid fa-user"></i>','Miembros'],
-    'finances'  => ['<i class="fa-solid fa-money-bill-trend-up"></i>','Finanzas'],
-    'dues'      => ['<i class="fa-solid fa-calendar-plus"></i>','Cuotas'],
-    'donations' => ['<i class="fa-solid fa-hand-holding-dollar"></i>','Donaciones'],
-    'savings'   => ['<i class="fa-solid fa-piggy-bank"></i>','Ahorros'],
-    'news'      => ['<i class="fa-solid fa-bullhorn"></i>','Comunicados'],
-    'admins'    => ['<i class="fa-solid fa-user-tie"></i>','Usuarios Admin'],
-    'reports'   => ['<i class="fa-solid fa-comment-dollar"></i>','Reportes'],
+    'members'   => ['👤','Miembros'],
+    'finances'  => ['💰','Finanzas'],
+    'dues'      => ['📋','Cuotas'],
+    'donations' => ['🎁','Donaciones'],
+    'savings'   => ['🏦','Ahorros'],
+    'news'      => ['📢','Comunicados'],
+    'admins'    => ['🔐','Usuarios Admin'],
+    'reports'   => ['📊','Reportes'],
   ];
   foreach($tabs as $id => [$icon,$label]):
     $cls = $activeTab===$id ? 'active' : '';
   ?>
   <a href="?tab=<?=$id?>&year=<?=$year?>" class="sidebar-link <?=$cls?>">
-    <span class="sidebar-icon"><?=$icon?></span><?=$label?>
+    <span><?=$icon?></span><?=$label?>
   </a>
   <?php endforeach; ?>
   <div style="padding:1rem 1.2rem;margin-top:1rem;border-top:1px solid rgba(74,114,196,.2)">
     <a href="/api/reports.php?type=financial&format=pdf&year=<?=$year?>" target="_blank"
-       class="btn btn-gold btn-sm" style="width:100%;text-align:center;display:block"><i class="fa-solid fa-print"></i> Reporte Rápido</a>
+       class="btn btn-gold btn-sm" style="width:100%;text-align:center;display:block">🖨 Reporte Rápido</a>
   </div>
 </aside>
 
@@ -792,6 +828,65 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
   </div>
   <?php endforeach; ?>
+
+  <!-- ════ ADMIN USERS DUES ════ -->
+  <?php if(!empty($adminUsers)): ?>
+  <div style="margin-top:2rem">
+    <h3 style="color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:8px">
+      <i class="fas fa-shield-halved"></i> Cuotas — Usuarios Administrativos
+    </h3>
+    <?php $currentMonth = (int)date('n'); ?>
+    <?php foreach($adminUsers as $au):
+      $paidCnt = 0; $owedCnt = 0;
+      for($m=1;$m<=12;$m++){
+        $d = $adminDuesMap[$au['id']][$m] ?? null;
+        if($d && $d['paid']) $paidCnt++;
+        elseif($m<=$currentMonth || $year<date('Y')) $owedCnt++;
+      }
+    ?>
+    <div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+        <div>
+          <strong style="color:#fff"><?=e($au['name'] ?: $au['username'])?></strong>
+          <span class="badge badge-gold" style="margin-left:8px;font-size:10px">Admin</span>
+          <span style="color:var(--text-muted);font-size:12px;margin-left:6px">@<?=e($au['username'])?></span>
+        </div>
+        <div style="display:flex;gap:1rem;font-size:12px">
+          <span style="color:var(--success)">&#10003; <?=$paidCnt?> pagados</span>
+          <?php if($owedCnt>0): ?>
+          <span style="color:var(--danger)">&#9888; <?=$owedCnt?> pendientes
+            <?php if($monthlyRate>0): ?>— $<?=number_format($owedCnt*$monthlyRate,2)?><?php endif; ?></span>
+          <?php endif; ?>
+        </div>
+      </div>
+      <div class="month-grid">
+        <?php for($m=1;$m<=12;$m++):
+          $d      = $adminDuesMap[$au['id']][$m] ?? null;
+          $isPast = $m <= $currentMonth || $year < date('Y');
+          $isPaid = $d && $d['paid'];
+          $cls    = $isPaid ? 'paid' : ($isPast ? 'unpaid' : 'future');
+        ?>
+        <div class="month-cell <?=$cls?>"
+             data-admin-id="<?=$au['id']?>"
+             data-year="<?=$year?>"
+             data-month="<?=$m?>"
+             title="<?=$isPast||$isPaid?'Click para cambiar estado':'Mes futuro — click para marcar pagado'?>">
+          <div><?=$MONTHS[$m]?></div>
+          <?php if($isPaid): ?>
+            <div style="font-size:10px">&#10003;<?=$d['paid_date']?' '.date('d/m',strtotime($d['paid_date'])):''?></div>
+          <?php elseif($isPast): ?>
+            <div style="font-size:10px">&#9888; Pend.</div>
+            <?php if($monthlyRate>0): ?><div style="font-size:9px">$<?=number_format($monthlyRate,2)?></div><?php endif; ?>
+          <?php else: ?>
+            <div style="font-size:10px">—</div>
+          <?php endif; ?>
+        </div>
+        <?php endfor; ?>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <?php endif; ?>
 </div>
 
 <?php /* ════════════════════ DONATIONS ════════════════════ */ ?>
@@ -1115,8 +1210,8 @@ require_once __DIR__ . '/../includes/header.php';
     <?php
     $rpts = [
       ['financial','📊 Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
-      // ['dues',     '📋 Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
-      // ['donations','🎁 Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
+      ['dues',     '📋 Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
+      ['donations','🎁 Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
     ];
     foreach($rpts as [$rtype,$rtitle,$rdesc]):
     ?>
@@ -1124,8 +1219,8 @@ require_once __DIR__ . '/../includes/header.php';
       <h3 style="color:var(--gold);margin-bottom:.5rem;font-size:14px"><?=$rtitle?></h3>
       <p style="color:var(--text-secondary);font-size:12px;margin-bottom:1.5rem"><?=$rdesc?></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')"><i class="fa-solid fa-file-excel"></i> CSV / Sheets</button>
-        <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')"><i class="fa-solid fa-file-pdf"></i> Ver PDF</button>
+        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')">⬇ CSV / Sheets</button>
+        <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')">🖨 Ver PDF</button>
       </div>
     </div>
     <?php endforeach; ?>
