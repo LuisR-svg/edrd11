@@ -1099,6 +1099,7 @@ h4 {
   }
   .sidebar-icon {
     font-size: 16px;
+    color: var(--star-color);
   }
   .admin-main {
     flex: 1;
