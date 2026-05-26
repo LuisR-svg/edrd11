@@ -68,7 +68,7 @@ function _navActive(string $item, string $active): string {
       <span class="symbol"><i class="fas fa-star-of-david"></i></span>
       <div class="brand-text">
         <div class="brand-name">Estrella Del Rey David</div>
-        <div class="brand-sub">Numero 11 — Est. 1952</div>
+        <div class="brand-sub">No. 11</div>
       </div>
     </a>
     <div class="navbar-links" id="navbar-links">

@@ -817,7 +817,7 @@ h4 {
     gap: 2px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 1.75rem;
-    overflow-x: auto;
+    /* overflow-x: auto; */
   }
   .tab-btn {
     padding: 11px 20px;
