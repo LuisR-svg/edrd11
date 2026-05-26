@@ -376,7 +376,7 @@ require_once __DIR__ . '/../includes/header.php';
   $tabs = [
     'dashboard' => ['<i class="fas fa-star-of-david"></i>', 'Resumen General'],
     'members'   => ['<i class="fa-solid fa-user"></i>','Miembros'],
-    'finances'  => ['<i class="fa-brands fa-cash-app"></i>','Finanzas'],
+    'finances'  => ['<i class="fa-solid fa-money-bill-trend-up"></i>','Finanzas'],
     'dues'      => ['<i class="fa-solid fa-calendar-plus"></i>','Cuotas'],
     'donations' => ['<i class="fa-solid fa-hand-holding-dollar"></i>','Donaciones'],
     'savings'   => ['<i class="fa-solid fa-piggy-bank"></i>','Ahorros'],
