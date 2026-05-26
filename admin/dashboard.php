@@ -1115,8 +1115,8 @@ require_once __DIR__ . '/../includes/header.php';
     <?php
     $rpts = [
       ['financial','📊 Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
-      ['dues',     '📋 Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
-      ['donations','🎁 Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
+      // ['dues',     '📋 Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
+      // ['donations','🎁 Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
     ];
     foreach($rpts as [$rtype,$rtitle,$rdesc]):
     ?>
@@ -1124,8 +1124,8 @@ require_once __DIR__ . '/../includes/header.php';
       <h3 style="color:var(--gold);margin-bottom:.5rem;font-size:14px"><?=$rtitle?></h3>
       <p style="color:var(--text-secondary);font-size:12px;margin-bottom:1.5rem"><?=$rdesc?></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')">⬇ CSV / Sheets</button>
-        <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')">🖨 Ver PDF</button>
+        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')"><i class="fa-solid fa-file-excel"></i> CSV / Sheets</button>
+        <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')"><i class="fa-solid fa-file-pdf"></i> Ver PDF</button>
       </div>
     </div>
     <?php endforeach; ?>
