@@ -412,14 +412,14 @@ require_once __DIR__ . '/../includes/header.php';
   <?php
   $tabs = [
     'dashboard' => ['<i class="fas fa-star-of-david"></i>', 'Resumen General'],
-    'members'   => ['👤','Miembros'],
-    'finances'  => ['💰','Finanzas'],
-    'dues'      => ['📋','Cuotas'],
-    'donations' => ['🎁','Donaciones'],
-    'savings'   => ['🏦','Ahorros'],
-    'news'      => ['📢','Comunicados'],
-    'admins'    => ['🔐','Usuarios Admin'],
-    'reports'   => ['📊','Reportes'],
+    'members'   => ['<i class="fa-solid fa-user"></i>','Miembros'],
+    'finances'  => ['<i class="fa-solid fa-coins"></i>','Finanzas'],
+    'dues'      => ['<i class="fa-regular fa-calendar-days"></i>','Cuotas'],
+    'donations' => ['<i class="fa-solid fa-hand-holding-dollar"></i>','Donaciones'],
+    'savings'   => ['<i class="fa-solid fa-vault"></i>','Ahorros'],
+    'news'      => ['<i class="fa-solid fa-bell"></i>','Comunicados'],
+    'admins'    => ['<i class="fa-solid fa-user-tie"></i>','Usuarios Admin'],
+    'reports'   => ['<i class="fa-solid fa-file-pdf"></i>','Reportes'],
   ];
   foreach($tabs as $id => [$icon,$label]):
     $cls = $activeTab===$id ? 'active' : '';
@@ -1217,9 +1217,9 @@ require_once __DIR__ . '/../includes/header.php';
   <div class="reports-grid">
     <?php
     $rpts = [
-      ['financial','📊 Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
-      ['dues',     '📋 Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
-      ['donations','🎁 Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
+      ['financial','<i class="fa-solid fa-coins"></i> Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
+      ['dues',     '<i class="fa-regular fa-calendar-days"></i> Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
+      ['donations','<i class="fa-solid fa-hand-holding-dollar"></i> Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
     ];
     foreach($rpts as [$rtype,$rtitle,$rdesc]):
     ?>

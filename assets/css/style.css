@@ -506,14 +506,13 @@ img {
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   gap: 20px;
 }
 .stat-card .data-head {
   display: block;
   text-align: left;
   margin: 10px 0;
-  width: 100%;
 }
 .stat-card.data {
   display: flex;
