@@ -951,10 +951,15 @@ textarea.form-control {
 }
 
 .stats-grid {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 1rem;
+  margin-bottom: 2rem; */
+  display: flex;
+  gap: 1rem;
   margin-bottom: 2rem;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .grid-2 {
   display: grid;
