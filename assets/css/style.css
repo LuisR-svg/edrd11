@@ -542,6 +542,7 @@ img {
   flex-wrap: wrap;
   justify-content: space-evenly;
   gap: 20px;
+  margin-bottom: 2rem;
 }
 .stat-card .report .data-head {
   display: block;
