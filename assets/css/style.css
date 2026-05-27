@@ -502,7 +502,20 @@ img {
   border-radius: var(--radius-md);
   padding: 1.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
+.stat-card .data-head {
+  display: block;
+  margin: 10px 0;
+  width: 100%;
+}
+.stat-card.data {
+  display: flex;
+  flex-direction: column;
+}
+
 .stat-label {
   font-size: 11px;
   letter-spacing: 2px;

@@ -454,19 +454,19 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">Balance Neto</div>
+    <div class="stat-card data-head"><div class="stat-label">Balance Neto</div>
      <div class="stat-value <?= $balance >= 0 ? 'positive' : 'negative' ?>">
     $<?= number_format($balance, 2) ?>
 </div>
-    <div class="stat-card"><div class="stat-label">Ingresos + Donaciones</div>
+    <div class="stat-card data"><div class="stat-label">Ingresos + Donaciones</div>
       <div class="stat-value positive">$<?=number_format($totalIncome+$totalDonations,2)?></div></div>
-    <div class="stat-card"><div class="stat-label">Egresos</div>
+    <div class="stat-card data"><div class="stat-label">Egresos</div>
       <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div></div>
-    <div class="stat-card"><div class="stat-label">Ahorros</div>
+    <div class="stat-card data "><div class="stat-label">Ahorros</div>
       <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
-    <div class="stat-card"><div class="stat-label">Cuotas Pendientes</div>
+    <div class="stat-card data"><div class="stat-label">Cuotas Pendientes</div>
       <div class="stat-value warning">$<?=number_format($totalDuesOwed,2)?></div></div>
-    <div class="stat-card"><div class="stat-label">Miembros Activos</div>
+    <div class="stat-card data"><div class="stat-label">Miembros Activos</div>
       <div class="stat-value"><?=$activeMembers?> / <?=$totalMembers?></div></div>
   </div>
 
