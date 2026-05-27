@@ -1197,7 +1197,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
   </div>
 
-  <div class="report grid" class="mb-3">
+  <div class="report-grid" class="mb-3">
     <div class="stat-card report"><div class="stat-label">Ingresos</div>
       <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div></div>
     <div class="stat-card report"><div class="stat-label">Donaciones</div>
