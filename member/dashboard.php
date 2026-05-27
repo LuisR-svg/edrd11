@@ -69,17 +69,17 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <!-- MAIN CONTENT -->
-<div style="max-width:1100px;margin:0 auto;padding:2rem;">
+<div class="page-content">
   <!-- Page Header -->
-  <div class="page-header animate-fadeUp">
-    <div style="display:flex;align-items:center;gap:16px">
+  <div class="page-header animate-fadeUp">s
+    <div class="d-flex align-center gap-2">
       <div class="avatar"><?= e(strtoupper($initials)) ?></div>
       <div>
         <h1 class="page-title"><?= e($member['name']) ?></h1>
         <div class="page-sub"><?= e($member['role']) ?> · <?= e($member['degree']) ?>° — <?= e($member['degree_name']) ?></div>
       </div>
     </div>
-    <span class="badge <?= $member['active'] ? 'badge-success' : 'badge-danger' ?>" style="font-size:13px;padding:6px 14px">
+    <span class="badge <?= $member['active'] ? 'badge-success' : 'badge-danger' ?> badge-lg">
       <?= $member['active'] ? '● Activo' : '● Inactivo' ?>
     </span>
   </div>
@@ -88,11 +88,11 @@ require_once __DIR__ . '/../includes/header.php';
   <div class="stats-grid animate-fadeUp delay-1">
     <div class="stat-card">
       <div class="stat-label">Meses Pendientes <?= $year ?></div>
-      <div class="stat-value" style="color:<?= $owed > 0 ? 'var(--danger)' : 'var(--success)' ?>"><?= $owed ?></div>
+      <div class="stat-value" data-owing="<?= $owed ?>"><?= $owed ?></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Cuota Pendiente</div>
-      <div class="stat-value" style="color:<?= $owedAmount > 0 ? 'var(--danger)' : 'var(--success)' ?>">$<?= number_format($owedAmount,2) ?></div>
+      <div class="stat-value <?= $owedAmount > 0 ? 'text-danger' : 'text-success' ?>">$<?= number_format($owedAmount,2) ?></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Total Donado</div>
@@ -100,7 +100,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
     <div class="stat-card">
       <div class="stat-label">Miembro Desde</div>
-      <div class="stat-value" style="font-size:1.3rem"><?= date('Y', strtotime($member['joined_date'])) ?></div>
+      <div class="stat-value sm"><?= date('Y', strtotime($member['joined_date'])) ?></div>
     </div>
   </div>
 
@@ -116,12 +116,12 @@ require_once __DIR__ . '/../includes/header.php';
     <!-- TAB: DUES CALENDAR -->
     <div data-tab-content="dues" class="tab-content active">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-          <h3 style="color:var(--gold)">Estado de Cuotas — <?= $year ?></h3>
+        <div class="card-header">
+          <h3 class="text-gold">Estado de Cuotas — <?= $year ?></h3>
           <!-- Year selector -->
-          <form method="GET" style="display:flex;align-items:center;gap:8px">
-            <label style="font-size:12px;color:var(--text-muted)">Año:</label>
-            <select name="year" onchange="this.form.submit()" class="form-control" style="width:100px;padding:6px 10px">
+          <form method="GET" class="year-select-form">
+            <label class="form-label text-sm">Año:</label>
+            <select name="year" onchange="this.form.submit()" class="form-control select-sm">
               <?php for ($y = date('Y'); $y >= 2020; $y--): ?>
                 <option value="<?= $y ?>" <?= $y == $year ? 'selected' : '' ?>><?= $y ?></option>
               <?php endfor; ?>
@@ -131,8 +131,8 @@ require_once __DIR__ . '/../includes/header.php';
 
         <!-- Monthly Rate -->
         <?php if ($monthlyRate > 0): ?>
-        <p style="color:var(--text-muted);font-size:13px;margin-bottom:1.25rem">
-          Cuota mensual: <strong style="color:var(--gold)">$<?= number_format($monthlyRate,2) ?></strong>
+        <p class="dues-rate-note">
+          Cuota mensual: <strong class="text-gold">$<?= number_format($monthlyRate,2) ?></strong>
         </p>
         <?php endif; ?>
 
@@ -151,34 +151,34 @@ require_once __DIR__ . '/../includes/header.php';
             <?php if ($isPaid): ?>
               <span class="dues-month-amt">✓ Pagado</span>
               <?php if ($d['paid_date']): ?>
-              <span style="font-size:10px;display:block;margin-top:2px"><?= date('d/m', strtotime($d['paid_date'])) ?></span>
+              <span class="text-xs"><?= date('d/m', strtotime($d['paid_date'])) ?></span>
               <?php endif; ?>
             <?php elseif ($isOwed): ?>
               <span class="dues-month-amt">⚠ Pendiente</span>
               <?php if ($monthlyRate > 0): ?>
-              <span style="font-size:10px;display:block;margin-top:2px">$<?= number_format($monthlyRate,2) ?></span>
+              <span class="text-xs">$<?= number_format($monthlyRate,2) ?></span>
               <?php endif; ?>
             <?php else: ?>
-              <span class="dues-month-amt" style="font-size:10px">—</span>
+              <span class="dues-month-amt text-xs">—</span>
             <?php endif; ?>
           </div>
           <?php endfor; ?>
         </div>
 
         <!-- Legend -->
-        <div style="display:flex;gap:1.5rem;margin-top:1.25rem;font-size:12px;flex-wrap:wrap">
-          <span><span style="color:var(--success)">■</span> Pagado</span>
-          <span><span style="color:var(--danger)">■</span> Pendiente</span>
-          <span><span style="color:var(--text-muted)">■</span> Próximo</span>
+        <div class="dues-legend">
+          <span><span class="text-success">■</span> Pagado</span>
+          <span><span class="text-danger">■</span> Pendiente</span>
+          <span><span class="text-muted">■</span> Próximo</span>
         </div>
 
         <?php if ($owed > 0): ?>
-        <div class="form-error" style="margin-top:1.5rem">
+        <div class="form-error" class="mt-3">
           ⚠ Tienes <strong><?= $owed ?> mes(es)</strong> de cuota pendiente por un total de
           <strong>$<?= number_format($owedAmount,2) ?></strong>. Por favor contáctate con el Tesorero.
         </div>
         <?php else: ?>
-        <div class="form-success" style="margin-top:1.5rem">
+        <div class="form-success" class="mt-3">
           ✓ Tus cuotas están al corriente. ¡Gracias, Hermano!
         </div>
         <?php endif; ?>
@@ -189,7 +189,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div data-tab-content="profile" class="tab-content">
       <div class="grid-2">
         <div class="card">
-          <h3 style="color:var(--gold);margin-bottom:1rem">Información Personal</h3>
+          <h3 class="text-gold mb-2">Información Personal</h3>
           <?php
           $fields = [
             'Nombre Completo' => $member['name'],
@@ -198,14 +198,14 @@ require_once __DIR__ . '/../includes/header.php';
             'Dirección' => $member['address'] ?: '—',
           ];
           foreach ($fields as $label => $val): ?>
-          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(74,114,196,0.15)">
-            <span style="color:var(--text-muted);font-size:13px"><?= e($label) ?></span>
-            <span style="color:#fff;font-size:13px"><?= e($val) ?></span>
+          <div class="profile-row">
+            <span class="profile-label"><?= e($label) ?></span>
+            <span class="profile-value"><?= e($val) ?></span>
           </div>
           <?php endforeach; ?>
         </div>
         <div class="card">
-          <h3 style="color:var(--gold);margin-bottom:1rem">Información Masónica</h3>
+          <h3 class="text-gold mb-2">Información Masónica</h3>
           <?php
           $mfields = [
             'Cargo' => $member['role'],
@@ -215,9 +215,9 @@ require_once __DIR__ . '/../includes/header.php';
             'Años en la Logia' => (date('Y') - date('Y', strtotime($member['joined_date']))) . ' años',
           ];
           foreach ($mfields as $label => $val): ?>
-          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(74,114,196,0.15)">
-            <span style="color:var(--text-muted);font-size:13px"><?= e($label) ?></span>
-            <span style="color:#fff;font-size:13px"><?= e($val) ?></span>
+          <div class="profile-row">
+            <span class="profile-label"><?= e($label) ?></span>
+            <span class="profile-value"><?= e($val) ?></span>
           </div>
           <?php endforeach; ?>
         </div>
@@ -227,12 +227,12 @@ require_once __DIR__ . '/../includes/header.php';
     <!-- TAB: DONATIONS -->
     <div data-tab-content="donations" class="tab-content">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
-          <h3 style="color:var(--gold)">Historial de Donaciones</h3>
-          <span style="color:var(--gold);font-weight:bold">Total: $<?= number_format($totalDonated,2) ?></span>
+        <div class="card-subheader">
+          <h3 class="text-gold">Historial de Donaciones</h3>
+          <span class="text-gold text-bold">Total: $<?= number_format($totalDonated,2) ?></span>
         </div>
         <?php if (empty($myDonations)): ?>
-          <p style="color:var(--text-muted);text-align:center;padding:2rem">No hay donaciones registradas aún.</p>
+          <p class="empty-state">No hay donaciones registradas aún.</p>
         <?php else: ?>
         <div class="table-wrap">
           <table class="data-table">
@@ -242,7 +242,7 @@ require_once __DIR__ . '/../includes/header.php';
               <tr>
                 <td><?= e(date('d M Y', strtotime($d['date']))) ?></td>
                 <td><span class="badge badge-gold"><?= e($d['category']) ?></span></td>
-                <td style="color:var(--success);font-weight:bold">$<?= number_format($d['amount'],2) ?></td>
+                <td class="text-success text-bold">$<?= number_format($d['amount'],2) ?></td>
                 <td><?= e($d['note'] ?? '—') ?></td>
               </tr>
               <?php endforeach; ?>
@@ -255,9 +255,9 @@ require_once __DIR__ . '/../includes/header.php';
 
     <!-- TAB: NEWS -->
     <div data-tab-content="news" class="tab-content">
-      <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="d-flex flex-col gap-2">
         <?php if (empty($news)): ?>
-          <p style="color:var(--text-muted);text-align:center;padding:2rem">No hay comunicados disponibles.</p>
+          <p class="empty-state">No hay comunicados disponibles.</p>
         <?php else: ?>
           <?php foreach ($news as $n): ?>
           <article class="card card-gold">
@@ -265,15 +265,14 @@ require_once __DIR__ . '/../includes/header.php';
               <?= e(date('d F Y', strtotime($n['created_at']))) ?> · <?= e($n['author']) ?>
             </div>
             <h3 class="news-title"><?= e($n['title']) ?></h3>
-            <p class="news-body" style="white-space:pre-wrap"><?= nl2br(e($n['body'])) ?></p>
+            <p class="news-body" class="pre-wrap"><?= nl2br(e($n['body'])) ?></p>
           </article>
           <?php endforeach; ?>
         <?php endif; ?>
       </div>
     </div>
 
-  </div>
-  <!-- /tabs -->
+  </div><!-- /tabs -->
 </div>
 
 <?php

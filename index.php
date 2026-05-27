@@ -41,7 +41,7 @@ try {
 $showLogin = get_param('login'); // 'member' or 'admin'
 
 
-//  ── Header config ──────────────────────────────────────────
+// ── Header config ──────────────────────────────────────────
 $pageTitle   = 'Inicio';
 $pageContext = 'public';
 $activeNav   = '';
@@ -54,8 +54,8 @@ require_once __DIR__ . '/includes/header.php';
   <div class="hero-bg-overlay" aria-hidden="true"></div>
   <div class="hero-pattern"    aria-hidden="true"></div>
   <div class="hero-content">
-    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David No. 11"></span>
-    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David No. 11</h1>
+    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David #11"></span>
+    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David #11</h1>
     <!-- <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica  — Fundada 1952</p> -->
     <p class="hero-desc animate-fadeUp delay-3">
       Una fraternidad dedicada al crecimiento moral, espiritual e intelectual de sus miembros
@@ -99,7 +99,7 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- ── HISTORY ───────────────────────────────────────────── -->
-<section class="section" id="history" style="background:rgba(10,22,40,0.5)">
+<section class="section section-dark" id="history">
   <div class="section-inner">
     <h2 class="section-title">Historia de la Logia</h2>
     <p class="section-sub">Más de 70 años de Fraternidad</p>
@@ -109,7 +109,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="timeline animate-fadeUp">
           <div class="timeline-item">
             <div class="timeline-year">1952</div>
-            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David No. 11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
+            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David #11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
           </div>
           <div class="timeline-item">
             <div class="timeline-year">1970s</div>
@@ -125,7 +125,7 @@ require_once __DIR__ . '/includes/header.php';
           </div>
         </div>
       </div>
-      <div class="stats-grid" style="align-content:start">
+      <div class="stats-grid stats-align-top">
         <div class="stat-card animate-fadeUp delay-1">
           <div class="stat-label">Años de Historia</div>
           <div class="stat-value"><?= date('Y') - 1952 ?></div>
@@ -157,7 +157,7 @@ require_once __DIR__ . '/includes/header.php';
     <p class="section-sub">Últimas noticias de la Logia</p>
     <div class="divider"></div>
     <?php if (empty($news)): ?>
-      <p style="text-align:center;color:var(--text-muted)">No hay comunicados disponibles en este momento.</p>
+      <p class="empty-state">No hay comunicados disponibles en este momento.</p>
     <?php else: ?>
     <div class="grid-3">
       <?php foreach ($news as $n): ?>
@@ -165,7 +165,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="news-date"><?= e(date('d M Y', strtotime($n['created_at']))) ?> · <?= e($n['author']) ?></div>
         <h3 class="news-title"><?= e($n['title']) ?></h3>
         <p class="news-body"><?= e(mb_substr($n['body'], 0, 180)) . (mb_strlen($n['body']) > 180 ? '…' : '') ?></p>
-        <div style="margin-top:1rem">
+        <div class="mt-2">
           <button class="btn btn-outline btn-sm" onclick="openModal('modal-member-login')">Leer más →</button>
         </div>
       </article>
@@ -176,18 +176,18 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- ── CONTACT ───────────────────────────────────────────── -->
-<section class="section" id="contact" style="background:rgba(10,22,40,0.5)">
-  <div class="section-inner" style="max-width:700px">
+<section class="section section-dark" id="contact">
+  <div class="section-inner section-inner-sm">
     <h2 class="section-title">Contacto</h2>
     <p class="section-sub">¿Deseas conocer más sobre la Masonería?</p>
     <div class="divider"></div>
-    <div class="card" style="text-align:center;padding:2.5rem">
-      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.05rem;line-height:1.9">
-        La Logia Estrella Del Rey David No. 11 da la bienvenida a hombres de buena moral
+    <div class="card contact-card">
+      <p>
+        La Logia Estrella Del Rey David #11 da la bienvenida a hombres de buena moral
         que deseen conocer nuestros principios y ser parte de nuestra hermandad.
         Para mayor información, contáctanos a través de un miembro activo de la logia.
       </p>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <div class="contact-actions">
         <button class="btn btn-gold" onclick="openModal('modal-member-login')">Acceso de Miembros</button>
         <button class="btn btn-outline" onclick="openModal('modal-admin-login')">Admin</button>
       </div>

@@ -404,9 +404,9 @@ require_once __DIR__ . '/../includes/header.php';
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div style="padding:0 1.2rem 1rem;border-bottom:1px solid rgba(74,114,196,.2);margin-bottom:.5rem">
-    <div style="font-size:11px;color:var(--text-muted)">Sesión activa</div>
-    <div style="font-size:13px;color:var(--gold);margin-top:2px"><?= $adminName ?></div>
+  <div class="sidebar-session">
+    <div class="sidebar-session-label">Sesión activa</div>
+    <div class="sidebar-session-name"><?= $adminName ?></div>
   </div>
   <div class="sidebar-lbl">Panel</div>
   <?php
@@ -428,9 +428,9 @@ require_once __DIR__ . '/../includes/header.php';
     <span><?=$icon?></span><?=$label?>
   </a>
   <?php endforeach; ?>
-  <div style="padding:1rem 1.2rem;margin-top:1rem;border-top:1px solid rgba(74,114,196,.2)">
+  <div class="sidebar-quick-report">
     <a href="/api/reports.php?type=financial&format=pdf&year=<?=$year?>" target="_blank"
-       class="btn btn-gold btn-sm" style="width:100%;text-align:center;display:block">🖨 Reporte Rápido</a>
+       class="btn btn-gold btn-sm btn-full">🖨 Reporte Rápido</a>
   </div>
 </aside>
 
@@ -443,9 +443,9 @@ require_once __DIR__ . '/../includes/header.php';
   <div class="page-header">
     <div><h1 class="page-title">Resumen General</h1>
       <div class="page-sub">Año fiscal <?=$year?></div></div>
-    <form method="GET" style="display:flex;gap:6px;align-items:center">
+    <form method="GET" class="year-select-form">
       <input type="hidden" name="tab" value="dashboard">
-      <select name="year" onchange="this.form.submit()" class="form-control" style="width:90px;padding:6px 8px">
+      <select name="year" onchange="this.form.submit()" class="form-control select-sm">
         <?php for($y=date('Y');$y>=2020;$y--): ?>
         <option value="<?=$y?>" <?=$y==$year?'selected':''?>><?=$y?></option>
         <?php endfor; ?>
@@ -455,26 +455,26 @@ require_once __DIR__ . '/../includes/header.php';
 
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">Balance Neto</div>
-      <div class="stat-value" style="color:<?=$balance>=0?'var(--success)':'var(--danger)'?>">$<?=number_format($balance,2)?></div></div>
+      <div class="stat-value" class="stat-value <?=$balance>=0?'positive':''var(--danger)'?>">$<?=number_format($balance,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Ingresos + Donaciones</div>
-      <div class="stat-value" style="color:var(--success)">$<?=number_format($totalIncome+$totalDonations,2)?></div></div>
+      <div class="stat-value positive">$<?=number_format($totalIncome+$totalDonations,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Egresos</div>
-      <div class="stat-value" style="color:var(--danger)">$<?=number_format($totalExpenses,2)?></div></div>
+      <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Ahorros</div>
-      <div class="stat-value" style="color:#7aa0d4">$<?=number_format($totalSavings,2)?></div></div>
+      <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Cuotas Pendientes</div>
-      <div class="stat-value" style="color:var(--warning,#f59e0b)">$<?=number_format($totalDuesOwed,2)?></div></div>
+      <div class="stat-value warning">$<?=number_format($totalDuesOwed,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Miembros Activos</div>
       <div class="stat-value"><?=$activeMembers?> / <?=$totalMembers?></div></div>
   </div>
 
   <!-- Monthly Chart (server-rendered PHP — no JS dependency) -->
-  <div class="card" style="margin-top:1.5rem">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <h3 style="color:var(--gold)">Movimiento Mensual <?=$year?></h3>
-      <div style="font-size:12px;display:flex;gap:12px">
-        <span style="color:#4caf7d">■ Ingresos</span>
-        <span style="color:#e57373">■ Egresos</span>
+  <div class="card" class="mt-3">
+    <div class="card-subheader">
+      <h3 class="text-gold">Movimiento Mensual <?=$year?></h3>
+      <div class="text-sm d-flex gap-sm">
+        <span class="text-success">■ Ingresos</span>
+        <span class="text-danger">■ Egresos</span>
       </div>
     </div>
     <?php
@@ -487,7 +487,7 @@ require_once __DIR__ . '/../includes/header.php';
         $eh = $chartData[$m]['expenses'] > 0 ? max(3, round(($chartData[$m]['expenses']/$maxVal)*95)) : 2;
       ?>
       <div class="bar-col">
-        <div style="display:flex;align-items:flex-end;gap:2px;height:95px">
+        <div class="bar-inner-wrap">
           <div class="bar-in" style="height:<?=$ih?>px;width:12px"
                title="Ing <?=$MONTHS[$m]?>: $<?=number_format($chartData[$m]['income'],2)?>"></div>
           <div class="bar-ex" style="height:<?=$eh?>px;width:12px"
@@ -501,20 +501,20 @@ require_once __DIR__ . '/../includes/header.php';
     $anyActivity = array_filter($chartData, fn($c)=>$c['income']>0||$c['expenses']>0);
     if(empty($anyActivity)):
     ?>
-    <p style="color:var(--text-muted);text-align:center;padding:1rem;font-size:13px">
+    <p class="empty-state">
       No hay transacciones en <?=$year?>. Use la pestaña <strong>Finanzas</strong> para agregar movimientos.
     </p>
     <?php endif; ?>
   </div>
 
   <!-- Recent transactions -->
-  <div class="card" style="margin-top:1.5rem">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <h3 style="color:var(--gold)">Últimas Transacciones</h3>
+  <div class="card" class="mt-3">
+    <div class="card-subheader">
+      <h3 class="text-gold">Últimas Transacciones</h3>
       <a href="?tab=finances&year=<?=$year?>" class="btn btn-outline btn-sm">Ver todas →</a>
     </div>
     <?php if(empty($transactions)): ?>
-    <p style="color:var(--text-muted);text-align:center;padding:1rem;font-size:13px">No hay transacciones en <?=$year?>.</p>
+    <p class="empty-state">No hay transacciones en <?=$year?>.</p>
     <?php else: ?>
     <div class="table-wrap">
       <table class="data-table">
@@ -525,7 +525,7 @@ require_once __DIR__ . '/../includes/header.php';
             <td><?=e($t['date'])?></td>
             <td><span class="badge <?=$t['type']==='income'?'badge-income':'badge-expense'?>"><?=$t['type']==='income'?'Ingreso':'Egreso'?></span></td>
             <td><?=e($t['description'])?></td>
-            <td style="color:<?=$t['type']==='income'?'var(--success)':'var(--danger)'?>;font-weight:bold">$<?=number_format($t['amount'],2)?></td>
+            <td class="<?=$t['type']==='income'?'text-success':'text-danger'?> text-bold">$<?=number_format($t['amount'],2)?></td>
           </tr>
           <?php endforeach; ?>
         </tbody>
@@ -544,8 +544,8 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-member-form')">+ Agregar Miembro</button>
   </div>
 
-  <div id="add-member-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Nuevo Miembro</h3>
+  <div id="add-member-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Nuevo Miembro</h3>
     <form id="form-add-member">
       <div class="form-row">
         <div class="form-group"><label class="form-label">Nombre *</label>
@@ -567,7 +567,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="form-group form-full"><label class="form-label">Notas</label>
           <textarea name="notes" class="form-control"></textarea></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:.75rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-member-form')">Cancelar</button>
       </div>
@@ -588,16 +588,16 @@ require_once __DIR__ . '/../includes/header.php';
           ?>
           <tr>
             <td><strong><?=e($mem['name'])?></strong><br>
-              <span style="font-size:11px;color:var(--text-muted)"><?=e($mem['email'])?></span></td>
+              <span class="sidebar-session-label"><?=e($mem['email'])?></span></td>
             <td><?=e($mem['role'])?></td>
-            <td style="font-size:12px"><?=e($mem['degree'])?><?='°'?></td>
+            <td class="text-sm"><?=e($mem['degree'])?><?='°'?></td>
             <td><span class="badge <?=$mem['active']?'badge-success':'badge-danger'?>"><?=$mem['active']?'Activo':'Inactivo'?></span></td>
             <td><?php if($owedAmt>0): ?>
-              <span style="color:var(--danger)"><?=$memOwed?> mes(es) — $<?=number_format($owedAmt,2)?></span>
-            <?php else: ?><span style="color:var(--success)">Al corriente ✓</span><?php endif; ?></td>
-            <td style="font-size:12px"><?=date('d/m/Y',strtotime($mem['joined_date']))?></td>
+              <span class="text-danger"><?=$memOwed?> mes(es) — $<?=number_format($owedAmt,2)?></span>
+            <?php else: ?><span class="text-success">Al corriente ✓</span><?php endif; ?></td>
+            <td class="text-sm"><?=date('d/m/Y',strtotime($mem['joined_date']))?></td>
             <td>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <div class="d-flex flex-wrap gap-sm">
                 <button class="btn btn-outline btn-sm"
                   onclick="editMember(<?=$mem['id']?>,<?=htmlspecialchars(json_encode($mem),ENT_QUOTES)?>)">Editar</button>
                 <button class="btn btn-sm <?=$mem['active']?'btn-danger':'btn-success'?>"
@@ -622,17 +622,17 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Filters -->
-  <div class="card" style="margin-bottom:1.5rem">
-    <form method="GET" style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">
+  <div class="card" class="mb-3">
+    <form method="GET" class="filter-row">
       <input type="hidden" name="tab" value="finances">
-      <div class="form-group" style="margin:0"><label class="form-label">Año</label>
-        <select name="year" class="form-control" style="width:90px">
+      <div class="form-group mx-0"><label class="form-label">Año</label>
+        <select name="year" class="form-control select-sm">
           <?php for($y=date('Y');$y>=2020;$y--): ?>
           <option value="<?=$y?>" <?=$y==$year?'selected':''?>><?=$y?></option>
           <?php endfor; ?>
         </select></div>
-      <div class="form-group" style="margin:0"><label class="form-label">Mes</label>
-        <select name="month" class="form-control" style="width:130px">
+      <div class="form-group mx-0"><label class="form-label">Mes</label>
+        <select name="month" class="form-control select-md">
           <option value="0" <?=$filterMonth==0?'selected':''?>>Todos</option>
           <?php for($m=1;$m<=12;$m++): ?>
           <option value="<?=$m?>" <?=$m==$filterMonth?'selected':''?>><?=$MONTHS_F[$m]?></option>
@@ -640,20 +640,20 @@ require_once __DIR__ . '/../includes/header.php';
         </select></div>
       <button type="submit" class="btn btn-primary">Filtrar</button>
     </form>
-    <div style="display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap">
-      <div><span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Ingresos</span>
-        <div style="color:var(--success);font-weight:bold;font-size:18px">$<?=number_format($filteredIncome,2)?></div></div>
-      <div><span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Egresos</span>
-        <div style="color:var(--danger);font-weight:bold;font-size:18px">$<?=number_format($filteredExpenses,2)?></div></div>
-      <div><span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Balance</span>
-        <div style="color:<?=($filteredIncome-$filteredExpenses)>=0?'var(--success)':'var(--danger)'?>;font-weight:bold;font-size:18px">
+    <div class="filter-summary">
+      <div><span class="filter-stat-label">Ingresos</span>
+        <div class="filter-stat-value text-success">$<?=number_format($filteredIncome,2)?></div></div>
+      <div><span class="filter-stat-label">Egresos</span>
+        <div class="filter-stat-value text-danger">$<?=number_format($filteredExpenses,2)?></div></div>
+      <div><span class="filter-stat-label">Balance</span>
+        <div class="filter-stat-value <?=($filteredIncome-$filteredExpenses)>=0?'text-success':'text-danger'?>">
           $<?=number_format($filteredIncome-$filteredExpenses,2)?></div></div>
     </div>
   </div>
 
   <!-- Add transaction form -->
-  <div id="add-tx-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Nueva Transacción</h3>
+  <div id="add-tx-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Nueva Transacción</h3>
     <form id="form-add-tx">
       <div class="form-row">
         <div class="form-group"><label class="form-label">Tipo *</label>
@@ -679,26 +679,26 @@ require_once __DIR__ . '/../includes/header.php';
           <input type="text" name="description" class="form-control" required></div>
       </div>
       <!-- Dues months (shown when category=Dues) -->
-      <div id="dues-month-row" style="display:none;margin-top:1rem;padding:1rem;background:rgba(201,168,76,.06);border-radius:8px;border:1px solid rgba(201,168,76,.2)">
+      <div id="dues-month-row" class="dues-month-selector hidden">
         <label class="form-label">Meses que cubre este pago de cuota</label>
-        <div style="margin-bottom:.5rem;display:flex;gap:8px;align-items:center">
-          <select name="dues_year" class="form-control" style="width:90px">
+        <div class="d-flex align-center gap-sm mb-1">
+          <select name="dues_year" class="form-control select-sm">
             <?php for($y=date('Y');$y>=2020;$y--): ?><option value="<?=$y?>"><?=$y?></option><?php endfor; ?>
           </select>
           <button type="button" class="btn btn-outline btn-sm" onclick="selectAllDuesMonths()">Selec. todos</button>
           <button type="button" class="btn btn-outline btn-sm" onclick="clearDuesMonths()">Limpiar</button>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem">
+        <div class="dues-months-grid">
           <?php for($m=1;$m<=12;$m++): ?>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;padding:5px;border:1px solid var(--border);border-radius:5px;background:rgba(26,58,107,.3)">
-            <input type="checkbox" class="dues-month-check" value="<?=$m?>" style="accent-color:var(--gold)">
+          <label class="dues-month-label">
+            <input type="checkbox" class="dues-month-check" value="<?=$m?>" class="accent-gold">
             <?=$MONTHS[$m]?>
           </label>
           <?php endfor; ?>
         </div>
-        <div id="dues-month-total" style="margin-top:.5rem;font-size:13px;color:var(--gold)"></div>
+        <div id="dues-month-total" class="text-gold text-13 mt-1"></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:1rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar Transacción</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-tx-form')">Cancelar</button>
       </div>
@@ -706,11 +706,11 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <div class="card">
-    <h3 style="color:var(--gold);margin-bottom:1rem">
+    <h3 class="text-gold mb-2">
       Transacciones<?=$filterMonth>0?' — '.$MONTHS_F[$filterMonth]:'';?> <?=$year?>
     </h3>
     <?php if(empty($transactions)): ?>
-    <p style="color:var(--text-muted);text-align:center;padding:1.5rem">No hay transacciones para este período.</p>
+    <p class="empty-state">No hay transacciones para este período.</p>
     <?php else: ?>
     <div class="table-wrap">
       <table class="data-table">
@@ -722,12 +722,12 @@ require_once __DIR__ . '/../includes/header.php';
             <td><span class="badge <?=$t['type']==='income'?'badge-income':'badge-expense'?>"><?=$t['type']==='income'?'Ingreso':'Egreso'?></span></td>
             <td data-field="description" data-edit="text"   data-val="<?=e($t['description'])?>"><?=e($t['description'])?></td>
             <td data-field="category"    data-edit="text"   data-val="<?=e($t['category'])?>"><?=e($t['category'])?></td>
-            <td style="font-size:12px;color:var(--text-muted)"><?=e($t['member_name']??'—')?></td>
+            <td class="text-sm text-muted"><?=e($t['member_name']??'—')?></td>
             <td data-field="amount"      data-edit="number" data-val="<?=e($t['amount'])?>"
-                style="color:<?=$t['type']==='income'?'var(--success)':'var(--danger)'?>;font-weight:bold">
+                class="<?=$t['type']==='income'?'text-success':'text-danger'?> text-bold">
               $<?=number_format($t['amount'],2)?></td>
             <td>
-              <div style="display:flex;gap:4px">
+              <div class="d-flex gap-sm">
                 <button class="btn btn-outline btn-sm edit-btn"   onclick="enableEditRow(<?=$t['id']?>)">Editar</button>
                 <button class="btn btn-gold   btn-sm save-btn"    onclick="saveEditRow(<?=$t['id']?>)"   style="display:none">Guardar</button>
                 <button class="btn btn-outline btn-sm cancel-btn" onclick="location.reload()"             style="display:none">✕</button>
@@ -749,9 +749,9 @@ require_once __DIR__ . '/../includes/header.php';
   <div class="page-header">
     <div><h1 class="page-title">Control de Cuotas</h1>
       <div class="page-sub">Haz clic en un mes para cambiar su estado</div></div>
-    <form method="GET" style="display:flex;gap:6px;align-items:center">
+    <form method="GET" class="year-select-form">
       <input type="hidden" name="tab" value="dues">
-      <select name="year" onchange="this.form.submit()" class="form-control" style="width:90px">
+      <select name="year" onchange="this.form.submit()" class="form-control select-sm">
         <?php for($y=date('Y');$y>=2020;$y--): ?>
         <option value="<?=$y?>" <?=$y==$year?'selected':''?>><?=$y?></option>
         <?php endfor; ?>
@@ -760,20 +760,20 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Dues rate -->
-  <div class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:.75rem">Cuota Mensual <?=$year?></h3>
-    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-      <div class="form-group" style="margin:0">
+  <div class="card" class="mb-3">
+    <h3 class="text-gold mb-1">Cuota Mensual <?=$year?></h3>
+    <div class="dues-rate-row">
+      <div class="form-group mx-0">
         <label class="form-label">Monto mensual ($)</label>
-        <input type="number" id="dues-rate-input" class="form-control" style="width:140px"
+        <input type="number" id="dues-rate-input" class="form-control select-lg"
                value="<?=number_format($monthlyRate,2)?>" min="0" step="0.01">
       </div>
       <input type="hidden" id="dues-rate-year" value="<?=$year?>">
       <button class="btn btn-gold" onclick="saveDuesRate()">Actualizar Tarifa</button>
     </div>
     <?php if($monthlyRate>0): ?>
-    <p style="color:var(--text-muted);font-size:12px;margin-top:.5rem">
-      Tarifa actual: <strong style="color:var(--gold)">$<?=number_format($monthlyRate,2)?>/mes</strong>
+    <p class="text-muted text-sm mt-1">
+      Tarifa actual: <strong class="text-gold">$<?=number_format($monthlyRate,2)?>/mes</strong>
     </p>
     <?php endif; ?>
   </div>
@@ -789,16 +789,16 @@ require_once __DIR__ . '/../includes/header.php';
       elseif($m<=$currentMonth || $year<date('Y')) $owedCnt++;
     }
   ?>
-  <div class="card" style="margin-bottom:1rem">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+  <div class="card" class="mb-2">
+    <div class="dues-member-header">
       <div>
-        <strong style="color:#fff"><?=e($mem['name'])?></strong>
-        <span style="color:var(--text-muted);font-size:12px;margin-left:8px"><?=e($mem['role'])?></span>
+        <strong class="text-white"><?=e($mem['name'])?></strong>
+        <span class="text-sm text-muted"><?=e($mem['role'])?></span>
       </div>
-      <div style="display:flex;gap:1rem;font-size:12px">
-        <span style="color:var(--success)">✓ <?=$paidCnt?> pagados</span>
+      <div class="dues-member-stats">
+        <span class="text-success">✓ <?=$paidCnt?> pagados</span>
         <?php if($owedCnt>0): ?>
-        <span style="color:var(--danger)">⚠ <?=$owedCnt?> pendientes
+        <span class="text-danger">⚠ <?=$owedCnt?> pendientes
           <?php if($monthlyRate>0): ?>— $<?=number_format($owedCnt * $monthlyRate,2)?><?php endif; ?></span>
         <?php endif; ?>
       </div>
@@ -817,12 +817,12 @@ require_once __DIR__ . '/../includes/header.php';
            <?= !$isPast && !$isPaid ? 'title="Mes futuro — click para marcar pagado"' : 'title="Click para cambiar estado"' ?>>
         <div><?=$MONTHS[$m]?></div>
         <?php if($isPaid): ?>
-          <div style="font-size:10px">✓<?=$d['paid_date']?' '.date('d/m',strtotime($d['paid_date'])):''?></div>
+          <div class="text-xs">✓<?=$d['paid_date']?' '.date('d/m',strtotime($d['paid_date'])):''?></div>
         <?php elseif($isPast): ?>
-          <div style="font-size:10px">⚠ Pend.</div>
-          <?php if($monthlyRate>0): ?><div style="font-size:9px">$<?=number_format($monthlyRate,2)?></div><?php endif; ?>
+          <div class="text-xs">⚠ Pend.</div>
+          <?php if($monthlyRate>0): ?><div class="text-9">$<?=number_format($monthlyRate,2)?></div><?php endif; ?>
         <?php else: ?>
-          <div style="font-size:10px">—</div>
+          <div class="text-xs">—</div>
         <?php endif; ?>
       </div>
       <?php endfor; ?>
@@ -832,8 +832,8 @@ require_once __DIR__ . '/../includes/header.php';
 
   <!-- ════ ADMIN USERS DUES ════ -->
   <?php if(!empty($adminUsers)): ?>
-  <div style="margin-top:2rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:8px">
+  <div class="mt-3">
+    <h3 class="dues-section-header">
       <i class="fas fa-shield-halved"></i> Cuotas — Usuarios Administrativos
     </h3>
     <?php $currentMonth = (int)date('n'); ?>
@@ -845,17 +845,17 @@ require_once __DIR__ . '/../includes/header.php';
         elseif($m<=$currentMonth || $year<date('Y')) $owedCnt++;
       }
     ?>
-    <div class="card" style="margin-bottom:1rem">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+    <div class="card" class="mb-2">
+      <div class="dues-member-header">
         <div>
-          <strong style="color:#fff"><?=e($au['name'] ?: $au['username'])?></strong>
-          <span class="badge badge-gold" style="margin-left:8px;font-size:10px">Admin</span>
-          <span style="color:var(--text-muted);font-size:12px;margin-left:6px">@<?=e($au['username'])?></span>
+          <strong class="text-white"><?=e($au['name'] ?: $au['username'])?></strong>
+          <span class="badge-admin">Admin</span>
+          <span class="text-sm text-muted">@<?=e($au['username'])?></span>
         </div>
-        <div style="display:flex;gap:1rem;font-size:12px">
-          <span style="color:var(--success)">&#10003; <?=$paidCnt?> pagados</span>
+        <div class="dues-member-stats">
+          <span class="text-success">&#10003; <?=$paidCnt?> pagados</span>
           <?php if($owedCnt>0): ?>
-          <span style="color:var(--danger)">&#9888; <?=$owedCnt?> pendientes
+          <span class="text-danger">&#9888; <?=$owedCnt?> pendientes
             <?php if($monthlyRate>0): ?>— $<?=number_format($owedCnt*$monthlyRate,2)?><?php endif; ?></span>
           <?php endif; ?>
         </div>
@@ -874,12 +874,12 @@ require_once __DIR__ . '/../includes/header.php';
              title="<?=$isPast||$isPaid?'Click para cambiar estado':'Mes futuro — click para marcar pagado'?>">
           <div><?=$MONTHS[$m]?></div>
           <?php if($isPaid): ?>
-            <div style="font-size:10px">&#10003;<?=$d['paid_date']?' '.date('d/m',strtotime($d['paid_date'])):''?></div>
+            <div class="text-xs">&#10003;<?=$d['paid_date']?' '.date('d/m',strtotime($d['paid_date'])):''?></div>
           <?php elseif($isPast): ?>
-            <div style="font-size:10px">&#9888; Pend.</div>
-            <?php if($monthlyRate>0): ?><div style="font-size:9px">$<?=number_format($monthlyRate,2)?></div><?php endif; ?>
+            <div class="text-xs">&#9888; Pend.</div>
+            <?php if($monthlyRate>0): ?><div class="text-9">$<?=number_format($monthlyRate,2)?></div><?php endif; ?>
           <?php else: ?>
-            <div style="font-size:10px">—</div>
+            <div class="text-xs">—</div>
           <?php endif; ?>
         </div>
         <?php endfor; ?>
@@ -899,18 +899,18 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-don-form')">+ Registrar</button>
   </div>
 
-  <div id="add-don-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Registrar Donación</h3>
+  <div id="add-don-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Registrar Donación</h3>
     <form id="form-add-don">
       <div class="form-row">
         <div class="form-group form-full">
           <label class="form-label">Tipo de Donante</label>
-          <div style="display:flex;gap:1rem">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-              <input type="radio" name="donor_type" value="member" checked onchange="toggleDonorType('member')" style="accent-color:var(--gold)">
+          <div class="d-flex gap-2">
+            <label class="radio-label">
+              <input type="radio" name="donor_type" value="member" checked onchange="toggleDonorType('member')" class="accent-gold">
               Miembro de la Logia</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-              <input type="radio" name="donor_type" value="external" onchange="toggleDonorType('external')" style="accent-color:var(--gold)">
+            <label class="radio-label">
+              <input type="radio" name="donor_type" value="external" onchange="toggleDonorType('external')" class="accent-gold">
               Externo / No Miembro</label>
           </div>
         </div>
@@ -934,11 +934,11 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="form-group form-full"><label class="form-label">Nota</label>
           <input type="text" name="note" class="form-control"></div>
         <div class="form-group">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;margin-top:.5rem">
-            <input type="checkbox" name="anonymous" value="1" style="accent-color:var(--gold)"> Donación Anónima</label>
+          <label class="radio-label mt-1">
+            <input type="checkbox" name="anonymous" value="1" class="accent-gold"> Donación Anónima</label>
         </div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:.5rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-don-form')">Cancelar</button>
       </div>
@@ -953,18 +953,18 @@ require_once __DIR__ . '/../includes/header.php';
           <?php foreach($donations as $d): ?>
           <tr data-don-id="<?=$d['id']?>">
             <td><?=e($d['date'])?></td>
-            <td><?php if($d['anonymous']): ?><em style="color:var(--text-muted)">[Anónimo]</em>
+            <td><?php if($d['anonymous']): ?><em class="text-muted">[Anónimo]</em>
               <?php else: ?><strong><?=e($d['member_name']??$d['donor_name']??'—')?></strong>
-                <?php if($d['member_id']): ?><span class="badge badge-info" style="margin-left:4px">Miembro</span><?php endif; ?>
+                <?php if($d['member_id']): ?><span class="badge badge-info ml-1">Miembro</span><?php endif; ?>
             <?php endif; ?></td>
             <td><span class="badge badge-gold"><?=e($d['category'])?></span></td>
-            <td style="color:var(--success);font-weight:bold">$<?=number_format($d['amount'],2)?></td>
-            <td style="font-size:12px;color:var(--text-muted)"><?=e($d['note']??'—')?></td>
+            <td class="text-success text-bold">$<?=number_format($d['amount'],2)?></td>
+            <td class="text-sm text-muted"><?=e($d['note']??'—')?></td>
             <td><button class="btn btn-danger btn-sm" onclick="deleteDonation(<?=$d['id']?>)">✕</button></td>
           </tr>
           <?php endforeach; ?>
           <?php if(empty($donations)): ?>
-          <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">No hay donaciones registradas.</td></tr>
+          <tr><td colspan="6" class="empty-state">No hay donaciones registradas.</td></tr>
           <?php endif; ?>
         </tbody>
       </table>
@@ -981,21 +981,21 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-saving-form')">+ Agregar</button>
   </div>
 
-  <div class="stats-grid" style="margin-bottom:1.5rem">
+  <div class="stats-grid" class="mb-3">
     <div class="stat-card"><div class="stat-label">Total Ahorros</div>
-      <div class="stat-value" style="color:#7aa0d4">$<?=number_format($totalSavings,2)?></div></div>
+      <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
     <?php
     $savDeposits    = array_sum(array_column(array_filter($savingsRows,fn($s)=>$s['type']==='deposit'),   'amount'));
     $savWithdrawals = array_sum(array_column(array_filter($savingsRows,fn($s)=>$s['type']==='withdrawal'),'amount'));
     ?>
     <div class="stat-card"><div class="stat-label">Total Depósitos</div>
-      <div class="stat-value" style="color:var(--success)">$<?=number_format($savDeposits,2)?></div></div>
+      <div class="stat-value positive">$<?=number_format($savDeposits,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Total Retiros</div>
-      <div class="stat-value" style="color:var(--danger)">$<?=number_format($savWithdrawals,2)?></div></div>
+      <div class="stat-value negative">$<?=number_format($savWithdrawals,2)?></div></div>
   </div>
 
-  <div id="add-saving-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Nuevo Movimiento de Ahorro</h3>
+  <div id="add-saving-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Nuevo Movimiento de Ahorro</h3>
     <form id="form-add-saving">
       <div class="form-row">
         <div class="form-group"><label class="form-label">Tipo *</label>
@@ -1012,7 +1012,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="form-group form-full"><label class="form-label">Referencia</label>
           <input type="text" name="reference" class="form-control" placeholder="Número de recibo, etc."></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:.5rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-saving-form')">Cancelar</button>
       </div>
@@ -1021,7 +1021,7 @@ require_once __DIR__ . '/../includes/header.php';
 
   <div class="card">
     <?php if(empty($savingsRows)): ?>
-    <p style="color:var(--text-muted);text-align:center;padding:2rem">
+    <p class="empty-state">
       No hay movimientos de ahorro. <br>
       <small>Si acabas de crear la tabla, asegúrate de correr el script <code>database_additions.sql</code> en phpMyAdmin.</small>
     </p>
@@ -1036,8 +1036,8 @@ require_once __DIR__ . '/../includes/header.php';
             <td><span class="badge <?=$s['type']==='deposit'?'badge-income':'badge-expense'?>">
               <?=$s['type']==='deposit'?'Depósito':'Retiro'?></span></td>
             <td><?=e($s['description'])?></td>
-            <td style="font-size:12px;color:var(--text-muted)"><?=e($s['reference']??'—')?></td>
-            <td style="color:<?=$s['type']==='deposit'?'var(--success)':'var(--danger)'?>;font-weight:bold">
+            <td class="text-sm text-muted"><?=e($s['reference']??'—')?></td>
+            <td class="<?=$s['type']==='deposit'?'text-success':'text-danger'?> text-bold">
               <?=$s['type']==='deposit'?'+':'-'?>$<?=number_format($s['amount'],2)?></td>
             <td><button class="btn btn-danger btn-sm" onclick="deleteSaving(<?=$s['id']?>)">✕</button></td>
           </tr>
@@ -1057,8 +1057,8 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="page-sub">Visibles para todos los miembros</div></div>
     <button class="btn btn-gold" onclick="showSection('add-news-form')">+ Publicar</button>
   </div>
-  <div id="add-news-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Nuevo Comunicado</h3>
+  <div id="add-news-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Nuevo Comunicado</h3>
     <form id="form-add-news">
       <div class="form-group"><label class="form-label">Título *</label>
         <input type="text" name="title" class="form-control" required></div>
@@ -1066,27 +1066,27 @@ require_once __DIR__ . '/../includes/header.php';
         <input type="text" name="author" class="form-control" value="<?=$adminName?>"></div>
       <div class="form-group"><label class="form-label">Contenido *</label>
         <textarea name="body" class="form-control" style="min-height:120px" required></textarea></div>
-      <div style="display:flex;gap:10px;margin-top:.5rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Publicar</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-news-form')">Cancelar</button>
       </div>
     </form>
   </div>
-  <div style="display:flex;flex-direction:column;gap:1rem">
+  <div class="d-flex flex-col gap-2">
     <?php if(empty($newsRows)): ?>
-    <p style="color:var(--text-muted);text-align:center;padding:2rem">No hay comunicados aún.</p>
+    <p class="empty-state">No hay comunicados aún.</p>
     <?php endif; ?>
     <?php foreach($newsRows as $n): ?>
     <div class="card card-gold" data-news-id="<?=$n['id']?>">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem">
+      <div class="news-item-inner">
         <div>
           <div class="news-date"><?=e(date('d M Y',strtotime($n['created_at'])))?> · <?=e($n['author'])?>
-            <?php if(!$n['published']): ?><span class="badge badge-danger" style="margin-left:6px">Oculto</span><?php endif; ?>
+            <?php if(!$n['published']): ?><span class="badge badge-danger ml-1">Oculto</span><?php endif; ?>
           </div>
           <h3 class="news-title"><?=e($n['title'])?></h3>
           <p class="news-body"><?=nl2br(e(mb_substr($n['body'],0,300)))?></p>
         </div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <div class="d-flex flex-col gap-sm shrink-0">
           <button class="btn btn-outline btn-sm" onclick="toggleNews(<?=$n['id']?>)"><?=$n['published']?'Ocultar':'Publicar'?></button>
           <button class="btn btn-danger btn-sm"  onclick="deleteNews(<?=$n['id']?>)">Eliminar</button>
         </div>
@@ -1105,8 +1105,8 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-admin-form')">+ Nuevo Admin</button>
   </div>
 
-  <div id="add-admin-form" style="display:none" class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Crear Cuenta Admin</h3>
+  <div id="add-admin-form" style="display:none" class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Crear Cuenta Admin</h3>
     <form id="form-add-admin">
       <div class="form-row">
         <div class="form-group"><label class="form-label">Usuario *</label>
@@ -1118,7 +1118,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="form-group"><label class="form-label">Contraseña * (mín. 6 caracteres)</label>
           <input type="password" name="password" class="form-control" required minlength="6"></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:.75rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Crear Admin</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-admin-form')">Cancelar</button>
       </div>
@@ -1126,7 +1126,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <div class="card">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Cuentas Admin</h3>
+    <h3 class="text-gold mb-2">Cuentas Admin</h3>
     <div class="table-wrap">
       <table class="data-table">
         <thead><tr><th>Usuario</th><th>Nombre</th><th>Correo</th><th>Estado</th><th>Último Acceso</th><th>Acciones</th></tr></thead>
@@ -1135,15 +1135,15 @@ require_once __DIR__ . '/../includes/header.php';
           <tr data-au-id="<?=$au['id']?>">
             <td><strong><?=e($au['username'])?></strong>
               <?php if($au['id']==$myAdminId): ?>
-              <span style="font-size:10px;color:var(--gold);margin-left:4px">(tú)</span>
+              <span class="text-xs text-gold">(tú)</span>
               <?php endif; ?>
             </td>
             <td><?=e($au['name']??'—')?></td>
-            <td style="font-size:12px;color:var(--text-muted)"><?=e($au['email']??'—')?></td>
+            <td class="text-sm text-muted"><?=e($au['email']??'—')?></td>
             <td><span class="badge <?=$au['active']?'badge-success':'badge-danger'?>"><?=$au['active']?'Activo':'Inactivo'?></span></td>
-            <td style="font-size:12px;color:var(--text-muted)"><?=$au['last_login']?date('d/m/Y',strtotime($au['last_login'])):'Nunca'?></td>
+            <td class="text-sm text-muted"><?=$au['last_login']?date('d/m/Y',strtotime($au['last_login'])):'Nunca'?></td>
             <td>
-              <div style="display:flex;gap:6px">
+              <div class="d-flex gap-sm">
                 <button class="btn btn-outline btn-sm"
                   onclick="openEditAdminModal(<?=$au['id']?>, '<?=e($au['name']??'')?>', '<?=e($au['email']??'')?>')">Editar</button>
                 <?php if($au['id']!=$myAdminId): ?>
@@ -1157,7 +1157,7 @@ require_once __DIR__ . '/../includes/header.php';
           </tr>
           <?php endforeach; ?>
           <?php if(empty($adminUsers)): ?>
-          <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">No hay usuarios admin.</td></tr>
+          <tr><td colspan="6" class="empty-state">No hay usuarios admin.</td></tr>
           <?php endif; ?>
         </tbody>
       </table>
@@ -1173,17 +1173,17 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="page-sub">PDF o CSV para Google Sheets / Excel</div></div>
   </div>
 
-  <div class="card" style="margin-bottom:1.5rem">
-    <h3 style="color:var(--gold);margin-bottom:1rem">Seleccionar Período</h3>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end">
-      <div class="form-group" style="margin:0"><label class="form-label">Año</label>
-        <select id="rpt-year" class="form-control" style="width:90px">
+  <div class="card" class="mb-3">
+    <h3 class="text-gold mb-2">Seleccionar Período</h3>
+    <div class="filter-row">
+      <div class="form-group mx-0"><label class="form-label">Año</label>
+        <select id="rpt-year" class="form-control select-sm">
           <?php for($y=date('Y');$y>=2020;$y--): ?>
           <option value="<?=$y?>" <?=$y==date('Y')?'selected':''?>><?=$y?></option>
           <?php endfor; ?>
         </select></div>
-      <div class="form-group" style="margin:0"><label class="form-label">Mes (vacío = anual)</label>
-        <select id="rpt-month" class="form-control" style="width:140px">
+      <div class="form-group mx-0"><label class="form-label">Mes (vacío = anual)</label>
+        <select id="rpt-month" class="form-control select-lg">
           <option value="0">Todos los meses</option>
           <?php for($m=1;$m<=12;$m++): ?>
           <option value="<?=$m?>"><?=$MONTHS_F[$m]?></option>
@@ -1192,22 +1192,22 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
   </div>
 
-  <div class="stats-grid" style="margin-bottom:1.5rem">
+  <div class="stats-grid" class="mb-3">
     <div class="stat-card"><div class="stat-label">Ingresos</div>
-      <div class="stat-value" style="color:var(--success)">$<?=number_format($totalIncome,2)?></div></div>
+      <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Donaciones</div>
-      <div class="stat-value" style="color:var(--success)">$<?=number_format($totalDonations,2)?></div></div>
+      <div class="stat-value positive">$<?=number_format($totalDonations,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Egresos</div>
-      <div class="stat-value" style="color:var(--danger)">$<?=number_format($totalExpenses,2)?></div></div>
+      <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Balance Neto</div>
-      <div class="stat-value" style="color:<?=$balance>=0?'var(--success)':'var(--danger)'?>">$<?=number_format($balance,2)?></div></div>
+      <div class="stat-value" class="stat-value <?=$balance>=0?'positive':''var(--danger)'?>">$<?=number_format($balance,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Ahorros</div>
-      <div class="stat-value" style="color:#7aa0d4">$<?=number_format($totalSavings,2)?></div></div>
+      <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
     <div class="stat-card"><div class="stat-label">Cuotas Pendientes</div>
-      <div class="stat-value" style="color:var(--warning,#f59e0b)">$<?=number_format($totalDuesOwed,2)?></div></div>
+      <div class="stat-value warning">$<?=number_format($totalDuesOwed,2)?></div></div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem">
+  <div class="reports-grid">
     <?php
     $rpts = [
       ['financial','📊 Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
@@ -1217,9 +1217,9 @@ require_once __DIR__ . '/../includes/header.php';
     foreach($rpts as [$rtype,$rtitle,$rdesc]):
     ?>
     <div class="card">
-      <h3 style="color:var(--gold);margin-bottom:.5rem;font-size:14px"><?=$rtitle?></h3>
-      <p style="color:var(--text-secondary);font-size:12px;margin-bottom:1.5rem"><?=$rdesc?></p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <h3 class="text-gold mb-1"><?=$rtitle?></h3>
+      <p class="text-secondary text-sm mb-3"><?=$rdesc?></p>
+      <div class="d-flex flex-wrap gap-sm">
         <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')">⬇ CSV / Sheets</button>
         <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')">🖨 Ver PDF</button>
       </div>
@@ -1248,7 +1248,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="form-group form-full"><label class="form-label">Dirección</label><input type="text" name="address" id="edit-m-address" class="form-control"></div>
         <div class="form-group form-full"><label class="form-label">Notas</label><textarea name="notes" id="edit-m-notes" class="form-control"></textarea></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:.75rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar Cambios</button>
         <button type="button" class="btn btn-outline" onclick="closeModal('modal-edit-member')">Cancelar</button>
       </div>
@@ -1265,7 +1265,7 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="form-group"><label class="form-label">Nombre</label><input type="text" name="name" id="edit-a-name" class="form-control"></div>
       <div class="form-group"><label class="form-label">Correo</label><input type="email" name="email" id="edit-a-email" class="form-control"></div>
       <div class="form-group"><label class="form-label">Nueva Contraseña (vacío = sin cambio)</label><input type="password" name="password" class="form-control" placeholder="Mínimo 6 caracteres"></div>
-      <div style="display:flex;gap:10px;margin-top:.75rem">
+      <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar</button>
         <button type="button" class="btn btn-outline" onclick="closeModal('modal-edit-admin')">Cancelar</button>
       </div>
