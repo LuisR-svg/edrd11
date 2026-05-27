@@ -455,7 +455,7 @@ require_once __DIR__ . '/../includes/header.php';
 
   <div class="stats-grid">
     <div class="stat-card ">
-      <div clas="data-head">
+      <div class="data-head">
       <div class="stat-label">Balance Neto</div>
      <div class="stat-value <?= $balance >= 0 ? 'positive' : 'negative' ?>">
     $<?= number_format($balance, 2) ?>
