@@ -1197,14 +1197,16 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
   </div>
 
-  <div class="report-grid" class="mb-3">
+  <div class="reports-grid" class="mb-3">
     <div class="stat-card report"><div class="stat-label">Ingresos</div>
       <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div></div>
     <div class="stat-card report"><div class="stat-label">Donaciones</div>
       <div class="stat-value positive">$<?=number_format($totalDonations,2)?></div></div>
     <div class="stat-card report"><div class="stat-label">Egresos</div>
       <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div></div>
-    <div class="stat-card report"><div class="stat-label">Balance Neto</div>
+    
+</div>
+<div class="stat-card report"><div class="stat-label">Balance Neto</div>
       <div class="stat-value <?= $balance >= 0 ? 'positive' : 'negative' ?>">
     $<?= number_format($balance, 2) ?>
 </div>
@@ -1233,8 +1235,6 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
     <?php endforeach; ?>
   </div>
-</div>
-
 <?php endif; ?>
 </main>
 </div>
