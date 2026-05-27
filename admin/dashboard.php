@@ -1207,7 +1207,7 @@ require_once __DIR__ . '/../includes/header.php';
     
 </div>
 <div class="stat-card report">
-  .data-head
+  <div class="data-head">
 <div class="stat-label">Balance Neto</div>
       <div class="stat-value <?= $balance >= 0 ? 'positive' : 'negative' ?>">
     $<?= number_format($balance, 2) ?>
