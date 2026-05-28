@@ -1250,7 +1250,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Summary stats — same layout as dashboard tab -->
-  <div class="stats-grid">
+  <div class="stats-grid reports-stats-grid ">
     <div class="stat-card">
       <div class="stat-label">Balance Neto</div>
       <div class="stat-value <?=$balance>=0?'positive':'negative'?>">$<?=number_format($balance,2)?></div>
