@@ -1684,33 +1684,10 @@ footer {
   background: rgba(76, 175, 125, 0.3);
 }
 
-/* Toggle button */
-.sidebar-toggle {
-}
-
 @media (max-width: 900px) {
-  .sidebar-toggle {
-    display: block;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 2000;
-  }
-
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: -280px;
-    width: 260px;
-    height: 100vh;
-    transition: left 0.3s ease;
-    z-index: 1500;
+    display: none;
   }
-
-  .sidebar.active {
-    left: 0;
-  }
-
   .main {
     max-width: 100vw;
     padding: 1rem;

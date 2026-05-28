@@ -497,15 +497,6 @@ document.addEventListener("DOMContentLoaded", () => {
         mobileMenu.classList.remove("open");
       }
     });
-    // ----------------------------------------------------------------------------------------
-    // Side Hamburger menu (mobile) - Refactored
-    // ----------------------------------------------------------------------------------------
-    const sidebarToggle = document.getElementById("sidebarToggle");
-    const sidebar = document.getElementById("sidebar");
-
-    sidebarToggle.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-    });
   }
 
   initMobileMenu(); // Run the safe function
