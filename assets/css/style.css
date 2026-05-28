@@ -1004,7 +1004,7 @@ textarea.form-control {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
 }
 .grid-2 {
