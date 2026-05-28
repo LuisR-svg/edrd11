@@ -221,9 +221,24 @@ function updateDuesMonthTotal() {
 }
 document.getElementById('tx-amount')?.addEventListener('input', updateDuesMonthTotal);
 document.getElementById('tx-category')?.addEventListener('change', function() {
-  document.getElementById('dues-month-row').style.display = this.value === 'Dues' ? '' : 'none';
-  document.getElementById('tx-member-row').style.display  = this.value === 'Dues' ? '' : 'none';
+  const isDues = this.value === 'Dues';
+  document.getElementById('dues-month-row').style.display     = isDues ? '' : 'none';
+  document.getElementById('tx-payer-type-row').style.display  = isDues ? '' : 'none';
+  if (!isDues) {
+    // Hide both payer rows when switching away from Dues
+    document.getElementById('tx-member-row').style.display = 'none';
+    document.getElementById('tx-admin-row').style.display  = 'none';
+  } else {
+    // Show the currently selected payer type
+    const payerType = document.querySelector('input[name="payer_type"]:checked')?.value || 'member';
+    updatePayerType(payerType);
+  }
 });
+
+function updatePayerType(type) {
+  document.getElementById('tx-member-row').style.display = type === 'member' ? '' : 'none';
+  document.getElementById('tx-admin-row').style.display  = type === 'admin'  ? '' : 'none';
+}
 document.querySelectorAll('.dues-month-check').forEach(c => c.addEventListener('change', updateDuesMonthTotal));
 
 // ── ADD TRANSACTION ───────────────────────────────────────
@@ -232,10 +247,13 @@ document.getElementById('form-add-tx')?.addEventListener('submit', async functio
   const fd = new FormData(this);
   const months = [...document.querySelectorAll('.dues-month-check:checked')].map(c => +c.value);
   try {
+    const payerType = document.querySelector('input[name="payer_type"]:checked')?.value || 'member';
     await adminPost('transactions.php', {
       type: fd.get('type'), amount: fd.get('amount'), date: fd.get('date'),
       description: fd.get('description'), category: fd.get('category'),
-      member_id: fd.get('member_id') || null, reference: fd.get('reference') || null,
+      member_id: payerType === 'member' ? (fd.get('member_id') || null) : null,
+      admin_id:  payerType === 'admin'  ? (fd.get('admin_id')  || null) : null,
+      reference: fd.get('reference') || null,
       dues_months: months, dues_year: fd.get('dues_year') || new Date().getFullYear()
     });
     toast('Transacción guardada');
@@ -474,7 +492,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Monthly Chart (server-rendered PHP — no JS dependency) -->
-  <div class="card" class="mt-3">
+  <div class="card mt-3">
     <div class="card-subheader">
       <h3 class="text-gold">Movimiento Mensual <?=$year?></h3>
       <div class="text-sm d-flex gap-sm">
@@ -513,7 +531,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Recent transactions -->
-  <div class="card" class="mt-3">
+  <div class="card mt-3">
     <div class="card-subheader">
       <h3 class="text-gold">Últimas Transacciones</h3>
       <a href="?tab=finances&year=<?=$year?>" class="btn btn-outline btn-sm">Ver todas →</a>
@@ -549,7 +567,7 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-member-form')">+ Agregar Miembro</button>
   </div>
 
-  <div id="add-member-form" style="display:none" class="card" class="mb-3">
+  <div id="add-member-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Nuevo Miembro</h3>
     <form id="form-add-member">
       <div class="form-row">
@@ -627,7 +645,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Filters -->
-  <div class="card" class="mb-3">
+  <div class="card mb-3">
     <form method="GET" class="filter-row">
       <input type="hidden" name="tab" value="finances">
       <div class="form-group mx-0"><label class="form-label">Año</label>
@@ -657,7 +675,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Add transaction form -->
-  <div id="add-tx-form" style="display:none" class="card" class="mb-3">
+  <div id="add-tx-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Nueva Transacción</h3>
     <form id="form-add-tx">
       <div class="form-row">
@@ -673,18 +691,49 @@ require_once __DIR__ . '/../includes/header.php';
             <option>Events</option><option>Maintenance</option><option>Administrative</option>
             <option>Operations</option><option>Charity</option><option>Education</option><option>Other</option>
           </select></div>
-        <div class="form-group" id="tx-member-row"><label class="form-label">Miembro (opcional)</label>
+        <!-- Payer type selector — only visible when category = Dues -->
+        <div class="form-group form-full" id="tx-payer-type-row" style="display:none">
+          <label class="form-label">Tipo de Pagador</label>
+          <div style="display:flex;gap:1.5rem">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+              <input type="radio" name="payer_type" value="member" checked
+                     onchange="updatePayerType('member')" style="accent-color:var(--gold)">
+              Miembro
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+              <input type="radio" name="payer_type" value="admin"
+                     onchange="updatePayerType('admin')" style="accent-color:var(--gold)">
+              Usuario Admin
+            </label>
+          </div>
+        </div>
+        <!-- Member select -->
+        <div class="form-group" id="tx-member-row" style="display:none">
+          <label class="form-label">Miembro</label>
           <select name="member_id" class="form-control">
-            <option value="">— Sin miembro —</option>
-            <?php foreach($members as $m_): ?><option value="<?=$m_['id']?>"><?=e($m_['name'])?></option><?php endforeach; ?>
-          </select></div>
+            <option value="">— Seleccionar miembro —</option>
+            <?php foreach($members as $m_): ?>
+            <option value="<?=$m_['id']?>"><?=e($m_['name'])?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <!-- Admin user select -->
+        <div class="form-group" id="tx-admin-row" style="display:none">
+          <label class="form-label">Usuario Admin</label>
+          <select name="admin_id" class="form-control">
+            <option value="">— Seleccionar admin —</option>
+            <?php foreach($adminUsers as $au): ?>
+            <option value="<?=$au['id']?>"><?=e($au['name'] ?: $au['username'])?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
         <div class="form-group"><label class="form-label">Referencia</label>
           <input type="text" name="reference" class="form-control" placeholder="Opcional"></div>
         <div class="form-group form-full"><label class="form-label">Descripción *</label>
           <input type="text" name="description" class="form-control" required></div>
       </div>
       <!-- Dues months (shown when category=Dues) -->
-      <div id="dues-month-row" class="dues-month-selector hidden">
+      <div id="dues-month-row" class="dues-month-selector" style="display:none">
         <label class="form-label">Meses que cubre este pago de cuota</label>
         <div class="d-flex align-center gap-sm mb-1">
           <select name="dues_year" class="form-control select-sm">
@@ -696,7 +745,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="dues-months-grid">
           <?php for($m=1;$m<=12;$m++): ?>
           <label class="dues-month-label">
-            <input type="checkbox" class="dues-month-check" value="<?=$m?>" class="accent-gold">
+            <input type="checkbox" class="dues-month-check accent-gold" value="<?=$m?>">
             <?=$MONTHS[$m]?>
           </label>
           <?php endfor; ?>
@@ -765,7 +814,7 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 
   <!-- Dues rate -->
-  <div class="card" class="mb-3">
+  <div class="card mb-3">
     <h3 class="text-gold mb-1">Cuota Mensual <?=$year?></h3>
     <div class="dues-rate-row">
       <div class="form-group mx-0">
@@ -794,7 +843,7 @@ require_once __DIR__ . '/../includes/header.php';
       elseif($m<=$currentMonth || $year<date('Y')) $owedCnt++;
     }
   ?>
-  <div class="card" class="mb-2">
+  <div class="card mb-2">
     <div class="dues-member-header">
       <div>
         <strong class="text-white"><?=e($mem['name'])?></strong>
@@ -850,7 +899,7 @@ require_once __DIR__ . '/../includes/header.php';
         elseif($m<=$currentMonth || $year<date('Y')) $owedCnt++;
       }
     ?>
-    <div class="card" class="mb-2">
+    <div class="card mb-2">
       <div class="dues-member-header">
         <div>
           <strong class="text-white"><?=e($au['name'] ?: $au['username'])?></strong>
@@ -904,7 +953,7 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-don-form')">+ Registrar</button>
   </div>
 
-  <div id="add-don-form" style="display:none" class="card" class="mb-3">
+  <div id="add-don-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Registrar Donación</h3>
     <form id="form-add-don">
       <div class="form-row">
@@ -986,7 +1035,7 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-saving-form')">+ Agregar</button>
   </div>
 
-  <div class="stats-grid" class="mb-3">
+  <div class="stats-grid mb-3">
     <div class="stat-card"><div class="stat-label">Total Ahorros</div>
       <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
     <?php
@@ -999,7 +1048,7 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="stat-value negative">$<?=number_format($savWithdrawals,2)?></div></div>
   </div>
 
-  <div id="add-saving-form" style="display:none" class="card" class="mb-3">
+  <div id="add-saving-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Nuevo Movimiento de Ahorro</h3>
     <form id="form-add-saving">
       <div class="form-row">
@@ -1062,7 +1111,7 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="page-sub">Visibles para todos los miembros</div></div>
     <button class="btn btn-gold" onclick="showSection('add-news-form')">+ Publicar</button>
   </div>
-  <div id="add-news-form" style="display:none" class="card" class="mb-3">
+  <div id="add-news-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Nuevo Comunicado</h3>
     <form id="form-add-news">
       <div class="form-group"><label class="form-label">Título *</label>
@@ -1110,7 +1159,7 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-admin-form')">+ Nuevo Admin</button>
   </div>
 
-  <div id="add-admin-form" style="display:none" class="card" class="mb-3">
+  <div id="add-admin-form" style="display:none" class="card mb-3">
     <h3 class="text-gold mb-2">Crear Cuenta Admin</h3>
     <form id="form-add-admin">
       <div class="form-row">
@@ -1178,7 +1227,7 @@ require_once __DIR__ . '/../includes/header.php';
       <div class="page-sub">PDF o CSV para Google Sheets / Excel</div></div>
   </div>
 
-  <div class="card" class="mb-3">
+  <div class="card mb-3">
     <h3 class="text-gold mb-2">Seleccionar Período</h3>
     <div class="filter-row">
       <div class="form-group mx-0"><label class="form-label">Año</label>
@@ -1197,7 +1246,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
   </div>
 
-  <div class="reports-grid" class="mb-3">
+  <div class="reports-grid mb-3">
     <div class="stat-card report"><div class="stat-label">Ingresos</div>
       <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div></div>
     <div class="stat-card report"><div class="stat-label">Donaciones</div>

@@ -30,13 +30,14 @@ if ($action === 'add') {
     $date        = preg_match('/^\d{4}-\d{2}-\d{2}$/', $input['date'] ?? '') ? $input['date'] : date('Y-m-d');
     $description = mb_substr(trim($input['description'] ?? ''), 0, 255);
     $category    = mb_substr(trim($input['category'] ?? 'General'), 0, 80);
-    $member_id   = $input['member_id'] ? int_val($input['member_id']) : null;
+    $member_id   = !empty($input['member_id']) ? int_val($input['member_id']) : null;
+    $admin_id    = !empty($input['admin_id'])  ? int_val($input['admin_id'])  : null;
     $reference   = mb_substr(trim($input['reference'] ?? ''), 0, 120);
     $dues_months = array_map('intval', $input['dues_months'] ?? []);
     $dues_year   = int_val($input['dues_year'] ?? date('Y'));
 
-    if (!$type)   json_error('Transaction type is required');
-    if (!$amount) json_error('Amount must be greater than 0');
+    if (!$type)        json_error('Transaction type is required');
+    if (!$amount)      json_error('Amount must be greater than 0');
     if (!$description) json_error('Description is required');
 
     try {
@@ -47,20 +48,33 @@ if ($action === 'add') {
             "INSERT INTO transactions (type, amount, date, description, category, member_id, reference, created_by)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         );
+        // For admin dues, member_id stays null (transaction table links to member only)
         $stmt->execute([$type, $amount, $date, $description, $category, $member_id, $reference ?: null, $_SESSION['admin_id']]);
         $tx_id = $pdo->lastInsertId();
 
-        // If dues payment, record each month paid
+        // If dues payment for a MEMBER — record each month
         if ($category === 'Dues' && $member_id && !empty($dues_months)) {
             $monthly_amount = $amount / count($dues_months);
             foreach ($dues_months as $month) {
                 if ($month < 1 || $month > 12) continue;
-                // Upsert dues record
                 $pdo->prepare(
-                    "INSERT INTO dues (member_id, year, month, amount, paid, paid_date, transaction_id)
-                     VALUES (?, ?, ?, ?, 1, ?, ?)
+                    "INSERT INTO dues (member_id, admin_id, year, month, amount, paid, paid_date, transaction_id)
+                     VALUES (?, NULL, ?, ?, ?, 1, ?, ?)
                      ON DUPLICATE KEY UPDATE paid=1, paid_date=VALUES(paid_date), transaction_id=VALUES(transaction_id), amount=VALUES(amount)"
                 )->execute([$member_id, $dues_year, $month, $monthly_amount, $date, $tx_id]);
+            }
+        }
+
+        // If dues payment for an ADMIN USER — record each month
+        if ($category === 'Dues' && $admin_id && !empty($dues_months)) {
+            $monthly_amount = $amount / count($dues_months);
+            foreach ($dues_months as $month) {
+                if ($month < 1 || $month > 12) continue;
+                $pdo->prepare(
+                    "INSERT INTO dues (member_id, admin_id, year, month, amount, paid, paid_date, transaction_id)
+                     VALUES (NULL, ?, ?, ?, ?, 1, ?, ?)
+                     ON DUPLICATE KEY UPDATE paid=1, paid_date=VALUES(paid_date), transaction_id=VALUES(transaction_id), amount=VALUES(amount)"
+                )->execute([$admin_id, $dues_year, $month, $monthly_amount, $date, $tx_id]);
             }
         }
 
