@@ -1683,9 +1683,37 @@ footer {
 .btn-success:hover {
   background: rgba(76, 175, 125, 0.3);
 }
+
+/* Toggle button */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 @media (max-width: 900px) {
+  .sidebar-toggle {
+    display: block;
+  }
+
   .sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 260px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 1500;
+  }
+
+  .sidebar.active {
+    left: 0;
   }
   .main {
     max-width: 100vw;

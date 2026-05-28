@@ -421,10 +421,14 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="admin-wrap">
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<button class="sidebar-toggle" id="sidebarToggle">
+  <i class="fas fa-bars"></i>
+</button>
+
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-session">
     <div class="sidebar-session-label">Sesión activa</div>
-    <div class="sidebar-session-name"><?= $adminName ?></div>
+    <div class="sidebar-session-name"><?= $adminName ?></div>  
   </div>
   <div class="sidebar-lbl">Panel</div>
   <?php
@@ -439,18 +443,24 @@ require_once __DIR__ . '/../includes/header.php';
     'admins'    => ['<i class="fa-solid fa-user-tie"></i>','Usuarios Admin'],
     'reports'   => ['<i class="fa-solid fa-file-pdf"></i>','Reportes'],
   ];
+
   foreach($tabs as $id => [$icon,$label]):
     $cls = $activeTab===$id ? 'active' : '';
   ?>
+  
   <a href="?tab=<?=$id?>&year=<?=$year?>" class="sidebar-link <?=$cls?>">
     <span><?=$icon?></span><?=$label?>
   </a>
   <?php endforeach; ?>
   <div class="sidebar-quick-report">
-    <a href="/api/reports.php?type=financial&format=pdf&year=<?=$year?>" target="_blank"
-       class="btn btn-gold btn-sm btn-full">🖨 Reporte Rápido</a>
+    <a href="/api/reports.php?type=financial&format=pdf&year=<?=$year?>"
+       target="_blank"
+       class="btn btn-gold btn-sm btn-full">
+       🖨 Reporte Rápido
+    </a>
   </div>
 </aside>
+
 
 <!-- MAIN CONTENT -->
 <main class="main">
