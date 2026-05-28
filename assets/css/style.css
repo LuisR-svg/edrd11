@@ -487,11 +487,7 @@ img {
   backdrop-filter: blur(8px);
   transition: var(--transition);
 }
-@media (max-width: 900px) {
-  .card {
-    overflow: scroll;
-  }
-}
+
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--border-gold);
@@ -1486,6 +1482,12 @@ footer {
   align-items: flex-end;
   gap: 4px;
   height: 100px;
+}
+
+@media (max-width: 900px) {
+  .bar-wrap {
+    overflow: scroll;
+  }
 }
 .bar-col {
   flex: 1;
