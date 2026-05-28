@@ -126,7 +126,7 @@ if ($format === 'csv') {
         $admDues = getAdminDues($pdo, $year);
         $label = $month ? "{$MONTHS[$month]} $year" : "Annual $year";
 
-        fputcsv($out, ["Estrella Del Rey David Numero 11 - Financial Report - {$label}"]);
+        fputcsv($out, ["No. 11 Del Rey David Numero 11 - Financial Report - {$label}"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Date','Type','Description','Category','Member','Reference','Amount']);
@@ -173,7 +173,7 @@ if ($format === 'csv') {
     if ($type === 'dues') {
         $memDues = getMemberDues($pdo, $year);
         $admDues = getAdminDues($pdo, $year);
-        fputcsv($out, ["Estrella Del Rey David - Dues Report $year"]);
+        fputcsv($out, ["No. 11 Del Rey David - Dues Report $year"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Name','Type','Role','Month','Amount','Status','Paid Date']);
@@ -189,7 +189,7 @@ if ($format === 'csv') {
 
     if ($type === 'donations') {
         $dons = getDonations($pdo, $year, $month);
-        fputcsv($out, ["Estrella Del Rey David - Donations Report $year"]);
+        fputcsv($out, ["No. 11 Del Rey David - Donations Report $year"]);
         fputcsv($out, ["Generated:", date('Y-m-d H:i:s')]);
         fputcsv($out, []);
         fputcsv($out, ['Date','Donor','Email','Amount','Category','Note','Anonymous']);
@@ -259,7 +259,7 @@ $currentYear   = (int)date('Y');
 
   <div class="rpt-header">
     <span class="rpt-symbol">&#x2B21;</span>
-    <h1>Estrella Del Rey David Numero 11</h1>
+    <h1>No. 11 Del Rey David Numero 11</h1>
     <h2>Reporte Financiero &mdash; <?= e($periodLabel) ?></h2>
     <div class="rpt-meta">Generado: <?= date('d F Y') ?> a las <?= date('g:i A') ?> &middot; CONFIDENCIAL</div>
   </div>
@@ -519,7 +519,7 @@ $currentYear   = (int)date('Y');
   </table>
 
   <div class="rpt-footer">
-    Estrella Del Rey David Numero 11 &middot; Reporte Financiero Confidencial &middot; <?= date('Y') ?>
+    No. 11 Del Rey David Numero 11 &middot; Reporte Financiero Confidencial &middot; <?= date('Y') ?>
   </div>
 
 </div>
