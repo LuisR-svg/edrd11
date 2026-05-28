@@ -260,7 +260,7 @@ $currentYear   = (int)date('Y');
   <div class="rpt-header">
     <span class="rpt-symbol">&#x2B21;</span>
     <h1>No. 11 Del Rey David Numero 11</h1>
-    <h2>Reporte Financiero &mdash; <?= e($periodLabel) ?></h2>
+    <h2>Reporte Financiero - <?= e($periodLabel) ?></h2>
     <div class="rpt-meta">Generado: <?= date('d F Y') ?> a las <?= date('g:i A') ?> &middot; CONFIDENCIAL</div>
   </div>
 
@@ -305,7 +305,7 @@ $currentYear   = (int)date('Y');
   </div>
 
   <!-- Monthly Breakdown -->
-  <h3 class="rpt-section-title">Movimiento Mensual &mdash; <?= $year ?></h3>
+  <h3 class="rpt-section-title">Movimiento Mensual - <?= $year ?></h3>
   <table class="rpt-table">
     <thead>
       <tr>
@@ -370,7 +370,7 @@ $currentYear   = (int)date('Y');
         <td><?= $t['type']==='income'?'Ingreso':'Egreso' ?></td>
         <td><?= e($t['description']) ?></td>
         <td><?= e($t['category']) ?></td>
-        <td><?= e($t['member_name']??'&mdash;') ?></td>
+        <td><?= e($t['member_name']??'-') ?></td>
         <td class="<?= $t['type']==='income'?'rpt-income':'rpt-expense' ?>">$<?= number_format($t['amount'],2) ?></td>
       </tr>
       <?php endforeach; ?>
@@ -384,7 +384,7 @@ $currentYear   = (int)date('Y');
 
   <!-- Donations -->
   <?php if (!empty($dons)): ?>
-  <h3 class="rpt-section-title">Donaciones &mdash; <?= e($periodLabel) ?></h3>
+  <h3 class="rpt-section-title">Donaciones - <?= e($periodLabel) ?></h3>
   <table class="rpt-table">
     <thead>
       <tr><th>Fecha</th><th>Donante</th><th>Categoria</th><th>Monto</th><th>Nota</th></tr>
@@ -393,7 +393,7 @@ $currentYear   = (int)date('Y');
       <?php foreach ($dons as $d): ?>
       <tr>
         <td><?= e($d['date']) ?></td>
-        <td><?= $d['anonymous'] ? '<em class="rpt-muted">[Anonimo]</em>' : e($d['donor_name']??'&mdash;') ?></td>
+        <td><?= $d['anonymous'] ? '<em class="rpt-muted">[Anonimo]</em>' : e($d['donor_name']??'-') ?></td>
         <td><?= e($d['category']) ?></td>
         <td class="rpt-income">$<?= number_format($d['amount'],2) ?></td>
         <td class="rpt-muted"><?= e($d['note']??'') ?></td>
@@ -409,7 +409,7 @@ $currentYear   = (int)date('Y');
   <?php endif; ?>
 
   <!-- Member Dues -->
-  <h3 class="rpt-section-title">Cuotas &mdash; Miembros &mdash; <?= $year ?></h3>
+  <h3 class="rpt-section-title">Cuotas - Miembros - <?= $year ?></h3>
   <p class="rpt-section-subtitle">Tarifa mensual: $<?= number_format($duesRate,2) ?></p>
   <?php if (empty($activeMembers)): ?>
     <p class="rpt-muted">No hay miembros activos.</p>
@@ -461,7 +461,7 @@ $currentYear   = (int)date('Y');
 
   <!-- Admin Dues -->
   <?php if (!empty($adminUsers)): ?>
-  <h3 class="rpt-section-title">Cuotas &mdash; Usuarios Administrativos &mdash; <?= $year ?></h3>
+  <h3 class="rpt-section-title">Cuotas - Usuarios Administrativos - <?= $year ?></h3>
   <p class="rpt-section-subtitle">Tarifa mensual: $<?= number_format($duesRate,2) ?></p>
   <table class="rpt-table">
     <thead>
