@@ -1007,6 +1007,21 @@ textarea.form-control {
   flex-direction: column;
   justify-content: space-around;
 }
+
+.saving {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  background: rgba(26, 58, 107, 0.35);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 .reports-stats-grid {
   display: flex;
   gap: 1rem;

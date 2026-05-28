@@ -1035,7 +1035,7 @@ require_once __DIR__ . '/../includes/header.php';
     <button class="btn btn-gold" onclick="showSection('add-saving-form')">+ Agregar</button>
   </div>
 
-  <div class="stats-grid mb-3">
+  <div class="stats-grid mb-3 saving">
     <div class="stat-card"><div class="stat-label">Total Ahorros</div>
       <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
     <?php
