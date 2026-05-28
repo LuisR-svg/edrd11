@@ -44,7 +44,7 @@ $balance       = $totalIncome + $totalDonations - $totalExpenses;
 $members = $pdo->query("SELECT * FROM members ORDER BY name")->fetchAll();
 
 // ── TRANSACTIONS (year + optional month filter) ───────────
-$txSql    = "SELECT t.*, m.name as member_name, au.name as admin_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id LEFT JOIN admin_users au ON t.created_by=au.id WHERE YEAR(t.date)=?";
+$txSql    = "SELECT t.*, m.name as member_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id WHERE YEAR(t.date)=?";
 $txParams = [$year];
 if ($filterMonth > 0) { $txSql .= " AND MONTH(t.date)=?"; $txParams[] = $filterMonth; }
 $txSql .= " ORDER BY t.date DESC, t.id DESC";
