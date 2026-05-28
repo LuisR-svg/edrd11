@@ -1077,7 +1077,7 @@ require_once __DIR__ . '/../includes/header.php';
     <?php if(empty($savingsRows)): ?>
     <p class="empty-state">
       No hay movimientos de ahorro. <br>
-      <small>Si acabas de crear la tabla, asegúrate de correr el script <code>database_additions.sql</code> en phpMyAdmin.</small>
+      <!-- <small>Si acabas de crear la tabla, asegúrate de correr el script <code>database_additions.sql</code> en phpMyAdmin.</small> -->
     </p>
     <?php else: ?>
     <div class="table-wrap">
