@@ -487,6 +487,11 @@ img {
   backdrop-filter: blur(8px);
   transition: var(--transition);
 }
+@media (max-width: 900px) {
+  .card {
+    overflow: scroll;
+  }
+}
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--border-gold);
@@ -567,7 +572,11 @@ img {
   color: #fff;
   font-family: var(--font-serif);
 }
-
+@media (max-width: 900px) {
+  .stat-value {
+    font-size: 1.2rem;
+  }
+}
 /* ── PILLARS (3-col grid) ── */
 .pillars-grid {
   display: grid;
@@ -2133,6 +2142,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 .card-subheader h3 {
   color: var(--gold);
