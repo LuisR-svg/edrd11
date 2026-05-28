@@ -1223,70 +1223,103 @@ require_once __DIR__ . '/../includes/header.php';
 <?php elseif($activeTab==='reports'): ?>
 <div class="tab-panel active">
   <div class="page-header">
-    <div><h1 class="page-title">Reportes</h1>
-      <div class="page-sub">PDF o CSV para Google Sheets / Excel</div></div>
-  </div>
-
-  <div class="card mb-3">
-    <h3 class="text-gold mb-2">Seleccionar Período</h3>
-    <div class="filter-row">
-      <div class="form-group mx-0"><label class="form-label">Año</label>
+    <div>
+      <h1 class="page-title">Reportes</h1>
+      <div class="page-sub">PDF o CSV para Google Sheets / Excel</div>
+    </div>
+    <!-- Period selector inline in header -->
+    <div class="d-flex gap-sm align-center flex-wrap">
+      <div class="form-group mx-0">
+        <label class="form-label">Año</label>
         <select id="rpt-year" class="form-control select-sm">
           <?php for($y=date('Y');$y>=2020;$y--): ?>
           <option value="<?=$y?>" <?=$y==date('Y')?'selected':''?>><?=$y?></option>
           <?php endfor; ?>
-        </select></div>
-      <div class="form-group mx-0"><label class="form-label">Mes (vacío = anual)</label>
+        </select>
+      </div>
+      <div class="form-group mx-0">
+        <label class="form-label">Mes</label>
         <select id="rpt-month" class="form-control select-lg">
           <option value="0">Todos los meses</option>
           <?php for($m=1;$m<=12;$m++): ?>
           <option value="<?=$m?>"><?=$MONTHS_F[$m]?></option>
           <?php endfor; ?>
-        </select></div>
+        </select>
+      </div>
     </div>
   </div>
 
-  <div class="reports-grid mb-3">
-    <div class="stat-card report"><div class="stat-label">Ingresos</div>
-      <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div></div>
-    <div class="stat-card report"><div class="stat-label">Donaciones</div>
-      <div class="stat-value positive">$<?=number_format($totalDonations,2)?></div></div>
-    <div class="stat-card report"><div class="stat-label">Egresos</div>
-      <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div></div>
-    
-</div>
-<div class="stat-card report">
-  <div class="data-head">
-<div class="stat-label">Balance Neto</div>
-      <div class="stat-value <?= $balance >= 0 ? 'positive' : 'negative' ?>">
-    $<?= number_format($balance, 2) ?>
-</div>
-</div>
-    <div class="stat-card"><div class="stat-label">Ahorros</div>
-      <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div></div>
-    <div class="stat-card"><div class="stat-label">Cuotas Pendientes</div>
-      <div class="stat-value warning">$<?=number_format($totalDuesOwed,2)?></div></div>
+  <!-- Summary stats — same layout as dashboard tab -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Balance Neto</div>
+      <div class="stat-value <?=$balance>=0?'positive':'negative'?>">$<?=number_format($balance,2)?></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ingresos</div>
+      <div class="stat-value positive">$<?=number_format($totalIncome,2)?></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Donaciones</div>
+      <div class="stat-value positive">$<?=number_format($totalDonations,2)?></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Egresos</div>
+      <div class="stat-value negative">$<?=number_format($totalExpenses,2)?></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ahorros</div>
+      <div class="stat-value neutral">$<?=number_format($totalSavings,2)?></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Cuotas Pendientes</div>
+      <div class="stat-value warning">$<?=number_format($totalDuesOwed,2)?></div>
+    </div>
   </div>
 
-  <div class="reports-grid">
+  <!-- Export cards -->
+  <div class="reports-export-grid">
     <?php
     $rpts = [
-      ['financial','<i class="fa-solid fa-coins"></i> Reporte Financiero Completo','Transacciones, balance mensual, cuotas pendientes, donaciones.'],
-      ['dues',     '<i class="fa-regular fa-calendar-days"></i> Estado de Cuotas',           'Todos los miembros con detalle mensual de pagos.'],
-      ['donations','<i class="fa-solid fa-hand-holding-dollar"></i> Reporte de Donaciones',      'Historial completo de donaciones de miembros y externos.'],
+      [
+        'financial',
+        '<i class="fa-solid fa-coins"></i>',
+        'Reporte Financiero Completo',
+        'Todas las transacciones, balance mensual, cuotas pendientes y donaciones.'
+      ],
+      [
+        'dues',
+        '<i class="fa-regular fa-calendar-days"></i>',
+        'Estado de Cuotas',
+        'Todos los miembros con detalle mensual de pagos realizados y pendientes.'
+      ],
+      [
+        'donations',
+        '<i class="fa-solid fa-hand-holding-dollar"></i>',
+        'Reporte de Donaciones',
+        'Historial completo de donaciones de miembros y donantes externos.'
+      ],
     ];
-    foreach($rpts as [$rtype,$rtitle,$rdesc]):
+    foreach($rpts as [$rtype,$icon,$rtitle,$rdesc]):
     ?>
-    <div class="card">
-      <h3 class="text-gold mb-1"><?=$rtitle?></h3>
-      <p class="text-secondary text-sm mb-3"><?=$rdesc?></p>
-      <div class="d-flex flex-wrap gap-sm">
-        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')">⬇ CSV / Sheets</button>
-        <button class="btn btn-gold btn-sm"    onclick="doExport('<?=$rtype?>','pdf')">🖨 Ver PDF</button>
+    <div class="card rpt-export-card">
+      <div class="rpt-export-icon"><?=$icon?></div>
+      <div class="rpt-export-body">
+        <h3 class="rpt-export-title"><?=$rtitle?></h3>
+        <p class="rpt-export-desc"><?=$rdesc?></p>
+      </div>
+      <div class="rpt-export-actions">
+        <button class="btn btn-outline btn-sm" onclick="doExport('<?=$rtype?>','csv')">
+          <i class="fa-solid fa-file-csv"></i> CSV
+        </button>
+        <button class="btn btn-gold btn-sm" onclick="doExport('<?=$rtype?>','pdf')">
+          <i class="fa-solid fa-file-pdf"></i> PDF
+        </button>
       </div>
     </div>
     <?php endforeach; ?>
   </div>
+</div>
 <?php endif; ?>
 </main>
 </div>

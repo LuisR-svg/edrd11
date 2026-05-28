@@ -2445,3 +2445,62 @@ footer {
 .text-secondary {
   color: var(--text-secondary);
 }
+
+/* ── Reports export cards grid ── */
+.reports-export-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Each export card — horizontal row matching dashboard card style */
+.rpt-export-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+}
+
+.rpt-export-icon {
+  font-size: 1.5rem;
+  color: var(--gold);
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.rpt-export-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rpt-export-title {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 3px;
+}
+
+.rpt-export-desc {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rpt-export-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .rpt-export-card {
+    flex-wrap: wrap;
+  }
+  .rpt-export-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
