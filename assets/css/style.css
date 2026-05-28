@@ -1008,16 +1008,38 @@ textarea.form-control {
   justify-content: space-around;
 }
 .reports-stats-grid {
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem; */
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
   flex-direction: row;
   justify-content: space-around;
+  background: rgba(26, 58, 107, 0.35);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 20px;
 }
+.reports-stats-grid .stat-card {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-direction: coli;
+  justify-content: space-around;
+  background: rgba(26, 58, 107, 0.35);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -2460,7 +2482,7 @@ footer {
 /* ── Reports export cards grid ── */
 .reports-export-grid {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
