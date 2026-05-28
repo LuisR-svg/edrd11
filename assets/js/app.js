@@ -498,15 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  // ----------------------------------------------------------------------------------------
-  // Side Hamburger menu (mobile) - Refactored
-  // ----------------------------------------------------------------------------------------
-  const sidebarToggle = document.getElementById("sidebarToggle");
-  const sidebar = document.getElementById("sidebar");
-
-  sidebarToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("active");
-  });
 
   initMobileMenu(); // Run the safe function
   // ----------------------------------------------------------------------------------------
@@ -516,5 +507,14 @@ document.addEventListener("DOMContentLoaded", () => {
       el.style.opacity = "0";
       setTimeout(() => el.remove(), 300);
     }, 4000);
+  });
+  // ----------------------------------------------------------------------------------------
+  // Side Hamburger menu (mobile) - Refactored
+  // ----------------------------------------------------------------------------------------
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  const sidebar = document.getElementById("sidebar");
+
+  sidebarToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
   });
 });
