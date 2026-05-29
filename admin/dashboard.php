@@ -44,7 +44,7 @@ $balance       = $totalIncome + $totalDonations - $totalExpenses;
 $members = $pdo->query("SELECT * FROM members ORDER BY name")->fetchAll();
 
 // ── TRANSACTIONS (year + optional month filter) ───────────
-$txSql    = "SELECT t.*, m.name as member_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id WHERE YEAR(t.date)=?";
+$txSql    = "SELECT t.*, m.name as member_name, au.name as admin_name FROM transactions t LEFT JOIN members m ON t.member_id=m.id LEFT JOIN admin_users au ON t.created_by=au.id WHERE YEAR(t.date)=?";
 $txParams = [$year];
 if ($filterMonth > 0) { $txSql .= " AND MONTH(t.date)=?"; $txParams[] = $filterMonth; }
 $txSql .= " ORDER BY t.date DESC, t.id DESC";
@@ -221,19 +221,36 @@ function updateDuesMonthTotal() {
 }
 document.getElementById('tx-amount')?.addEventListener('input', updateDuesMonthTotal);
 document.getElementById('tx-category')?.addEventListener('change', function() {
-  const isDues = this.value === 'Dues';
-  document.getElementById('dues-month-row').style.display     = isDues ? '' : 'none';
-  document.getElementById('tx-payer-type-row').style.display  = isDues ? '' : 'none';
-  if (!isDues) {
-    // Hide both payer rows when switching away from Dues
+  const isDues   = this.value === 'Dues';
+  const isDegree = this.value === 'Degree Raising';
+
+  document.getElementById('dues-month-row').style.display      = isDues   ? '' : 'none';
+  document.getElementById('tx-payer-type-row').style.display   = isDues   ? '' : 'none';
+  document.getElementById('degree-raising-row').style.display  = isDegree ? '' : 'none';
+
+  if (isDegree) {
+    // Always show member selector for degree raising
+    document.getElementById('tx-member-row').style.display = '';
+    document.getElementById('tx-admin-row').style.display  = 'none';
+    calcDegreeTotal();
+  } else if (!isDues) {
     document.getElementById('tx-member-row').style.display = 'none';
     document.getElementById('tx-admin-row').style.display  = 'none';
   } else {
-    // Show the currently selected payer type
     const payerType = document.querySelector('input[name="payer_type"]:checked')?.value || 'member';
     updatePayerType(payerType);
   }
 });
+
+function calcDegreeTotal() {
+  const regalia = parseFloat(document.getElementById('dr-regalia')?.value || 0);
+  const liturgy = parseFloat(document.getElementById('dr-liturgy')?.value || 0);
+  const lodge   = parseFloat(document.getElementById('dr-lodge')?.value   || 0);
+  const total   = regalia + liturgy + lodge;
+  document.getElementById('dr-total').textContent = '$' + total.toFixed(2);
+  const amtField = document.getElementById('tx-amount');
+  if (amtField) amtField.value = total > 0 ? total.toFixed(2) : '';
+}
 
 function updatePayerType(type) {
   document.getElementById('tx-member-row').style.display = type === 'member' ? '' : 'none';
@@ -244,15 +261,35 @@ document.querySelectorAll('.dues-month-check').forEach(c => c.addEventListener('
 // ── ADD TRANSACTION ───────────────────────────────────────
 document.getElementById('form-add-tx')?.addEventListener('submit', async function(e) {
   e.preventDefault();
-  const fd = new FormData(this);
-  const months = [...document.querySelectorAll('.dues-month-check:checked')].map(c => +c.value);
+  const fd       = new FormData(this);
+  const months   = [...document.querySelectorAll('.dues-month-check:checked')].map(c => +c.value);
+  const category = fd.get('category');
+  const isDegree = category === 'Degree Raising';
+
+  let description = fd.get('description');
+  let amount      = fd.get('amount');
+
+  if (isDegree) {
+    const regalia = parseFloat(document.getElementById('dr-regalia')?.value || 0);
+    const liturgy = parseFloat(document.getElementById('dr-liturgy')?.value || 0);
+    const lodge   = parseFloat(document.getElementById('dr-lodge')?.value   || 0);
+    const total   = regalia + liturgy + lodge;
+    if (total <= 0) { toast('Ingresa al menos un valor en el desglose de Subida de Grado', 'error'); return; }
+    amount = total.toFixed(2);
+    const parts = [];
+    if (regalia > 0) parts.push(`Regalia: $${regalia.toFixed(2)}`);
+    if (liturgy > 0) parts.push(`Liturgia: $${liturgy.toFixed(2)}`);
+    if (lodge   > 0) parts.push(`Cuota Logia: $${lodge.toFixed(2)}`);
+    if (!description) description = 'Subida de Grado — ' + parts.join(' | ');
+  }
+
   try {
     const payerType = document.querySelector('input[name="payer_type"]:checked')?.value || 'member';
     await adminPost('transactions.php', {
-      type: fd.get('type'), amount: fd.get('amount'), date: fd.get('date'),
-      description: fd.get('description'), category: fd.get('category'),
-      member_id: payerType === 'member' ? (fd.get('member_id') || null) : null,
-      admin_id:  payerType === 'admin'  ? (fd.get('admin_id')  || null) : null,
+      type: fd.get('type'), amount, date: fd.get('date'),
+      description, category,
+      member_id: (isDegree || payerType === 'member') ? (fd.get('member_id') || null) : null,
+      admin_id:  (!isDegree && payerType === 'admin') ? (fd.get('admin_id')  || null) : null,
       reference: fd.get('reference') || null,
       dues_months: months, dues_year: fd.get('dues_year') || new Date().getFullYear()
     });
@@ -689,7 +726,9 @@ require_once __DIR__ . '/../includes/header.php';
           <select name="category" id="tx-category" class="form-control">
             <option>General</option><option>Dues</option><option>Donations</option>
             <option>Events</option><option>Maintenance</option><option>Administrative</option>
-            <option>Operations</option><option>Charity</option><option>Education</option><option>Other</option>
+            <option>Operations</option><option>Charity</option><option>Education</option>
+            <option value="Degree Raising">Subida de Grado</option>
+            <option>Other</option>
           </select></div>
         <!-- Payer type selector — only visible when category = Dues -->
         <div class="form-group form-full" id="tx-payer-type-row" style="display:none">
@@ -752,6 +791,34 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <div id="dues-month-total" class="text-gold text-13 mt-1"></div>
       </div>
+      <!-- Degree Raising breakdown (shown when category = Degree Raising) -->
+      <div id="degree-raising-row" style="display:none;grid-column:1/-1">
+        <label class="form-label" style="margin-bottom:.6rem">
+          <i class="fas fa-star-of-david" style="color:var(--gold);margin-right:6px"></i>
+          Desglose — Subida de Grado
+        </label>
+        <div style="background:#0a1628;border:1px solid #2952a3;border-radius:8px;padding:1.2rem;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.8rem 1rem;align-items:end">
+          <div>
+            <label class="form-label" style="font-size:11px">Regalia</label>
+            <input type="number" id="dr-regalia" class="form-control" min="0" step="0.01" placeholder="0.00" oninput="calcDegreeTotal()">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:11px">Liturgia</label>
+            <input type="number" id="dr-liturgy" class="form-control" min="0" step="0.01" placeholder="0.00" oninput="calcDegreeTotal()">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:11px">Cuota de Logia</label>
+            <input type="number" id="dr-lodge" class="form-control" min="0" step="0.01" placeholder="0.00" oninput="calcDegreeTotal()">
+          </div>
+          <div style="padding-bottom:2px">
+            <div style="font-size:11px;color:#7aa0d4;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Total</div>
+            <div id="dr-total" style="color:var(--gold);font-weight:bold;font-size:1.1rem;white-space:nowrap">$0.00</div>
+          </div>
+        </div>
+        <p style="color:#7aa0d4;font-size:11px;margin-top:.4rem">
+          El total se calcula automáticamente y se copia al campo Monto. El desglose se guarda en la descripción.
+        </p>
+      </div>
       <div class="form-actions">
         <button type="submit" class="btn btn-gold">Guardar Transacción</button>
         <button type="button" class="btn btn-outline" onclick="hideSection('add-tx-form')">Cancelar</button>
@@ -776,7 +843,13 @@ require_once __DIR__ . '/../includes/header.php';
             <td><span class="badge <?=$t['type']==='income'?'badge-income':'badge-expense'?>"><?=$t['type']==='income'?'Ingreso':'Egreso'?></span></td>
             <td data-field="description" data-edit="text"   data-val="<?=e($t['description'])?>"><?=e($t['description'])?></td>
             <td data-field="category"    data-edit="text"   data-val="<?=e($t['category'])?>"><?=e($t['category'])?></td>
-            <td class="text-sm text-muted"><?=e($t['member_name']??'—')?></td>
+            <td class="text-sm text-muted">
+              <?php
+                if (!empty($t['member_name']))      echo e($t['member_name']);
+                elseif (!empty($t['admin_name']))   echo '<span title="Admin">' . e($t['admin_name']) . ' <i class="fas fa-shield-halved" style="font-size:10px;opacity:.6"></i></span>';
+                else                                echo '—';
+              ?>
+            </td>
             <td data-field="amount"      data-edit="number" data-val="<?=e($t['amount'])?>"
                 class="<?=$t['type']==='income'?'text-success':'text-danger'?> text-bold">
               $<?=number_format($t['amount'],2)?></td>

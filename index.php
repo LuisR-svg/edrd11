@@ -54,8 +54,8 @@ require_once __DIR__ . '/includes/header.php';
   <div class="hero-bg-overlay" aria-hidden="true"></div>
   <div class="hero-pattern"    aria-hidden="true"></div>
   <div class="hero-content">
-    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey David #11"></span>
-    <h1 class="animate-fadeUp delay-1">Estrella Del Rey David #11</h1>
+    <span class="hero-symbol animate-fadeUp" aria-hidden="true"><img src="assets/img/logo.png" alt="Estrella Del Rey DavidNo. 11"></span>
+    <h1 class="animate-fadeUp delay-1">Estrella Del Rey DavidNo. 11</h1>
     <!-- <p class="hero-subtitle animate-fadeUp delay-2">Logia Masónica  — Fundada 1952</p> -->
     <p class="hero-desc animate-fadeUp delay-3">
       Una fraternidad dedicada al crecimiento moral, espiritual e intelectual de sus miembros
@@ -109,7 +109,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="timeline animate-fadeUp">
           <div class="timeline-item">
             <div class="timeline-year">1952</div>
-            <div class="timeline-text">Fundación de la Logia Estrella Del Rey David #11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
+            <div class="timeline-text">Fundación de la Logia Estrella Del Rey DavidNo. 11. Un grupo de visionarios comprometidos con los valores masónicos establecen la hermandad.</div>
           </div>
           <div class="timeline-item">
             <div class="timeline-year">1970s</div>
@@ -183,7 +183,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="divider"></div>
     <div class="card contact-card">
       <p>
-        La Logia Estrella Del Rey David #11 da la bienvenida a hombres de buena moral
+        La Logia Estrella Del Rey DavidNo. 11 da la bienvenida a hombres de buena moral
         que deseen conocer nuestros principios y ser parte de nuestra hermandad.
         Para mayor información, contáctanos a través de un miembro activo de la logia.
       </p>
